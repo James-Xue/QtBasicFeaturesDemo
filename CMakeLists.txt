@@ -13,12 +13,12 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories(src/Demo)
 
 # Collect source and header files
-file(GLOB SOURCES "src/Demo/*.cpp")
-file(GLOB HEADERS "src/Demo/*.h")
+file(GLOB SOURCES "src/DemoMain/*.cpp")
+file(GLOB HEADERS "src/DemoMain/*.h")
 
 # Organize files into filters for Visual Studio
 source_group("Header Files" FILES ${HEADERS})
 source_group("Source Files" FILES ${SOURCES})
 
 # Set the output directory for the executable
-add_executable(Demo ${SOURCES} ${HEADERS})
+add_executable(DemoMain ${SOURCES} ${HEADERS})
