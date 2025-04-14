@@ -6,7 +6,7 @@
  * - QLibraryInfo::LibraryPath enum in qtbase/src/corelib/global/qlibraryinfo.h
  * - qtConfEntries in qtbase/src/corelib/global/qlibraryinfo.cpp
  */
-#include "private/qoffsetstringarray_p.h"
+// #include "private/qoffsetstringarray_p.h"
 
 /* Installation Info */
 static const char qt_configure_prefix_path_str  [12+256] = "qt_prfxpath=";

@@ -11,3 +11,9 @@ source_group("Source Files" FILES ${SOURCES})
 
 # Set the output directory for the executable
 add_executable(${MODULE_NAME} ${SOURCES} ${HEADERS})
+
+# Specify include directories for header file lookup
+target_include_directories(${MODULE_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
+)

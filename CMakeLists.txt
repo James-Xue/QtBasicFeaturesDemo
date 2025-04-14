@@ -29,7 +29,7 @@ else()
         -Wextra
         # GCC/Clang: Enable strict standard compliance warnings
         -Wpedantic
-        )
+    )
 endif()
 
 # Add the subdirectory for the main demo application
