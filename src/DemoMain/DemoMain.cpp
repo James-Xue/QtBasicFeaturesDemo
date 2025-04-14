@@ -5,7 +5,7 @@ bool InitApplication(int argc, char* argv[]);
 void RunApplicationLoop();
 void CleanupApplication();
 
-int main(int argc, char* argv[])
+int main(const int /*argc*/, char */*argv*/[])
 {
     //// Initialize the application
     //if (false == InitApplication(argc, argv))
