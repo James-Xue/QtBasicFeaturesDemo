@@ -19,8 +19,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if (MSVC)
     # Enable additional warnings for MSVC
     add_compile_options(
-        /W4
-        /Zc:__cplusplus
+        /W4 # Enable level 4 warnings
+        /Zc:__cplusplus # Enable C++ standard version
+        /permissive- # Enable strict standard compliance
     )
 else()
     # Enable additional warnings for GCC/Clang
