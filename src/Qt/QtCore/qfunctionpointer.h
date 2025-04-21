@@ -2,22 +2,19 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #ifndef QFUNCTIONPOINTER_H
-#define QFUNCTIONPOINTER_H
+    #define QFUNCTIONPOINTER_H
 
-#include <QtCore/qtconfigmacros.h>
+    #include <QtCore/qtconfigmacros.h>
 
-#if 0
-#pragma qt_class(QFunctionPointer)
-#endif
+    #if 0
+        #pragma qt_class(QFunctionPointer)
+    #endif
 
-#if defined(__cplusplus)
+    #if defined(__cplusplus)
+        QT_BEGIN_NAMESPACE
 
-QT_BEGIN_NAMESPACE
+        typedef void (*QFunctionPointer)();
 
-typedef void (*QFunctionPointer)();
-
-QT_END_NAMESPACE
-
-#endif // __cplusplus
-
+        QT_END_NAMESPACE
+    #endif // __cplusplus
 #endif // QFUNCTIONPOINTER_H
