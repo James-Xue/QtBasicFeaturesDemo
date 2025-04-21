@@ -5,32 +5,32 @@
 #include "qcompare.h"
 
 #ifdef __cpp_lib_bit_cast
-#include <bit>
+    #include <bit>
 #endif
 
 QT_BEGIN_NAMESPACE
 
 #ifdef __cpp_lib_three_way_comparison
-#ifdef __cpp_lib_bit_cast
-#define CHECK(type, flag) \
-    static_assert(std::bit_cast<Qt:: type ## _ordering>(std:: type ## _ordering:: flag) \
-                  == Qt:: type ## _ordering :: flag); \
-    static_assert(std::bit_cast<std:: type ## _ordering>(Qt:: type ## _ordering:: flag) \
-                  == std:: type ## _ordering :: flag) \
-    /* end */
-CHECK(partial, unordered);
-CHECK(partial, less);
-CHECK(partial, greater);
-CHECK(partial, equivalent);
-CHECK(weak, less);
-CHECK(weak, greater);
-CHECK(weak, equivalent);
-CHECK(strong, less);
-CHECK(strong, greater);
-CHECK(strong, equal);
-CHECK(strong, equivalent);
-#undef CHECK
-#endif // __cpp_lib_bit_cast
+    #ifdef __cpp_lib_bit_cast
+        #define CHECK(type, flag) \
+            static_assert(std::bit_cast<Qt:: type ## _ordering>(std:: type ## _ordering:: flag) \
+                          == Qt:: type ## _ordering :: flag); \
+            static_assert(std::bit_cast<std:: type ## _ordering>(Qt:: type ## _ordering:: flag) \
+                          == std:: type ## _ordering :: flag) \
+            /* end */
+        CHECK(partial, unordered);
+        CHECK(partial, less);
+        CHECK(partial, greater);
+        CHECK(partial, equivalent);
+        CHECK(weak, less);
+        CHECK(weak, greater);
+        CHECK(weak, equivalent);
+        CHECK(strong, less);
+        CHECK(strong, greater);
+        CHECK(strong, equal);
+        CHECK(strong, equivalent);
+        #undef CHECK
+    #endif // __cpp_lib_bit_cast
 #endif //__cpp_lib_three_way_comparison
 
 
