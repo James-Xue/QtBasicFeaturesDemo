@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+# The folders below are created by the build system
+/.vscode

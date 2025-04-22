@@ -2,12 +2,9 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qchar.h"
-
 #include "qdatastream.h"
-
 #include "qunicodetables_p.h"
 #include "qunicodetables.cpp"
-
 #include <algorithm>
 
 QT_BEGIN_NAMESPACE
