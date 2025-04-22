@@ -15,17 +15,19 @@
     #include <QtCore/qtmetamacros.h>
 
     #if defined(__OBJC__) && !defined(__cplusplus)
-    #  warning "File built in Objective-C mode (.m), but using Qt requires Objective-C++ (.mm)"
+        #warning "File built in Objective-C mode (.m), but using Qt requires Objective-C++ (.mm)"
     #endif
 
     QT_BEGIN_NAMESPACE
 
     struct QMetaObject;
 
-    namespace Qt {
+    namespace Qt
+    {
         Q_NAMESPACE_EXPORT(Q_CORE_EXPORT)
 
-        enum GlobalColor {
+        enum GlobalColor
+        {
             color0,
             color1,
             black,
@@ -48,13 +50,15 @@
             transparent
         };
 
-        enum class ColorScheme {
+        enum class ColorScheme
+        {
             Unknown,
             Light,
             Dark,
         };
 
-        enum MouseButton {
+        enum MouseButton
+        {
             NoButton         = 0x00000000,
             LeftButton       = 0x00000001,
             RightButton      = 0x00000002,
@@ -93,10 +97,12 @@
             // 4 high-order bits remain available for future use (0x08000000 through 0x40000000).
             MouseButtonMask  = 0xffffffff
         };
+
         Q_DECLARE_FLAGS(MouseButtons, MouseButton)
         Q_DECLARE_OPERATORS_FOR_FLAGS(MouseButtons)
 
-        enum Orientation {
+        enum Orientation
+        {
             Horizontal = 0x1,
             Vertical = 0x2
         };
@@ -104,7 +110,8 @@
         Q_DECLARE_FLAGS(Orientations, Orientation)
         Q_DECLARE_OPERATORS_FOR_FLAGS(Orientations)
 
-        enum FocusPolicy {
+        enum FocusPolicy
+        {
             NoFocus = 0,
             TabFocus = 0x1,
             ClickFocus = 0x2,
@@ -112,26 +119,31 @@
             WheelFocus = StrongFocus | 0x4
         };
 
-        enum TabFocusBehavior {
+        enum TabFocusBehavior
+        {
             NoTabFocus           = 0x00,
             TabFocusTextControls = 0x01,
             TabFocusListControls = 0x02,
             TabFocusAllControls  = 0xff
         };
 
-        enum SortOrder {
+        enum SortOrder
+        {
             AscendingOrder,
             DescendingOrder
         };
 
-        enum SplitBehaviorFlags {
+        enum SplitBehaviorFlags
+        {
             KeepEmptyParts = 0,
             SkipEmptyParts = 0x1,
         };
+
         Q_DECLARE_FLAGS(SplitBehavior, SplitBehaviorFlags)
         Q_DECLARE_OPERATORS_FOR_FLAGS(SplitBehavior)
 
-        enum TileRule {
+        enum TileRule
+        {
             StretchTile,
             RepeatTile,
             RoundTile
@@ -141,7 +153,8 @@
         // The following two enums can be combined to one integer which
         // is passed as 'flags' to QPainter::drawText, QFontMetrics::boundingRect and qt_format_text.
 
-        enum AlignmentFlag {
+        enum AlignmentFlag
+        {
             AlignLeft = 0x0001,
             AlignLeading = AlignLeft,
             AlignRight = 0x0002,
@@ -167,7 +180,8 @@
         Q_DECLARE_FLAGS(Alignment, AlignmentFlag)
         Q_DECLARE_OPERATORS_FOR_FLAGS(Alignment)
 
-        enum TextFlag {
+        enum TextFlag
+        {
             TextSingleLine = 0x0100,
             TextDontClip = 0x0200,
             TextExpandTabs = 0x0400,
@@ -184,17 +198,21 @@
             // size of a multi-variant string.
             TextLongestVariant = 0x80000
         };
+
         Q_DECLARE_MIXED_ENUM_OPERATORS_SYMMETRIC(int, AlignmentFlag, TextFlag)
 
-        enum TextElideMode {
+        enum TextElideMode
+        {
             ElideLeft,
             ElideRight,
             ElideMiddle,
             ElideNone
         };
+
         Q_DECLARE_MIXED_ENUM_OPERATORS_SYMMETRIC(int, TextElideMode, TextFlag)
 
-        enum WhiteSpaceMode {
+        enum WhiteSpaceMode
+        {
             WhiteSpaceNormal,
             WhiteSpacePre,
             WhiteSpaceNoWrap,
@@ -203,7 +221,8 @@
 
         enum HitTestAccuracy { ExactHit, FuzzyHit };
 
-        enum WindowType {
+        enum WindowType
+        {
             Widget = 0x00000000,
             Window = 0x00000001,
             Dialog = 0x00000002 | Window,
@@ -236,7 +255,6 @@
             WindowOverridesSystemGestures = 0x00100000,
             WindowDoesNotAcceptFocus = 0x00200000,
             MaximizeUsingFullscreenGeometryHint = 0x00400000,
-
             CustomizeWindowHint = 0x02000000,
             WindowStaysOnBottomHint = 0x04000000,
             WindowCloseButtonHint = 0x08000000,
@@ -249,7 +267,8 @@
         Q_DECLARE_FLAGS(WindowFlags, WindowType)
         Q_DECLARE_OPERATORS_FOR_FLAGS(WindowFlags)
 
-        enum WindowState {
+        enum WindowState
+        {
             WindowNoState    = 0x00000000,
             WindowMinimized  = 0x00000001,
             WindowMaximized  = 0x00000002,
@@ -260,7 +279,8 @@
         Q_DECLARE_FLAGS(WindowStates, WindowState)
         Q_DECLARE_OPERATORS_FOR_FLAGS(WindowStates)
 
-        enum ApplicationState {
+        enum ApplicationState
+        {
             ApplicationSuspended    = 0x00000000,
             ApplicationHidden       = 0x00000001,
             ApplicationInactive     = 0x00000002,
@@ -269,7 +289,8 @@
 
         Q_DECLARE_FLAGS(ApplicationStates, ApplicationState)
 
-        enum ScreenOrientation {
+        enum ScreenOrientation
+        {
             PrimaryOrientation           = 0x00000000,
             PortraitOrientation          = 0x00000001,
             LandscapeOrientation         = 0x00000002,
@@ -280,7 +301,8 @@
         Q_DECLARE_FLAGS(ScreenOrientations, ScreenOrientation)
         Q_DECLARE_OPERATORS_FOR_FLAGS(ScreenOrientations)
 
-        enum WidgetAttribute {
+        enum WidgetAttribute
+        {
             WA_Disabled = 0,
             WA_UnderMouse = 1,
             WA_MouseTracking = 2,
@@ -296,7 +318,6 @@
             WA_InputMethodEnabled = 14,
             WA_WState_Visible = 15,
             WA_WState_Hidden = 16,
-
             WA_ForceDisabled = 32,
             WA_KeyCompression = 33,
             WA_PendingMoveEvent = 34,
@@ -324,7 +345,6 @@
             WA_SetLayoutDirection = 57,
             WA_NoChildEventsForParent = 58,
             WA_ForceUpdatesDisabled = 59,
-
             WA_WState_Created = 60,
             WA_WState_CompressKeys = 61,
             WA_WState_InPaintEvent = 62,
@@ -334,7 +354,6 @@
             // Formerly, 67 was WA_WState_DND.
             WA_WState_OwnSizePolicy = 68,
             WA_WState_ExplicitShowHide = 69,
-
             WA_ShowModal = 70, // ## deprecated since since 4.5.1 but still in use :-(
             WA_MouseNoMask = 71,
             WA_NoMousePropagation = 73, // for now, might go away.
@@ -474,7 +493,8 @@
         // Image conversion flags.  The unusual ordering is caused by
         // compatibility and default requirements.
 
-        enum ImageConversionFlag {
+        enum ImageConversionFlag
+        {
             ColorMode_Mask          = 0x00000003,
             AutoColor               = 0x00000000,
             ColorOnly               = 0x00000003,
@@ -504,12 +524,14 @@
         Q_DECLARE_FLAGS(ImageConversionFlags, ImageConversionFlag)
         Q_DECLARE_OPERATORS_FOR_FLAGS(ImageConversionFlags)
 
-        enum BGMode {
+        enum BGMode
+        {
             TransparentMode,
             OpaqueMode
         };
 
-        enum Key {
+        enum Key
+        {
             // Unicode Basic Latin block (0x00-0x7f)
             Key_Space = 0x20,
             Key_Any = Key_Space,

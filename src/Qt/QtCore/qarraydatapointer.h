@@ -6,7 +6,6 @@
 
 #include <QtCore/qarraydataops.h>
 #include <QtCore/qcontainertools_impl.h>
-
 #include <QtCore/q20functional.h>
 #include <QtCore/q20memory.h>
 

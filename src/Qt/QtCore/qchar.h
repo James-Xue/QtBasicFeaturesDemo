@@ -10,7 +10,6 @@
 
     QT_BEGIN_NAMESPACE
 
-
     class QString;
 
     struct QLatin1Char
@@ -40,9 +39,11 @@
     };
 
     #define QT_CHAR_FASTCALL QT7_ONLY(Q_CORE_EXPORT) QT_FASTCALL
-    class QT6_ONLY(Q_CORE_EXPORT) QChar {
+    class QT6_ONLY(Q_CORE_EXPORT) QChar
+    {
     public:
-        enum SpecialCharacter {
+        enum SpecialCharacter
+        {
             Null = 0x0000,
             Tabulation = 0x0009,
             LineFeed = 0x000a,
@@ -136,7 +137,6 @@
             Script_Unknown,
             Script_Inherited,
             Script_Common,
-
             Script_Latin,
             Script_Greek,
             Script_Cyrillic,
@@ -361,7 +361,8 @@
             Fraction
         };
 
-        enum JoiningType {
+        enum JoiningType
+        {
             Joining_None,
             Joining_Causing,
             Joining_Dual,
@@ -395,7 +396,8 @@
             Combining_IotaSubscript           = 240
         };
 
-        enum UnicodeVersion {
+        enum UnicodeVersion
+        {
             Unicode_Unassigned,
             Unicode_1_1,
             Unicode_2_0,
@@ -481,56 +483,73 @@
         {
             return ucs4 >= 0xfdd0 && (ucs4 <= 0xfdef || (ucs4 & 0xfffe) == 0xfffe);
         }
+
         static constexpr inline bool isHighSurrogate(char32_t ucs4) noexcept
         {
             return (ucs4 & 0xfffffc00) == 0xd800; // 0xd800 + up to 1023 (0x3ff)
         }
+
         static constexpr inline bool isLowSurrogate(char32_t ucs4) noexcept
         {
             return (ucs4 & 0xfffffc00) == 0xdc00; // 0xdc00 + up to 1023 (0x3ff)
         }
+
         static constexpr inline bool isSurrogate(char32_t ucs4) noexcept
         {
             return (ucs4 - 0xd800u < 2048u);
         }
+
         static constexpr inline bool requiresSurrogates(char32_t ucs4) noexcept
         {
             return (ucs4 >= 0x10000);
         }
+
         static constexpr inline char32_t surrogateToUcs4(char16_t high, char16_t low) noexcept
         {
             // 0x010000 through 0x10ffff, provided params are actual high, low surrogates.
             // 0x010000 + ((high - 0xd800) << 10) + (low - 0xdc00), optimized:
             return (char32_t(high)<<10) + low - 0x35fdc00;
         }
+
         static constexpr inline char32_t surrogateToUcs4(QChar high, QChar low) noexcept
         {
             return surrogateToUcs4(high.ucs, low.ucs);
         }
+
         static constexpr inline char16_t highSurrogate(char32_t ucs4) noexcept
         {
             return char16_t((ucs4>>10) + 0xd7c0);
         }
+
         static constexpr inline char16_t lowSurrogate(char32_t ucs4) noexcept
         {
             return char16_t(ucs4%0x400 + 0xdc00);
         }
 
         static Category QT_CHAR_FASTCALL category(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static Direction QT_CHAR_FASTCALL direction(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static JoiningType QT_CHAR_FASTCALL joiningType(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static unsigned char QT_CHAR_FASTCALL combiningClass(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
 
         static char32_t QT_CHAR_FASTCALL mirroredChar(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static bool QT_CHAR_FASTCALL hasMirrored(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
 
         static QString QT_CHAR_FASTCALL decomposition(char32_t ucs4);
+
         static Decomposition QT_CHAR_FASTCALL decompositionTag(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
 
         static int QT_CHAR_FASTCALL digitValue(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static char32_t QT_CHAR_FASTCALL toLower(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static char32_t QT_CHAR_FASTCALL toUpper(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static char32_t QT_CHAR_FASTCALL toTitleCase(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static char32_t QT_CHAR_FASTCALL toCaseFolded(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
 
         static Script QT_CHAR_FASTCALL script(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
@@ -540,55 +559,74 @@
         static UnicodeVersion QT_CHAR_FASTCALL currentUnicodeVersion() noexcept Q_DECL_CONST_FUNCTION;
 
         static bool QT_CHAR_FASTCALL isPrint(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static constexpr inline bool isSpace(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
         {
             // note that [0x09..0x0d] + 0x85 are exceptional Cc-s and must be handled explicitly
             return ucs4 == 0x20 || (ucs4 <= 0x0d && ucs4 >= 0x09)
                     || (ucs4 > 127 && (ucs4 == 0x85 || ucs4 == 0xa0 || QChar::isSpace_helper(ucs4)));
         }
+
         static bool QT_CHAR_FASTCALL isMark(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static bool QT_CHAR_FASTCALL isPunct(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static bool QT_CHAR_FASTCALL isSymbol(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static constexpr inline bool isLetter(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
         {
             return (ucs4 >= 'A' && ucs4 <= 'z' && (ucs4 >= 'a' || ucs4 <= 'Z'))
                     || (ucs4 > 127 && QChar::isLetter_helper(ucs4));
         }
+
         static constexpr inline bool isNumber(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
         { return (ucs4 <= '9' && ucs4 >= '0') || (ucs4 > 127 && QChar::isNumber_helper(ucs4)); }
+
         static constexpr inline bool isLetterOrNumber(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
         {
             return (ucs4 >= 'A' && ucs4 <= 'z' && (ucs4 >= 'a' || ucs4 <= 'Z'))
                     || (ucs4 >= '0' && ucs4 <= '9')
                     || (ucs4 > 127 && QChar::isLetterOrNumber_helper(ucs4));
         }
+
         static constexpr inline bool isDigit(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
         { return (ucs4 <= '9' && ucs4 >= '0') || (ucs4 > 127 && QChar::category(ucs4) == Number_DecimalDigit); }
+
         static constexpr inline bool isLower(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
         { return (ucs4 <= 'z' && ucs4 >= 'a') || (ucs4 > 127 && QChar::category(ucs4) == Letter_Lowercase); }
+
         static constexpr inline bool isUpper(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
         { return (ucs4 <= 'Z' && ucs4 >= 'A') || (ucs4 > 127 && QChar::category(ucs4) == Letter_Uppercase); }
+
         static constexpr inline bool isTitleCase(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
         { return ucs4 > 127 && QChar::category(ucs4) == Letter_Titlecase; }
 
         friend constexpr bool comparesEqual(const QChar &lhs, const QChar &rhs) noexcept
         { return lhs.ucs == rhs.ucs; }
+
         friend constexpr Qt::strong_ordering
         compareThreeWay(const QChar &lhs, const QChar &rhs) noexcept
         { return Qt::compareThreeWay(lhs.ucs, rhs.ucs); }
+
         Q_DECLARE_STRONGLY_ORDERED_LITERAL_TYPE(QChar)
 
         friend constexpr bool comparesEqual(const QChar &lhs, std::nullptr_t) noexcept
         { return lhs.isNull(); }
+
         friend constexpr Qt::strong_ordering
+
         compareThreeWay(const QChar &lhs, std::nullptr_t) noexcept
         { return lhs.isNull() ? Qt::strong_ordering::equivalent : Qt::strong_ordering::greater; }
+
         Q_DECLARE_STRONGLY_ORDERED_LITERAL_TYPE(QChar, std::nullptr_t)
 
     private:
         static bool QT_CHAR_FASTCALL isSpace_helper(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static bool QT_CHAR_FASTCALL isLetter_helper(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static bool QT_CHAR_FASTCALL isNumber_helper(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
+
         static bool QT_CHAR_FASTCALL isLetterOrNumber_helper(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION;
 
         // defined in qstring.cpp, because we need to go via QUtf8StringView
@@ -622,36 +660,38 @@
     Q_DECLARE_TYPEINFO(QChar, Q_PRIMITIVE_TYPE);
 
     #ifndef QT_NO_DATASTREAM
-    Q_CORE_EXPORT QDataStream &operator<<(QDataStream &, QChar);
-    Q_CORE_EXPORT QDataStream &operator>>(QDataStream &, QChar &);
+        Q_CORE_EXPORT QDataStream &operator<<(QDataStream &, QChar);
+        Q_CORE_EXPORT QDataStream &operator>>(QDataStream &, QChar &);
     #endif
 
-    namespace Qt {
-    inline namespace Literals {
-    inline namespace StringLiterals {
-
-    constexpr inline QLatin1Char operator""_L1(char ch) noexcept
+    namespace Qt
     {
-        return QLatin1Char(ch);
-    }
-
-    } // StringLiterals
-    } // Literals
+        inline namespace Literals
+        {
+            inline namespace StringLiterals
+            {
+                constexpr inline QLatin1Char operator""_L1(char ch) noexcept
+                {
+                    return QLatin1Char(ch);
+                }
+            } // StringLiterals
+        } // Literals
     } // Qt
 
     QT_END_NAMESPACE
 
-    namespace std {
-    template <>
-    struct hash<QT_PREPEND_NAMESPACE(QChar)>
+    namespace std
     {
-        template <typename = void> // for transparent constexpr tracking
-        constexpr size_t operator()(QT_PREPEND_NAMESPACE(QChar) c) const
-            noexcept(noexcept(std::hash<char16_t>{}(u' ')))
+        template <>
+        struct hash<QT_PREPEND_NAMESPACE(QChar)>
         {
-            return std::hash<char16_t>{}(c.unicode());
-        }
-    };
+            template <typename = void> // for transparent constexpr tracking
+            constexpr size_t operator()(QT_PREPEND_NAMESPACE(QChar) c) const
+                noexcept(noexcept(std::hash<char16_t>{}(u' ')))
+            {
+                return std::hash<char16_t>{}(c.unicode());
+            }
+        };
     } // namespace std
 
 #endif // QCHAR_H
