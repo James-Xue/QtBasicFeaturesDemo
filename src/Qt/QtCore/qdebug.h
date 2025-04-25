@@ -29,10 +29,10 @@
 #include <vector>
 
 #if !defined(QT_LEAN_HEADERS) || QT_LEAN_HEADERS < 1
-#  include <QtCore/qlist.h>
-#  include <QtCore/qmap.h>
-#  include <QtCore/qset.h>
-#  include <QtCore/qvarlengtharray.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qset.h>
+#include <QtCore/qvarlengtharray.h>
 #endif
 
 QT_BEGIN_NAMESPACE

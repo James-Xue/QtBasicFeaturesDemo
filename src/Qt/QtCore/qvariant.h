@@ -18,12 +18,12 @@
 #include <variant>
 
 #if !defined(QT_LEAN_HEADERS) || QT_LEAN_HEADERS < 1
-#  include <QtCore/qlist.h>
-#  include <QtCore/qstringlist.h>
-#  include <QtCore/qbytearraylist.h>
-#  include <QtCore/qhash.h>
-#  include <QtCore/qmap.h>
-#  include <QtCore/qobject.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qbytearraylist.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qobject.h>
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -796,14 +796,14 @@ template<typename T> inline T qvariant_cast(QVariant &&v)
     return t;
 }
 
-#  ifndef QT_NO_VARIANT
+#ifndef QT_NO_VARIANT
 template<> inline QVariant qvariant_cast<QVariant>(const QVariant &v)
 {
     if (v.metaType().id() == QMetaType::QVariant)
         return *reinterpret_cast<const QVariant *>(v.constData());
     return v;
 }
-#  endif
+#endif
 
 #endif // QT_MOC
 
