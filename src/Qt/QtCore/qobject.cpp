@@ -4,8 +4,8 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qobject.h"
-#include "qobject_p.h"
-#include "qobject_p_p.h"
+#include <QtCore/private/qobject_p.h>
+#include <QtCore/private/qobject_p_p.h>
 #include "qmetaobject_p.h"
 
 #include "qabstracteventdispatcher.h"

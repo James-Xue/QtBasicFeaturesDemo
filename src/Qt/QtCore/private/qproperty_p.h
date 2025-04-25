@@ -22,7 +22,7 @@
 #include <qscopedvaluerollback.h>
 #include <qvariant.h>
 #include <vector>
-#include <QtCore/QVarLengthArray>
+#include <QtCore/qvarlengtharray.h>
 
 #include <memory>
 
