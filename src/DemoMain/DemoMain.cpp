@@ -1,24 +1,16 @@
-#include "DemoMain.h"
+// STL
 #include <iostream>
 
-bool InitApplication(int argc, char* argv[]);
-void RunApplicationLoop();
-void CleanupApplication();
+// Qt
+#include <QtCore/qchar.h>
+
+// Self
+#include "DemoMain.h"
+
 
 int main(const int /*argc*/, char */*argv*/[])
 {
-    //// Initialize the application
-    //if (false == InitApplication(argc, argv))
-    //{
-    //    std::cerr << "Failed to initialize application."
-    //              << std::endl;
-    //    return -1;
-    //}
+    QChar cTest = 'c';
 
-    //// Run the main application loop
-    //RunApplicationLoop();
-
-    //// Clean up and exit
-    //CleanupApplication();
     return 0;
 }

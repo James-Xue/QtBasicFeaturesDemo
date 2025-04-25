@@ -6,7 +6,6 @@
 #define QSCOPEGUARD_H
 
 #include <QtCore/qglobal.h>
-
 #include <type_traits>
 #include <utility>
 

@@ -11,13 +11,20 @@ source_group("Header Files" FILES ${HEADERS})
 source_group("Header Files\\Private" FILES ${PRIVATE_HEADERS})
 source_group("Source Files" FILES ${SOURCES})
 
-# Set the output directory for the executable
-add_executable(${MODULE_NAME} ${SOURCES} ${HEADERS} ${PRIVATE_HEADERS})
+# Set the output directory for the dynamic library
+add_library(${MODULE_NAME} SHARED ${SOURCES} ${HEADERS} ${PRIVATE_HEADERS})
 
 # Specify include directories for header file lookup
 target_include_directories(${MODULE_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/..
+)
+
+# Add preprocessor definitions (precompiled macros)
+target_compile_definitions(${MODULE_NAME} PRIVATE
+    # QT_CORE_LIBRARY          #
+    QT_BUILD_CORE_LIB
+    # ENABLE_DEBUG_FEATURES    #
 )
 
 # Add the subdirectory for the Qt modules

@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #ifndef QOBJECTDEFS_H
-#error Do not include qobjectdefs_impl.h directly
-#include <QtCore/qnamespace.h>
+    #error Do not include qobjectdefs_impl.h directly
+    #include <QtCore/qnamespace.h>
 #endif
 
 #if 0
@@ -13,7 +13,6 @@
 #endif
 
 #include <QtCore/qfunctionaltools_impl.h>
-
 #include <memory>
 
 QT_BEGIN_NAMESPACE
