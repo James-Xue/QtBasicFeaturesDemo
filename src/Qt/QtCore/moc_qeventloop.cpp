@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../../../../00_qtbase-6.8.2-src/src/corelib/kernel/qeventloop.h"
+#include <QtCore/qeventloop.h>
 #include <QtCore/qmetatype.h>
 
 #include <QtCore/qtmochelpers.h>
