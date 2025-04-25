@@ -8,7 +8,7 @@
 #include "qcoreapplication_p.h"
 #include "qdeadlinetimer.h"
 
-#include "qobject_p.h"
+#include <QtCore/private/qobject_p.h>
 #include "qeventloop_p.h"
 #include <private/qthread_p.h>
 

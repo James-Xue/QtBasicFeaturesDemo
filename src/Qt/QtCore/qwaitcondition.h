@@ -4,7 +4,7 @@
 #ifndef QWAITCONDITION_H
 #define QWAITCONDITION_H
 
-#include <QtCore/QDeadlineTimer>
+#include <QtCore/qdeadlinetimer.h>
 
 QT_BEGIN_NAMESPACE
 

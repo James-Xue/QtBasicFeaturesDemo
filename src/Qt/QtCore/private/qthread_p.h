@@ -17,7 +17,7 @@
 //
 //
 
-#include "qplatformdefs.h"
+#include <win32-msvc-qplatformdefs.h>
 #include "QtCore/qthread.h"
 #include "QtCore/qmutex.h"
 #include "QtCore/qstack.h"
