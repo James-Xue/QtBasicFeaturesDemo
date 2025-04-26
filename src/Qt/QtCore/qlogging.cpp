@@ -3,9 +3,9 @@
 // Copyright (C) 2022 Intel Corporation.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qglobal_p.h"
+#include <QtCore/private/qglobal_p.h>
 #include "qlogging.h"
-#include "qlogging_p.h"
+#include <QtCore/private/qlogging_p.h>
 #include "qlist.h"
 #include "qbytearray.h"
 #include "qscopeguard.h"

@@ -7,6 +7,7 @@ file(GLOB SOURCES
  "qstring.cpp"
  "qfile.cpp"
  "qassert.cpp"
+ "qlogging.cpp"
 )
 file(GLOB HEADERS "*.h")
 file(GLOB PRIVATE_HEADERS "./private/*.h")
@@ -31,6 +32,9 @@ target_compile_definitions(${MODULE_NAME} PRIVATE
     QT_BUILD_CORE_LIB
     # ENABLE_DEBUG_FEATURES    #
 )
+
+# Define UNICODE and _UNICODE for all targets
+add_compile_definitions(UNICODE _UNICODE)
 
 # Add the subdirectory for the Qt modules
 # This is where the Qt modules will be located
