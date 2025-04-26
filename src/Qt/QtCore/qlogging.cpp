@@ -1245,45 +1245,46 @@ void QMessagePattern::setPattern(const QString &pattern)
     bool inIf = false;
     QString error;
 
-    for (int i = 0; i < lexemes.size(); ++i) {
-        const QString lexeme = lexemes.at(i);
-        if (lexeme.startsWith("%{"_L1) && lexeme.endsWith(u'}')) {
+    for (int i = 0; i < lexemes.size(); ++i)
+    {
+        const QString sLexeme = lexemes.at(i);
+        if (sLexeme.startsWith("%{"_L1) && sLexeme.endsWith(u'}')) {
             // placeholder
-            if (lexeme == QLatin1StringView(typeTokenC)) {
+            if (sLexeme == QLatin1StringView(typeTokenC)) {
                 tokens[i] = typeTokenC;
-            } else if (lexeme == QLatin1StringView(categoryTokenC))
+            } else if (sLexeme == QLatin1StringView(categoryTokenC))
                 tokens[i] = categoryTokenC;
-            else if (lexeme == QLatin1StringView(messageTokenC))
+            else if (sLexeme == QLatin1StringView(messageTokenC))
                 tokens[i] = messageTokenC;
-            else if (lexeme == QLatin1StringView(fileTokenC))
+            else if (sLexeme == QLatin1StringView(fileTokenC))
                 tokens[i] = fileTokenC;
-            else if (lexeme == QLatin1StringView(lineTokenC))
+            else if (sLexeme == QLatin1StringView(lineTokenC))
                 tokens[i] = lineTokenC;
-            else if (lexeme == QLatin1StringView(functionTokenC))
+            else if (sLexeme == QLatin1StringView(functionTokenC))
                 tokens[i] = functionTokenC;
-            else if (lexeme == QLatin1StringView(pidTokenC))
+            else if (sLexeme == QLatin1StringView(pidTokenC))
                 tokens[i] = pidTokenC;
-            else if (lexeme == QLatin1StringView(appnameTokenC))
+            else if (sLexeme == QLatin1StringView(appnameTokenC))
                 tokens[i] = appnameTokenC;
-            else if (lexeme == QLatin1StringView(threadidTokenC))
+            else if (sLexeme == QLatin1StringView(threadidTokenC))
                 tokens[i] = threadidTokenC;
-            else if (lexeme == QLatin1StringView(qthreadptrTokenC))
+            else if (sLexeme == QLatin1StringView(qthreadptrTokenC))
                 tokens[i] = qthreadptrTokenC;
-            else if (lexeme.startsWith(QLatin1StringView(timeTokenC))) {
+            else if (sLexeme.startsWith(QLatin1StringView(timeTokenC))) {
                 tokens[i] = timeTokenC;
-                qsizetype spaceIdx = lexeme.indexOf(QChar::fromLatin1(' '));
+                qsizetype spaceIdx = sLexeme.indexOf(QChar::fromLatin1(' '));
                 if (spaceIdx > 0)
-                    timeArgs.append(lexeme.mid(spaceIdx + 1, lexeme.size() - spaceIdx - 2));
+                    timeArgs.append(sLexeme.mid(spaceIdx + 1, sLexeme.size() - spaceIdx - 2));
                 else
                     timeArgs.append(QString());
-            } else if (lexeme.startsWith(QLatin1StringView(backtraceTokenC))) {
+            } else if (sLexeme.startsWith(QLatin1StringView(backtraceTokenC))) {
 #ifdef QLOGGING_HAVE_BACKTRACE
                 tokens[i] = backtraceTokenC;
                 QString backtraceSeparator = QStringLiteral("|");
                 int backtraceDepth = 5;
                 static const QRegularExpression depthRx(QStringLiteral(" depth=(?|\"([^\"]*)\"|([^ }]*))"));
                 static const QRegularExpression separatorRx(QStringLiteral(" separator=(?|\"([^\"]*)\"|([^ }]*))"));
-                QRegularExpressionMatch m = depthRx.match(lexeme);
+                QRegularExpressionMatch m = depthRx.match(sLexeme);
                 if (m.hasMatch()) {
                     int depth = m.capturedView(1).toInt();
                     if (depth <= 0)
@@ -1291,7 +1292,7 @@ void QMessagePattern::setPattern(const QString &pattern)
                     else
                         backtraceDepth = depth;
                 }
-                m = separatorRx.match(lexeme);
+                m = separatorRx.match(sLexeme);
                 if (m.hasMatch())
                     backtraceSeparator = m.captured(1);
                 BacktraceParams backtraceParams;
@@ -1306,7 +1307,7 @@ void QMessagePattern::setPattern(const QString &pattern)
             }
 
 #define IF_TOKEN(LEVEL) \
-            else if (lexeme == QLatin1StringView(LEVEL)) { \
+            else if (sLexeme == QLatin1StringView(LEVEL)) { \
                 if (inIf) \
                     nestedIfError = true; \
                 tokens[i] = LEVEL; \
@@ -1319,18 +1320,18 @@ void QMessagePattern::setPattern(const QString &pattern)
             IF_TOKEN(ifCriticalTokenC)
             IF_TOKEN(ifFatalTokenC)
 #undef IF_TOKEN
-            else if (lexeme == QLatin1StringView(endifTokenC)) {
+            else if (sLexeme == QLatin1StringView(endifTokenC)) {
                 tokens[i] = endifTokenC;
                 if (!inIf && !nestedIfError)
                     error += "QT_MESSAGE_PATTERN: %{endif} without an %{if-*}\n"_L1;
                 inIf = false;
             } else {
                 tokens[i] = emptyTokenC;
-                error += "QT_MESSAGE_PATTERN: Unknown placeholder "_L1 + lexeme + '\n'_L1;
+                error += "QT_MESSAGE_PATTERN: Unknown placeholder "_L1 + sLexeme + '\n'_L1;
             }
         } else {
             using UP = std::unique_ptr<char[]>;
-            tokens[i] = literalsVar.emplace_back(UP(qstrdup(lexeme.toLatin1().constData()))).get();
+            tokens[i] = literalsVar.emplace_back(UP(qstrdup(sLexeme.toLatin1().constData()))).get();
         }
     }
     if (nestedIfError)
