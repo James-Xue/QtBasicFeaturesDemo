@@ -2,7 +2,12 @@
 set(MODULE_NAME QtCore)
 
 # Collect source and header files
-file(GLOB SOURCES "*.cpp")
+#file(GLOB SOURCES "*.cpp")
+file(GLOB SOURCES
+ "qstring.cpp"
+ "qfile.cpp"
+ "qassert.cpp"
+)
 file(GLOB HEADERS "*.h")
 file(GLOB PRIVATE_HEADERS "./private/*.h")
 

@@ -43,7 +43,7 @@ QFilePrivate::~QFilePrivate()
 }
 
 bool
-QFilePrivate::openExternalFile(QIODevice::OpenMode flags, int fd, QFile::FileHandleFlags handleFlags)
+QFilePrivate::openExternalFile(QIODevice::OpenMode flags, int fd, QFile::FileHandleFlags eHandleFlags)
 {
 #ifdef QT_NO_FSFILEENGINE
     Q_UNUSED(flags);
@@ -53,12 +53,12 @@ QFilePrivate::openExternalFile(QIODevice::OpenMode flags, int fd, QFile::FileHan
     auto fs = std::make_unique<QFSFileEngine>();
     auto fe = fs.get();
     fileEngine = std::move(fs);
-    return fe->open(flags, fd, handleFlags);
+    return fe->open(flags, fd, eHandleFlags);
 #endif
 }
 
 bool
-QFilePrivate::openExternalFile(QIODevice::OpenMode flags, FILE *fh, QFile::FileHandleFlags handleFlags)
+QFilePrivate::openExternalFile(QIODevice::OpenMode flags, FILE *fh, QFile::FileHandleFlags eHandleFlags)
 {
 #ifdef QT_NO_FSFILEENGINE
     Q_UNUSED(flags);
@@ -68,7 +68,7 @@ QFilePrivate::openExternalFile(QIODevice::OpenMode flags, FILE *fh, QFile::FileH
     auto fs = std::make_unique<QFSFileEngine>();
     auto fe = fs.get();
     fileEngine = std::move(fs);
-    return fe->open(flags, fh, handleFlags);
+    return fe->open(flags, fh, eHandleFlags);
 #endif
 }
 
