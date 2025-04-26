@@ -4130,7 +4130,9 @@ void doActivate(QObject *sender, int signal_index, void **argv)
                     Q_TRACE_SCOPE(QMetaObject_activate_slot_functor, c->slotObj);
                     obj->call(receiver, argv);
                 }
-            } else if (c->callFunction && c->method_offset <= receiver->metaObject()->methodOffset()) {
+            }
+            else if (c->callFunction && c->method_offset <= receiver->metaObject()->methodOffset())
+            {
                 //we compare the vtable to make sure we are not in the destructor of the object.
                 const int method_relative = c->method_relative;
                 const auto callFunction = c->callFunction;
@@ -4148,13 +4150,24 @@ void doActivate(QObject *sender, int signal_index, void **argv)
                     callFunction(receiver, QMetaObject::InvokeMetaMethod, method_relative, argv);
                 }
 
-                if (callbacks_enabled && signal_spy_set->slot_end_callback != nullptr)
-                    signal_spy_set->slot_end_callback(receiver, methodIndex);
-            } else {
+                if constexpr (true == callbacks_enabled)
+                {
+                    if (signal_spy_set->slot_end_callback != nullptr)
+                    {
+                        signal_spy_set->slot_end_callback(receiver, methodIndex);
+                    }
+                }
+            }
+            else
+            {
                 const int method = c->method_relative + c->method_offset;
 
-                if (callbacks_enabled && signal_spy_set->slot_begin_callback != nullptr) {
-                    signal_spy_set->slot_begin_callback(receiver, method, argv);
+                if constexpr (true == callbacks_enabled)
+                {
+                    if (signal_spy_set->slot_begin_callback != nullptr)
+                    {
+                        signal_spy_set->slot_begin_callback(receiver, method, argv);
+                    }
                 }
 
                 {
@@ -4162,8 +4175,13 @@ void doActivate(QObject *sender, int signal_index, void **argv)
                     QMetaObject::metacall(receiver, QMetaObject::InvokeMetaMethod, method, argv);
                 }
 
-                if (callbacks_enabled && signal_spy_set->slot_end_callback != nullptr)
-                    signal_spy_set->slot_end_callback(receiver, method);
+                if constexpr (true == callbacks_enabled)
+                {
+                    if (signal_spy_set->slot_end_callback != nullptr)
+                    {
+                        signal_spy_set->slot_end_callback(receiver, method);
+                    }
+                }
             }
         } while ((c = c->nextConnectionList.loadRelaxed()) != nullptr && c->id <= highestConnectionId);
 
@@ -4174,11 +4192,18 @@ void doActivate(QObject *sender, int signal_index, void **argv)
         if (connections->currentConnectionId.loadRelaxed() == 0)
             senderDeleted = true;
     }
-    if (!senderDeleted) {
+
+    if (!senderDeleted)
+    {
         sp->m_connections.loadAcquire()->cleanOrphanedConnections(sender);
 
-        if (callbacks_enabled && signal_spy_set->signal_end_callback != nullptr)
-            signal_spy_set->signal_end_callback(sender, signal_index);
+        if constexpr (true == callbacks_enabled)
+        {
+            if (signal_spy_set->signal_end_callback != nullptr)
+            {
+                signal_spy_set->signal_end_callback(sender, signal_index);
+            }
+        }
     }
 }
 
