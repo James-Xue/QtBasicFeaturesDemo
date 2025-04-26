@@ -2,12 +2,11 @@
 // Copyright (C) 2017 Intel Corporation.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qplatformdefs.h"
+#include "win32-msvc-qplatformdefs.h"
 #include "qdebug.h"
 #include "qfile.h"
-#include "qfsfileengine_p.h"
+#include <private/qfsfileengine_p.h>
 #include "qtemporaryfile.h"
-#include "qtemporaryfile_p.h"
 #include "qlist.h"
 #include "qfileinfo.h"
 #include <private/qiodevice_p.h>

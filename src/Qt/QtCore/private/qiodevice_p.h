@@ -20,7 +20,7 @@
 #include "QtCore/qobjectdefs.h"
 #include "QtCore/qstring.h"
 #include "QtCore/qvarlengtharray.h"
-#include "private/qringbuffer_p.h"
+#include <private/qringbuffer_p.h>
 #ifndef QT_NO_QOBJECT
 #include "private/qobject_p.h"
 #endif
