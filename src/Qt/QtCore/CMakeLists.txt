@@ -11,6 +11,7 @@ file(GLOB SOURCES
  "qlogging.cpp"
  "qbytearray.cpp"
  "qarraydata.cpp"
+ "qbytearraymatcher.cpp"
 )
 file(GLOB HEADERS "*.h")
 file(GLOB PRIVATE_HEADERS "./private/*.h")
