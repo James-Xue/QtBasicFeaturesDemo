@@ -6,8 +6,10 @@ set(MODULE_NAME QtCore)
 file(GLOB SOURCES
  "qstring.cpp"
  "qfile.cpp"
+ #"moc_qfile.cpp"
  "qassert.cpp"
  "qlogging.cpp"
+ "qbytearray.cpp"
 )
 file(GLOB HEADERS "*.h")
 file(GLOB PRIVATE_HEADERS "./private/*.h")
