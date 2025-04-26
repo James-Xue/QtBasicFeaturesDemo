@@ -231,7 +231,7 @@ QObjectList QObjectPrivate::receiverList(const char *signal) const
 {
     QObjectList returnValue;
     int signal_index = signalIndex(signal);
-    ConnectionData *cd = connections.loadAcquire();
+    ConnectionData *cd = m_connections.loadAcquire();
     if (signal_index < 0 || !cd)
         return returnValue;
     if (signal_index < cd->signalVectorCount()) {
@@ -253,11 +253,11 @@ QObjectList QObjectPrivate::receiverList(const char *signal) const
 */
 inline void QObjectPrivate::ensureConnectionData()
 {
-    if (connections.loadRelaxed())
+    if (m_connections.loadRelaxed())
         return;
     ConnectionData *cd = new ConnectionData;
     cd->ref.ref();
-    connections.storeRelease(cd);
+    m_connections.storeRelease(cd);
 }
 
 /*!
@@ -274,7 +274,7 @@ inline void QObjectPrivate::addConnection(int signal, Connection *c)
 {
     Q_ASSERT(c->sender == q_ptr);
     ensureConnectionData();
-    ConnectionData *cd = connections.loadRelaxed();
+    ConnectionData *cd = m_connections.loadRelaxed();
     cd->resizeSignalVector(signal + 1);
 
     ConnectionList &connectionList = cd->connectionsForSignal(signal);
@@ -291,7 +291,7 @@ inline void QObjectPrivate::addConnection(int signal, Connection *c)
     QObjectPrivate *rd = QObjectPrivate::get(c->receiver.loadRelaxed());
     rd->ensureConnectionData();
 
-    c->prev = &(rd->connections.loadRelaxed()->senders);
+    c->prev = &(rd->m_connections.loadRelaxed()->senders);
     c->next = *c->prev;
     *c->prev = c;
     if (c->next)
@@ -422,7 +422,7 @@ bool QObjectPrivate::isSignalConnected(uint signalIndex, bool checkDeclarative) 
     if (checkDeclarative && isDeclarativeSignalConnected(signalIndex))
         return true;
 
-    ConnectionData *cd = connections.loadAcquire();
+    ConnectionData *cd = m_connections.loadAcquire();
     if (!cd)
         return false;
     SignalVector *signalVector = cd->signalVector.loadRelaxed();
@@ -445,7 +445,7 @@ bool QObjectPrivate::isSignalConnected(uint signalIndex, bool checkDeclarative) 
 
 bool QObjectPrivate::maybeSignalConnected(uint signalIndex) const
 {
-    ConnectionData *cd = connections.loadAcquire();
+    ConnectionData *cd = m_connections.loadAcquire();
     if (!cd)
         return false;
     SignalVector *signalVector = cd->signalVector.loadRelaxed();
@@ -601,10 +601,10 @@ QMetaCallEvent::QMetaCallEvent(QtPrivate::SlotObjUniquePtr slotO,
 QMetaCallEvent::~QMetaCallEvent()
 {
     if (d.nargs_) {
-        QMetaType *t = types();
+        QMetaType *pQMetaType = types();
         for (int i = 0; i < d.nargs_; ++i) {
-            if (t[i].isValid() && d.args_[i])
-                t[i].destroy(d.args_[i]);
+            if (pQMetaType[i].isValid() && d.args_[i])
+                pQMetaType[i].destroy(d.args_[i]);
         }
         if (reinterpret_cast<void *>(d.args_) != reinterpret_cast<void *>(prealloc_))
             free(d.args_);
@@ -1043,7 +1043,7 @@ QObject::~QObject()
     if (!d->isDeletingChildren && d->declarativeData && QAbstractDeclarativeData::destroyed)
         QAbstractDeclarativeData::destroyed(d->declarativeData, this);
 
-    QObjectPrivate::ConnectionData *cd = d->connections.loadAcquire();
+    QObjectPrivate::ConnectionData *cd = d->m_connections.loadAcquire();
     if (cd) {
         if (cd->currentSender) {
             cd->currentSender->receiverDeleted();
@@ -1091,7 +1091,7 @@ QObject::~QObject()
                 continue;
             }
 
-            QObjectPrivate::ConnectionData *senderData = sender->d_func()->connections.loadRelaxed();
+            QObjectPrivate::ConnectionData *senderData = sender->d_func()->m_connections.loadRelaxed();
             Q_ASSERT(senderData);
 
             QtPrivate::QSlotObjectBase *slotObj = nullptr;
@@ -1132,7 +1132,7 @@ QObject::~QObject()
     }
     if (cd && !cd->ref.deref())
         delete cd;
-    d->connections.storeRelaxed(nullptr);
+    d->m_connections.storeRelaxed(nullptr);
 
     if (!d->children.isEmpty())
         d->deleteChildren();
@@ -1407,11 +1407,11 @@ bool QObject::event(QEvent *e)
         {
             QAbstractMetaCallEvent *mce = static_cast<QAbstractMetaCallEvent*>(e);
 
-            QObjectPrivate::ConnectionData *connections = d_func()->connections.loadAcquire();
+            QObjectPrivate::ConnectionData *connections = d_func()->m_connections.loadAcquire();
             if (!connections) {
                 QMutexLocker locker(signalSlotLock(this));
                 d_func()->ensureConnectionData();
-                connections = d_func()->connections.loadRelaxed();
+                connections = d_func()->m_connections.loadRelaxed();
             }
             QObjectPrivate::Sender sender(this, const_cast<QObject*>(mce->sender()), mce->signalId(), connections);
 
@@ -1755,7 +1755,7 @@ void QObjectPrivate::setThreadData_helper(QThreadData *currentData, QThreadData 
     }
 
     // the current emitting thread shouldn't restore currentSender after calling moveToThread()
-    ConnectionData *cd = connections.loadAcquire();
+    ConnectionData *cd = m_connections.loadAcquire();
     if (cd) {
         if (cd->currentSender) {
             cd->currentSender->receiverDeleted();
@@ -2650,7 +2650,7 @@ QObject *QObject::sender() const
     Q_D(const QObject);
 
     QMutexLocker locker(signalSlotLock(this));
-    QObjectPrivate::ConnectionData *cd = d->connections.loadRelaxed();
+    QObjectPrivate::ConnectionData *cd = d->m_connections.loadRelaxed();
     if (!cd || !cd->currentSender)
         return nullptr;
 
@@ -2692,7 +2692,7 @@ int QObject::senderSignalIndex() const
     Q_D(const QObject);
 
     QMutexLocker locker(signalSlotLock(this));
-    QObjectPrivate::ConnectionData *cd = d->connections.loadRelaxed();
+    QObjectPrivate::ConnectionData *cd = d->m_connections.loadRelaxed();
     if (!cd || !cd->currentSender)
         return -1;
 
@@ -2756,7 +2756,7 @@ int QObject::receivers(const char *signal) const
         }
 
         QMutexLocker locker(signalSlotLock(this));
-        QObjectPrivate::ConnectionData *cd = d->connections.loadRelaxed();
+        QObjectPrivate::ConnectionData *cd = d->m_connections.loadRelaxed();
         if (cd && signal_index < cd->signalVectorCount()) {
             const QObjectPrivate::Connection *c = cd->signalVector.loadRelaxed()->at(signal_index).first.loadRelaxed();
             while (c) {
@@ -3590,7 +3590,7 @@ QObjectPrivate::Connection *QMetaObjectPrivate::connect(const QObject *sender,
     QOrderedMutexLocker locker(signalSlotLock(sender),
                                signalSlotLock(receiver));
 
-    QObjectPrivate::ConnectionData *scd  = QObjectPrivate::get(s)->connections.loadRelaxed();
+    QObjectPrivate::ConnectionData *scd  = QObjectPrivate::get(s)->m_connections.loadRelaxed();
     if (type & Qt::UniqueConnection && scd) {
         if (scd->signalVectorCount() > signal_index) {
             const QObjectPrivate::Connection *c2 = scd->signalVector.loadRelaxed()->at(signal_index).first.loadRelaxed();
@@ -3723,7 +3723,7 @@ bool QMetaObjectPrivate::disconnect(const QObject *sender,
     QBasicMutex *senderMutex = signalSlotLock(sender);
     QMutexLocker locker(senderMutex);
 
-    QObjectPrivate::ConnectionData *scd = QObjectPrivate::get(s)->connections.loadRelaxed();
+    QObjectPrivate::ConnectionData *scd = QObjectPrivate::get(s)->m_connections.loadRelaxed();
     if (!scd)
         return false;
 
@@ -4012,22 +4012,38 @@ void doActivate(QObject *sender, int signal_index, void **argv)
     if (!argv)
         argv = empty_argv;
 
-    if (!sp->maybeSignalConnected(signal_index)) {
+    if (!sp->maybeSignalConnected(signal_index))
+    {
         // The possible declarative connection is done, and nothing else is connected
-        if (callbacks_enabled && signal_spy_set->signal_begin_callback != nullptr)
-            signal_spy_set->signal_begin_callback(sender, signal_index, argv);
-        if (callbacks_enabled && signal_spy_set->signal_end_callback != nullptr)
-            signal_spy_set->signal_end_callback(sender, signal_index);
+        if constexpr (true == callbacks_enabled)
+        {
+            if (nullptr != signal_spy_set->signal_begin_callback)
+            {
+                signal_spy_set->signal_begin_callback(sender, signal_index, argv);
+            }
+        }
+        if constexpr (true == callbacks_enabled)
+        {
+            if (nullptr != signal_spy_set->signal_end_callback)
+            {
+                signal_spy_set->signal_end_callback(sender, signal_index);
+            }
+        }
         return;
     }
 
-    if (callbacks_enabled && signal_spy_set->signal_begin_callback != nullptr)
-        signal_spy_set->signal_begin_callback(sender, signal_index, argv);
+    if constexpr (true == callbacks_enabled)
+    {
+        if (nullptr != signal_spy_set->signal_begin_callback)
+        {
+            signal_spy_set->signal_begin_callback(sender, signal_index, argv);
+        }
+    }
 
     bool senderDeleted = false;
     {
-    Q_ASSERT(sp->connections.loadRelaxed());
-    QObjectPrivate::ConnectionDataPointer connections(sp->connections.loadAcquire());
+    Q_ASSERT(sp->m_connections.loadRelaxed());
+    QObjectPrivate::ConnectionDataPointer connections(sp->m_connections.loadAcquire());
     QObjectPrivate::SignalVector *signalVector = connections->signalVector.loadRelaxed();
 
     const QObjectPrivate::ConnectionList *list;
@@ -4105,7 +4121,7 @@ void doActivate(QObject *sender, int signal_index, void **argv)
 
             QObjectPrivate::Sender senderData(
                     receiverInSameThread ? receiver : nullptr, sender, signal_index,
-                    receiverInSameThread ? QObjectPrivate::get(receiver)->connections.loadAcquire() : nullptr);
+                    receiverInSameThread ? QObjectPrivate::get(receiver)->m_connections.loadAcquire() : nullptr);
 
             if (c->isSlotObject) {
                 SlotObjectGuard obj{c->slotObj};
@@ -4154,7 +4170,7 @@ void doActivate(QObject *sender, int signal_index, void **argv)
             senderDeleted = true;
     }
     if (!senderDeleted) {
-        sp->connections.loadAcquire()->cleanOrphanedConnections(sender);
+        sp->m_connections.loadAcquire()->cleanOrphanedConnections(sender);
 
         if (callbacks_enabled && signal_spy_set->signal_end_callback != nullptr)
             signal_spy_set->signal_end_callback(sender, signal_index);
@@ -4414,7 +4430,7 @@ void QObject::dumpObjectInfo() const
     // first, look for connections where this object is the sender
     qDebug("  SIGNALS OUT");
 
-    QObjectPrivate::ConnectionData *cd = d->connections.loadRelaxed();
+    QObjectPrivate::ConnectionData *cd = d->m_connections.loadRelaxed();
     if (cd && cd->signalVectorCount() > 0) {
         QObjectPrivate::SignalVector *signalVector = cd->signalVector.loadRelaxed();
         for (int signal_index = 0; signal_index < signalVector->count(); ++signal_index) {
@@ -5265,7 +5281,7 @@ QMetaObject::Connection QObjectPrivate::connectImpl(const QObject *sender, int s
                                signalSlotLock(receiver));
 
     if (type & Qt::UniqueConnection && slot) {
-        QObjectPrivate::ConnectionData *connections = QObjectPrivate::get(s)->connections.loadRelaxed();
+        QObjectPrivate::ConnectionData *connections = QObjectPrivate::get(s)->m_connections.loadRelaxed();
         if (connections && connections->signalVectorCount() > signal_index) {
             const QObjectPrivate::Connection *c2 = connections->signalVector.loadRelaxed()->at(signal_index).first.loadRelaxed();
 
@@ -5521,7 +5537,7 @@ inline bool QObjectPrivate::removeConnection(QObjectPrivate::Connection *c)
         if (!receiver)
             return false;
 
-        connections = QObjectPrivate::get(c->sender)->connections.loadRelaxed();
+        connections = QObjectPrivate::get(c->sender)->m_connections.loadRelaxed();
         Q_ASSERT(connections);
         connections->removeConnection(c);
 
@@ -5548,10 +5564,10 @@ inline bool QObjectPrivate::removeConnection(QObjectPrivate::Connection *c)
 QtPrivate::QPropertyAdaptorSlotObject *
 QObjectPrivate::getPropertyAdaptorSlotObject(const QMetaProperty &property)
 {
-    if (auto conns = connections.loadAcquire()) {
+    if (auto conns = m_connections.loadAcquire()) {
         Q_Q(QObject);
-        const QMetaObject *metaObject = q->metaObject();
-        int signal_index = methodIndexToSignalIndex(&metaObject, property.notifySignalIndex());
+        const QMetaObject *pMetaObject = q->metaObject();
+        int signal_index = methodIndexToSignalIndex(&pMetaObject, property.notifySignalIndex());
         if (signal_index >= conns->signalVectorCount())
             return nullptr;
         const auto &connectionList = conns->connectionsForSignal(signal_index);

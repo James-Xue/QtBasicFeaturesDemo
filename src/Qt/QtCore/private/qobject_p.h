@@ -203,7 +203,7 @@ public:
     QAtomicPointer<QThreadData> threadData; // id of the thread that owns the object
 
     using ConnectionDataPointer = QExplicitlySharedDataPointer<ConnectionData>;
-    QAtomicPointer<ConnectionData> connections;
+    QAtomicPointer<ConnectionData> m_connections;
 
     union {
         QObject *currentChildBeingDeleted; // should only be used when QObjectData::isDeletingChildren is set

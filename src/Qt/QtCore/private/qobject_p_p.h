@@ -235,7 +235,7 @@ struct QObjectPrivate::Sender
     ~Sender()
     {
         if (receiver)
-            receiver->d_func()->connections.loadAcquire()->currentSender = previous;
+            receiver->d_func()->m_connections.loadAcquire()->currentSender = previous;
     }
     void receiverDeleted()
     {

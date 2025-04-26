@@ -303,12 +303,12 @@ protected:
     {
         QPropertyBindingSourceLocation location;
 
-        struct
+        struct MyExtraDataAndCallback
         {
             std::byte
                 declarativeExtraData[sizeof(QPropertyBindingSourceLocation) - sizeof(DeclarativeErrorCallback)];
             DeclarativeErrorCallback errorCallBack;
-        };
+        } m_structNameless;
     };
 
 private:
@@ -835,7 +835,7 @@ inline bool QPropertyBindingPrivate::evaluateRecursive_inline(PendingBindingObse
     if (updating) {
         m_error = QPropertyBindingError(QPropertyBindingError::BindingLoop);
         if (isQQmlPropertyBinding)
-            errorCallBack(this);
+            m_structNameless.errorCallBack(this);
         return false;
     }
 
