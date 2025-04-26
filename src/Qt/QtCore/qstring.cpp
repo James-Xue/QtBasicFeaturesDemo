@@ -661,8 +661,10 @@ qsizetype QtPrivate::qustrlen(const char16_t *str) noexcept
     return qustrlen_sse2(str);
 #endif
 
-    if (sizeof(wchar_t) == sizeof(char16_t))
+    if constexpr (sizeof(wchar_t) == sizeof(char16_t))
+    {
         return wcslen(reinterpret_cast<const wchar_t *>(str));
+    }
 
     qsizetype result = 0;
     while (*str++)
@@ -927,24 +929,29 @@ Q_CORE_EXPORT void qt_from_latin1(char16_t *dst, const char *str, size_t size) n
 #if defined(__SSE2__)
     // we're going to read str[offset..offset+15] (16 bytes)
     const __m128i nullMask = _mm_setzero_si128();
-    auto processOneChunk = [=](qptrdiff offset) {
-        const __m128i chunk = _mm_loadu_si128((const __m128i*)(str + offset)); // load
-        if constexpr (UseAvx2) {
-            // zero extend to an YMM register
-            const __m256i extended = _mm256_cvtepu8_epi16(chunk);
+    auto processOneChunk =
+        [=] (qptrdiff offset)
+        {
+            const __m128i chunk = _mm_loadu_si128((const __m128i*)(str + offset)); // load
+            if constexpr (UseAvx2)
+            {
+                // zero extend to an YMM register
+                const __m256i extended = _mm256_cvtepu8_epi16(chunk);
 
-            // store
-            _mm256_storeu_si256((__m256i*)(dst + offset), extended);
-        } else {
-            // unpack the first 8 bytes, padding with zeros
-            const __m128i firstHalf = _mm_unpacklo_epi8(chunk, nullMask);
-            _mm_storeu_si128((__m128i*)(dst + offset), firstHalf); // store
+                // store
+                _mm256_storeu_si256((__m256i*)(dst + offset), extended);
+            }
+            else
+            {
+                // unpack the first 8 bytes, padding with zeros
+                const __m128i firstHalf = _mm_unpacklo_epi8(chunk, nullMask);
+                _mm_storeu_si128((__m128i*)(dst + offset), firstHalf); // store
 
-            // unpack the last 8 bytes, padding with zeros
-            const __m128i secondHalf = _mm_unpackhi_epi8 (chunk, nullMask);
-            _mm_storeu_si128((__m128i*)(dst + offset + 8), secondHalf); // store
-        }
-    };
+                // unpack the last 8 bytes, padding with zeros
+                const __m128i secondHalf = _mm_unpackhi_epi8 (chunk, nullMask);
+                _mm_storeu_si128((__m128i*)(dst + offset + 8), secondHalf); // store
+            }
+        };
 
     const char *e = str + size;
     if (size >= sizeof(__m128i)) {
@@ -8763,14 +8770,14 @@ QString QString::arg(const QString &a, int fieldWidth, QChar fillChar) const
 */
 QString QString::arg(QStringView a, int fieldWidth, QChar fillChar) const
 {
-    ArgEscapeData d = findArgEscapes(*this);
+    ArgEscapeData oneData = findArgEscapes(*this);
 
-    if (Q_UNLIKELY(d.occurrences == 0)) {
+    if (Q_UNLIKELY(oneData.occurrences == 0)) {
         qWarning("QString::arg: Argument missing: %ls, %ls", qUtf16Printable(*this),
                   qUtf16Printable(a.toString()));
         return *this;
     }
-    return replaceArgEscapes(*this, d, fieldWidth, a, a, fillChar);
+    return replaceArgEscapes(*this, oneData, fieldWidth, a, a, fillChar);
 }
 
 /*!
@@ -8892,9 +8899,9 @@ QString QString::arg(QLatin1StringView a, int fieldWidth, QChar fillChar) const
 */
 QString QString::arg(qlonglong a, int fieldWidth, int base, QChar fillChar) const
 {
-    ArgEscapeData d = findArgEscapes(*this);
+    ArgEscapeData oneData = findArgEscapes(*this);
 
-    if (d.occurrences == 0) {
+    if (oneData.occurrences == 0) {
         qWarning() << "QString::arg: Argument missing:" << *this << ',' << a;
         return *this;
     }
@@ -8905,13 +8912,13 @@ QString QString::arg(qlonglong a, int fieldWidth, int base, QChar fillChar) cons
         flags = QLocaleData::ZeroPadded;
 
     QString arg;
-    if (d.occurrences > d.locale_occurrences) {
+    if (oneData.occurrences > oneData.locale_occurrences) {
         arg = QLocaleData::c()->longLongToString(a, -1, base, fieldWidth, flags);
         Q_ASSERT(fillChar != u'0' || fieldWidth <= arg.size());
     }
 
     QString localeArg;
-    if (d.locale_occurrences > 0) {
+    if (oneData.locale_occurrences > 0) {
         QLocale locale;
         if (!(locale.numberOptions() & QLocale::OmitGroupSeparator))
             flags |= QLocaleData::GroupDigits;
@@ -8919,7 +8926,7 @@ QString QString::arg(qlonglong a, int fieldWidth, int base, QChar fillChar) cons
         Q_ASSERT(fillChar != u'0' || fieldWidth <= localeArg.size());
     }
 
-    return replaceArgEscapes(*this, d, fieldWidth, arg, localeArg, fillChar);
+    return replaceArgEscapes(*this, oneData, fieldWidth, arg, localeArg, fillChar);
 }
 
 /*!
@@ -8938,9 +8945,10 @@ QString QString::arg(qlonglong a, int fieldWidth, int base, QChar fillChar) cons
 */
 QString QString::arg(qulonglong a, int fieldWidth, int base, QChar fillChar) const
 {
-    ArgEscapeData d = findArgEscapes(*this);
+    ArgEscapeData oneData = findArgEscapes(*this);
 
-    if (d.occurrences == 0) {
+    if (oneData.occurrences == 0)
+    {
         qWarning() << "QString::arg: Argument missing:" << *this << ',' << a;
         return *this;
     }
@@ -8951,13 +8959,13 @@ QString QString::arg(qulonglong a, int fieldWidth, int base, QChar fillChar) con
         flags = QLocaleData::ZeroPadded;
 
     QString arg;
-    if (d.occurrences > d.locale_occurrences) {
+    if (oneData.occurrences > oneData.locale_occurrences) {
         arg = QLocaleData::c()->unsLongLongToString(a, -1, base, fieldWidth, flags);
         Q_ASSERT(fillChar != u'0' || fieldWidth <= arg.size());
     }
 
     QString localeArg;
-    if (d.locale_occurrences > 0) {
+    if (oneData.locale_occurrences > 0) {
         QLocale locale;
         if (!(locale.numberOptions() & QLocale::OmitGroupSeparator))
             flags |= QLocaleData::GroupDigits;
@@ -8965,7 +8973,7 @@ QString QString::arg(qulonglong a, int fieldWidth, int base, QChar fillChar) con
         Q_ASSERT(fillChar != u'0' || fieldWidth <= localeArg.size());
     }
 
-    return replaceArgEscapes(*this, d, fieldWidth, arg, localeArg, fillChar);
+    return replaceArgEscapes(*this, oneData, fieldWidth, arg, localeArg, fillChar);
 }
 
 /*!
@@ -9036,9 +9044,10 @@ QString QString::arg(char a, int fieldWidth, QChar fillChar) const
 */
 QString QString::arg(double a, int fieldWidth, char format, int precision, QChar fillChar) const
 {
-    ArgEscapeData d = findArgEscapes(*this);
+    ArgEscapeData oneData = findArgEscapes(*this);
 
-    if (d.occurrences == 0) {
+    if (oneData.occurrences == 0)
+    {
         qWarning("QString::arg: Argument missing: %s, %g", toLocal8Bit().data(), a);
         return *this;
     }
@@ -9070,7 +9079,7 @@ QString QString::arg(double a, int fieldWidth, char format, int precision, QChar
     }
 
     QString arg;
-    if (d.occurrences > d.locale_occurrences) {
+    if (oneData.occurrences > oneData.locale_occurrences) {
         arg = QLocaleData::c()->doubleToString(a, precision, form, fieldWidth,
                                                flags | QLocaleData::ZeroPadExponent);
         Q_ASSERT(fillChar != u'0' || !qt_is_finite(a)
@@ -9078,7 +9087,7 @@ QString QString::arg(double a, int fieldWidth, char format, int precision, QChar
     }
 
     QString localeArg;
-    if (d.locale_occurrences > 0) {
+    if (oneData.locale_occurrences > 0) {
         QLocale locale;
 
         const QLocale::NumberOptions numberOptions = locale.numberOptions();
@@ -9093,7 +9102,7 @@ QString QString::arg(double a, int fieldWidth, char format, int precision, QChar
                  || fieldWidth <= localeArg.size());
     }
 
-    return replaceArgEscapes(*this, d, fieldWidth, arg, localeArg, fillChar);
+    return replaceArgEscapes(*this, oneData, fieldWidth, arg, localeArg, fillChar);
 }
 
 static inline char16_t to_unicode(const QChar c) { return c.unicode(); }
