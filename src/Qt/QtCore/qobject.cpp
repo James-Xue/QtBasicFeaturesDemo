@@ -4135,8 +4135,13 @@ void doActivate(QObject *sender, int signal_index, void **argv)
                 const int method_relative = c->method_relative;
                 const auto callFunction = c->callFunction;
                 const int methodIndex = (Q_HAS_TRACEPOINTS || callbacks_enabled) ? c->method() : 0;
-                if (callbacks_enabled && signal_spy_set->slot_begin_callback != nullptr)
-                    signal_spy_set->slot_begin_callback(receiver, methodIndex, argv);
+                if constexpr (true == callbacks_enabled)
+                {
+                    if (signal_spy_set->slot_begin_callback != nullptr)
+                    {
+                        signal_spy_set->slot_begin_callback(receiver, methodIndex, argv);
+                    }
+                }
 
                 {
                     Q_TRACE_SCOPE(QMetaObject_activate_slot, receiver, methodIndex);
