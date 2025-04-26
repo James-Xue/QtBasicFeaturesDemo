@@ -157,7 +157,7 @@
         */
         template <typename X> QArrayDataPointer<X> reinterpreted() &&
         {
-            if (sizeof(T) != sizeof(X))
+            if constexpr (sizeof(T) != sizeof(X))
             {
                 Q_ASSERT(!d->isShared());
                 d->alloc = d->alloc * sizeof(T) / sizeof(X);

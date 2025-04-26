@@ -10,11 +10,11 @@
 #include "qtemporaryfile_p.h"
 #include "qlist.h"
 #include "qfileinfo.h"
-#include "private/qiodevice_p.h"
-#include "private/qfile_p.h"
-#include "private/qfilesystemengine_p.h"
-#include "private/qsystemerror_p.h"
-#include "private/qtemporaryfile_p.h"
+#include <private/qiodevice_p.h>
+#include <private/qfile_p.h>
+#include <private/qfilesystemengine_p.h>
+#include <private/qsystemerror_p.h>
+#include <private/qtemporaryfile_p.h>
 #if defined(QT_BUILD_CORE_LIB)
 # include "qcoreapplication.h"
 #endif

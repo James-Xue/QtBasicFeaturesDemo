@@ -546,22 +546,30 @@ static int ucstrncmp_sse2(const char16_t *a, const Char *b, size_t l)
         ptr += idx / (Stride / sizeof(*n));
         return *reinterpret_cast<decltype(n)>(ptr);
     };
-    auto difference = [a, b](uint mask, qptrdiff offset) {
-        if (Mode == CompareStringsForEquality)
-            return 1;
-        uint idx = qCountTrailingZeroBits(mask);
-        return codeUnitAt(a + offset, idx) - codeUnitAt(b + offset, idx);
-    };
+    auto difference = [a, b](uint mask, qptrdiff offset)
+        {
+            if constexpr (Mode == CompareStringsForEquality)
+            {
+                return 1;
+            }
+            uint idx = qCountTrailingZeroBits(mask);
+            return codeUnitAt(a + offset, idx) - codeUnitAt(b + offset, idx);
+        };
 
     static const auto load8Chars = [](const auto *ptr) {
-        if (sizeof(*ptr) == 2)
+        if constexpr (sizeof(*ptr) == 2)
+        {
             return _mm_loadu_si128(reinterpret_cast<const __m128i *>(ptr));
+        }
         __m128i chunk = _mm_loadl_epi64(reinterpret_cast<const __m128i *>(ptr));
         return _mm_unpacklo_epi8(chunk, _mm_setzero_si128());
     };
     static const auto load4Chars = [](const auto *ptr) {
-        if (sizeof(*ptr) == 2)
+        if constexpr (sizeof(*ptr) == 2)
+        {
             return _mm_loadl_epi64(reinterpret_cast<const __m128i *>(ptr));
+        }
+
         __m128i chunk = _mm_cvtsi32_si128(qFromUnaligned<quint32>(ptr));
         return _mm_unpacklo_epi8(chunk, _mm_setzero_si128());
     };
@@ -585,12 +593,15 @@ static int ucstrncmp_sse2(const char16_t *a, const Char *b, size_t l)
         __m128i a_data1 = load8Chars(a + offset);
         __m128i a_data2 = load8Chars(a + offset + 8);
         __m128i b_data1, b_data2;
-        if (sizeof(Char) == 1) {
+        if constexpr (sizeof(Char) == 1)
+        {
             // expand to UTF-16 via unpacking
             __m128i b_data = _mm_loadu_si128(reinterpret_cast<const __m128i *>(b + offset));
             b_data1 = _mm_unpacklo_epi8(b_data, _mm_setzero_si128());
             b_data2 = _mm_unpackhi_epi8(b_data, _mm_setzero_si128());
-        } else {
+        }
+        else
+        {
             b_data1 = load8Chars(b + offset);
             b_data2 = load8Chars(b + offset + 8);
         }
@@ -1322,10 +1333,13 @@ static int ucstrncmp(const char16_t *a, const char16_t *b, size_t l)
 #  endif // MIPS DSP or __SSE2__ or __ARM_NEON__
 #endif // __OPTIMIZE_SIZE__
 
-    if (Mode == CompareStringsForEquality || QSysInfo::ByteOrder == QSysInfo::BigEndian)
+    if constexpr (Mode == CompareStringsForEquality || QSysInfo::ByteOrder == QSysInfo::BigEndian)
+    {
         return memcmp(a, b, l * sizeof(char16_t));
+    }
 
-    for (size_t i = 0; i < l; ++i) {
+    for (size_t i = 0; i < l; ++i)
+    {
         if (int diff = a[i] - b[i])
             return diff;
     }

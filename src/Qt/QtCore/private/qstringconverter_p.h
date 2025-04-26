@@ -271,8 +271,10 @@ namespace QUtf8Functions
                 return Traits::Error;
             if (QChar::isSurrogate(uc) || uc > QChar::LastValidCodePoint)
                 return Traits::Error;
-            if (!Traits::allowNonCharacters && QChar::isNonCharacter(uc))
+            if constexpr (!Traits::allowNonCharacters && QChar::isNonCharacter(uc))
+            {
                 return Traits::Error;
+            }
         }
 
         // write the UTF-16 sequence
