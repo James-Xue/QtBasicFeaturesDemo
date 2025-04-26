@@ -10,6 +10,7 @@ file(GLOB SOURCES
  "qassert.cpp"
  "qlogging.cpp"
  "qbytearray.cpp"
+ "qarraydata.cpp"
 )
 file(GLOB HEADERS "*.h")
 file(GLOB PRIVATE_HEADERS "./private/*.h")
