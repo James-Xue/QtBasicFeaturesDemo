@@ -298,16 +298,21 @@ protected:
        (checked in qproperty.cpp)
     */
     using DeclarativeErrorCallback = void(*)(QPropertyBindingPrivate *);
-    union {
+
+    union
+    {
         QPropertyBindingSourceLocation location;
-        struct {
-            std::byte declarativeExtraData[sizeof(QPropertyBindingSourceLocation) - sizeof(DeclarativeErrorCallback)];
+
+        struct
+        {
+            std::byte
+                declarativeExtraData[sizeof(QPropertyBindingSourceLocation) - sizeof(DeclarativeErrorCallback)];
             DeclarativeErrorCallback errorCallBack;
         };
     };
+
 private:
     QPropertyBindingError m_error;
-
     QMetaType metaType;
 
 public:
