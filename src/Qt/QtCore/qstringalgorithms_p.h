@@ -16,7 +16,7 @@
 //
 
 #include "qstring.h"
-#include "qlocale_p.h"      // for ascii_isspace
+#include <private/qlocale_p.h>      // for ascii_isspace
 
 QT_BEGIN_NAMESPACE
 

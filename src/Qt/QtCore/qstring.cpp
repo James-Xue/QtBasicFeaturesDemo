@@ -10,13 +10,13 @@
 #include "qunicodetables_p.h"
 #include <private/qstringconverter_p.h>
 #include <private/qtools_p.h>
-#include "qlocale_tools_p.h"
-#include "private/qsimd_p.h"
+#include <private/qlocale_tools_p.h>
+#include <private/qsimd_p.h>
 #include <qnumeric.h>
 #include <qdatastream.h>
 #include <qlist.h>
 #include "qlocale.h"
-#include "qlocale_p.h"
+#include <private/qlocale_p.h>
 #include "qspan.h"
 #include "qstringbuilder.h"
 #include "qstringmatcher.h"
@@ -42,7 +42,7 @@
 #include "qchar.cpp"
 #include "qlatin1stringmatcher.h"
 #include "qstringmatcher.cpp"
-#include "qstringiterator_p.h"
+#include <private/qstringiterator_p.h>
 #include "qstringalgorithms_p.h"
 #include "qthreadstorage.h"
 
