@@ -26,13 +26,17 @@ add_library(${MODULE_NAME} SHARED ${SOURCES} ${HEADERS} ${PRIVATE_HEADERS})
 target_include_directories(${MODULE_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/..
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../ZLib
 )
 
 # Add preprocessor definitions (precompiled macros)
 target_compile_definitions(${MODULE_NAME} PRIVATE
-    # QT_CORE_LIBRARY          #
     QT_BUILD_CORE_LIB
-    # ENABLE_DEBUG_FEATURES    #
+)
+
+# Debug postfix for debug builds
+set_target_properties(${MODULE_NAME} PROPERTIES
+    DEBUG_POSTFIX "_d"
 )
 
 # Define UNICODE and _UNICODE for all targets

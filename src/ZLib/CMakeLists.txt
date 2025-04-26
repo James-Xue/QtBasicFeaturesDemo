@@ -17,6 +17,11 @@ target_compile_definitions(${MODULE_NAME} PRIVATE
     QT_BUILD_CORE_LIB
 )
 
+# Debug postfix for debug builds
+set_target_properties(${MODULE_NAME} PROPERTIES
+DEBUG_POSTFIX "_d"
+)
+
 # Specify include directories for header file lookup
 target_include_directories(${MODULE_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}

@@ -258,18 +258,25 @@ local void fill_window(deflate_state *s) {
     do {
         more = (unsigned)(s->window_size -(ulg)s->lookahead -(ulg)s->strstart);
 
+#pragma warning(push)
+#pragma warning(disable: 4127)
         /* Deal with !@#$% 64K limit: */
-        if (sizeof(int) <= 2) {
-            if (more == 0 && s->strstart == 0 && s->lookahead == 0) {
+        if (sizeof(int) <= 2)
+        {
+            if (more == 0 && s->strstart == 0 && s->lookahead == 0)
+            {
                 more = wsize;
 
-            } else if (more == (unsigned)(-1)) {
+            }
+            else if (more == (unsigned)(-1))
+            {
                 /* Very unlikely, but possible on 16 bit machine if
                  * strstart == 0 && lookahead == 1 (input done a byte at time)
                  */
                 more--;
             }
         }
+#pragma warning(pop)
 
         /* If the window is almost full and there is insufficient lookahead,
          * move the upper half to the lower one to make room in the upper half.
