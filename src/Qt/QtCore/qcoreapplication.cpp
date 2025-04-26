@@ -62,7 +62,7 @@
 # endif
 #endif
 #ifdef Q_OS_WIN
-#include "qeventdispatcher_win_p.h"
+#include <private/qeventdispatcher_win_p.h>
 #endif
 #endif // QT_NO_QOBJECT
 
