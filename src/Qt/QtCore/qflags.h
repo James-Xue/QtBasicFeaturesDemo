@@ -170,8 +170,8 @@
     };
 
     #ifndef Q_MOC_RUN
-    #define Q_DECLARE_FLAGS(Flags, Enum)\
-    typedef QFlags<Enum> Flags;
+        #define Q_DECLARE_FLAGS(Flags, Enum) \
+        typedef QFlags<Enum> Flags;
     #endif
 
     #ifdef QT_TYPESAFE_FLAGS
