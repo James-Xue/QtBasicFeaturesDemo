@@ -6,7 +6,6 @@
 
 #include <QtCore/qglobal.h>
 #include <QtCore/qfutureinterface.h>
-
 #include <utility>
 
 QT_REQUIRE_CONFIG(future);

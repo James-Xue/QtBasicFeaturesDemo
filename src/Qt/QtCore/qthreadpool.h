@@ -5,7 +5,6 @@
 #define QTHREADPOOL_H
 
 #include <QtCore/qglobal.h>
-
 #include <QtCore/qthread.h>
 #include <QtCore/qrunnable.h>
 

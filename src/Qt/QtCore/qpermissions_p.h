@@ -4,10 +4,13 @@
 #ifndef QPERMISSIONS_P_H
 #define QPERMISSIONS_P_H
 
-#include <QtCore/qpermissions.h>
+#include "qpermissions.h"
+
 #include <private/qglobal_p.h>
 #include <QtCore/qloggingcategory.h>
-#include <QtCore/qobject.h>
+
+#include <QtCore/QObject>
+
 #include <functional>
 
 QT_REQUIRE_CONFIG(permissions);
