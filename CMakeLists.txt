@@ -36,7 +36,7 @@ else()
     )
 endif()
 
-if(WIN32)
+if(MSVC)
 add_compile_options(
     -MP # Enable multi-threaded precompiled headers
     -INCREMENTAL # Enable incremental linking    
