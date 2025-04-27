@@ -2,15 +2,15 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qproperty.h"
-#include "qproperty_p.h"
+#include <Private/qproperty_p.h>
 
 #include <qscopedvaluerollback.h>
-#include <QScopeGuard>
+#include <qscopeguard.h>
 #include <QtCore/qloggingcategory.h>
-#include <QThread>
+#include <qthread.h>
 #include <QtCore/qmetaobject.h>
 
-#include "qobject_p.h"
+#include <Private/qobject_p.h>
 
 QT_BEGIN_NAMESPACE
 
