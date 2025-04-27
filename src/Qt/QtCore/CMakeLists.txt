@@ -19,6 +19,7 @@ file(GLOB SOURCES
  "qfloat16.cpp"
  "QDebug.cpp"
  "qproperty.cpp"
+ "qobject.cpp"
 )
 #file(GLOB TEST_SOURCES "./test/*.cpp")
 file(GLOB TEST_SOURCES
