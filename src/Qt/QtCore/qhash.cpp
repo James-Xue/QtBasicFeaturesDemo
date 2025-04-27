@@ -34,7 +34,7 @@
 #endif // QT_BOOTSTRAPPED
 
 // Implementation of SipHash algorithm
-#include "../../3rdparty/siphash/siphash.cpp"
+#include "siphash.cpp"
 
 #include <array>
 #include <limits.h>
