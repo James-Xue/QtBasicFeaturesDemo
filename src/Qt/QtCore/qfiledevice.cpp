@@ -1,10 +1,10 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qplatformdefs.h"
+#include "win32-msvc-qplatformdefs.h"
 #include "qfiledevice.h"
-#include "qfiledevice_p.h"
-#include "qfsfileengine_p.h"
+#include <private/qfiledevice_p.h>
+#include <private/qfsfileengine_p.h>
 
 #ifdef QT_NO_QOBJECT
 #define tr(X) QString::fromLatin1(X)

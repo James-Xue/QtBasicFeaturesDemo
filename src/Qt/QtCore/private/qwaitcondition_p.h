@@ -14,11 +14,10 @@
 // We mean it.
 //
 
-#include <QtCore/QWaitCondition>
-#include <QtCore/QMutex>
-#include <QtCore/QDeadlineTimer>
+#include <QtCore/qwaitcondition.h>
+#include <QtCore/qmutex.h>
+#include <QtCore/qdeadlinetimer.h>
 #include <QtCore/private/qglobal_p.h>
-
 #include <condition_variable>
 #include <mutex>
 

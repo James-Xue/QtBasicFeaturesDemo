@@ -10,10 +10,10 @@
 #include "qlocale.h"
 #include "qset.h"
 
-#include "private/qcalendarmath_p.h"
-#include "private/qdatetime_p.h"
+#include <private/qcalendarmath_p.h>
+#include <private/qdatetime_p.h>
 #if QT_CONFIG(datetimeparser)
-#include "private/qdatetimeparser_p.h"
+#include <private/qdatetimeparser_p.h>
 #endif
 #ifdef Q_OS_DARWIN
 #include "private/qcore_mac_p.h"

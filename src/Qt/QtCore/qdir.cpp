@@ -1,11 +1,11 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qplatformdefs.h"
+#include "win32-msvc-qplatformdefs.h"
 #include "qdir.h"
-#include "qdir_p.h"
-#include "qabstractfileengine_p.h"
-#include "qfsfileengine_p.h"
+#include <private/qdir_p.h>
+#include <private/qabstractfileengine_p.h>
+#include <private/qfsfileengine_p.h>
 #ifndef QT_NO_DEBUG_STREAM
 #include "qdebug.h"
 #endif
@@ -16,9 +16,9 @@
 #  include <qregularexpression.h>
 #endif
 #include "qvarlengtharray.h"
-#include "qfilesystementry_p.h"
-#include "qfilesystemmetadata_p.h"
-#include "qfilesystemengine_p.h"
+#include <private/qfilesystementry_p.h>
+#include <private/qfilesystemmetadata_p.h>
+#include <private/qfilesystemengine_p.h>
 #include <qstringbuilder.h>
 
 #ifndef QT_BOOTSTRAPPED

@@ -21,7 +21,7 @@ QT_WARNING_DISABLE_GCC("-Wfree-nonheap-object") // false positive tracking
 #   include <CoreFoundation/CoreFoundation.h>
 #endif
 
-#include "qplatformdefs.h"
+#include "win32-msvc-qplatformdefs.h"
 
 #include "qcalendar.h"
 #include "qdatastream.h"

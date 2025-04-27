@@ -1,7 +1,7 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qplatformdefs.h"
+#include "win32-msvc-qplatformdefs.h"
 
 #include "qtranslator.h"
 
@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include <new>
 
-#include "qobject_p.h"
+#include <QtCore/private/qobject_p.h>
 
 #include <vector>
 #include <memory>

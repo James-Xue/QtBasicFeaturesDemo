@@ -2,9 +2,9 @@
 // Copyright (C) 2016 Intel Corporation.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qfsfileengine_p.h"
-#include "qfsfileengine_iterator_p.h"
-#include "qfilesystemengine_p.h"
+#include <private/qfsfileengine_p.h>
+#include <private/qfsfileengine_iterator_p.h>
+#include <private/qfilesystemengine_p.h>
 #include "qdatetime.h"
 #include "qset.h"
 #include <QtCore/qdebug.h>

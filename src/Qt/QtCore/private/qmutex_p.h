@@ -23,7 +23,7 @@
 #include <QtCore/qatomic.h>
 #include <QtCore/qdeadlinetimer.h>
 
-#include "qplatformdefs.h" // _POSIX_VERSION
+#include "win32-msvc-qplatformdefs.h" // _POSIX_VERSION
 
 #if defined(Q_OS_DARWIN)
 # include <mach/semaphore.h>
