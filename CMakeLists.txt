@@ -36,6 +36,9 @@ else()
     )
 endif()
 
+# Define UNICODE and _UNICODE for all targets
+add_compile_definitions(UNICODE _UNICODE)
+
 # Add the subdirectory for the main demo application
 # This is where the main application code will be located
 # This will allow us to build the main application separately

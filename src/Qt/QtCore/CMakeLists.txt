@@ -104,6 +104,3 @@ target_compile_definitions(${MODULE_NAME} PRIVATE
 set_target_properties(${MODULE_NAME} PROPERTIES
     DEBUG_POSTFIX "_d"
 )
-
-# Define UNICODE and _UNICODE for all targets
-add_compile_definitions(UNICODE _UNICODE)
