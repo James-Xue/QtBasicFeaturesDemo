@@ -3,11 +3,11 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qmetaobject.h"
-#include "qmetaobject_p.h"
+#include <Private/qmetaobject_p.h>
 #include "qmetatype.h"
-#include "qmetatype_p.h"
+#include <Private/qmetatype_p.h>
 #include "qobject.h"
-#include "qobject_p.h"
+#include <Private/qobject_p.h>
 
 #include <qcoreapplication.h>
 #include <qvariant.h>
@@ -415,8 +415,8 @@ QString QMetaObject::tr(const char *s, const char *c, int n) const
 QMetaType QMetaObject::metaType() const
 {
 
-    const QMetaObjectPrivate *d = priv(this->d.data);
-    if (d->revision < 10) {
+    const QMetaObjectPrivate *pData = priv(this->d.data);
+    if (pData->revision < 10) {
         // before revision 10, we did not store the metatype in the metatype array
         return QMetaType::fromName(className());
     } else {
@@ -437,11 +437,11 @@ QMetaType QMetaObject::metaType() const
         // Before revision 12 we only stored metatypes for enums if they showed
         // up as types of properties or method arguments or return values.
         // From revision 12 on, we always store them in a predictable place.
-        const qsizetype offset = d->revision < 12
-                ? d->propertyCount
-                : d->propertyCount + d->enumeratorCount;
+        const qsizetype offset = pData->revision < 12
+                ? pData->propertyCount
+                : pData->propertyCount + pData->enumeratorCount;
 #else
-        const qsizetype offset = d->propertyCount + d->enumeratorCount;
+        const qsizetype offset = pData->propertyCount + pData->enumeratorCount;
 #endif
 
         auto iface = this->d.metaTypes[offset];
@@ -1104,8 +1104,8 @@ int QMetaObject::indexOfProperty(const char *name) const
 {
     const QMetaObject *m = this;
     while (m) {
-        const QMetaObjectPrivate *d = priv(m->d.data);
-        for (int i = 0; i < d->propertyCount; ++i) {
+        const QMetaObjectPrivate *pData = priv(m->d.data);
+        for (int i = 0; i < pData->propertyCount; ++i) {
             const QMetaProperty::Data data = QMetaProperty::getMetaPropertyData(m, i);
             const char *prop = rawStringData(m, data.name());
             if (strcmp(name, prop) == 0) {
