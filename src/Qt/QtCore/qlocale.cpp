@@ -29,7 +29,7 @@ QT_WARNING_DISABLE_GCC("-Wfree-nonheap-object") // false positive tracking
 #include "qhashfunctions.h"
 #include "qstring.h"
 #include "qlocale.h"
-#include "qlocale_p.h"
+#include <private/qlocale_p.h>
 #include "qlocale_tools_p.h"
 #include <private/qtools_p.h>
 #if QT_CONFIG(datetimeparser)
@@ -3527,7 +3527,8 @@ QString QLocale::pmText() const
 // For the benefit of QCalendar, below.
 static QString offsetFromAbbreviation(QString &&text)
 {
-    QStringView tail{text};
+    //QStringView tail{text};
+    QString tail{text};
     // May need to strip a prefix:
     if (tail.startsWith("UTC"_L1) || tail.startsWith("GMT"_L1))
         tail = tail.sliced(3);
@@ -4082,7 +4083,9 @@ QString QLocaleData::applyIntegerFormatting(QString &&numStr, bool negative, int
         return {};
     }();
 
-    const QString prefix = signPrefix(negative, flags) + basePrefix;
+    const QString basePrefixTmp(basePrefix);
+    //const QString prefix = signPrefix(negative, flags) + basePrefix;
+    const QString prefix = signPrefix(negative, flags) + basePrefixTmp;
     // Count how much of width we've used up.  Each digit counts as one
     qsizetype usedWidth = digitCount + prefix.size();
 
@@ -4816,7 +4819,9 @@ QString QLocale::formattedDataSize(qint64 bytes, int precision, DataSizeFormats 
         unit = d->m_data->byteCount().viewData(byte_unit_data);
     }
 
-    return number + u' ' + unit;
+    QString unitTmp(unit);
+    //return number + u' ' + unit;
+    return number + u' ' + unitTmp;
 }
 
 /*!
