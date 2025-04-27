@@ -20,6 +20,7 @@ file(GLOB SOURCES
  "QDebug.cpp"
  "qproperty.cpp"
  "qobject.cpp"
+ "qvariant.cpp"
 )
 #file(GLOB TEST_SOURCES "./test/*.cpp")
 file(GLOB TEST_SOURCES
