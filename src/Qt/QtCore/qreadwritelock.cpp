@@ -722,4 +722,37 @@ void QReadWriteLockPrivate::release()
     to the constructor.
 */
 
+// ========== My define ==========
+QReadWriteLock::QReadWriteLock(RecursionMode recursionMode)
+    : d_ptr(recursionMode == Recursive ? initRecursive() : nullptr)
+{
+}
+
+QReadWriteLock::~QReadWriteLock()
+{
+    if (auto d = d_ptr.loadAcquire())
+        destroyRecursive(d);
+}
+
+void QReadWriteLock::lockForRead()
+{
+    tryLockForRead(QDeadlineTimer(QDeadlineTimer::Forever));
+}
+
+bool QReadWriteLock::tryLockForRead(int timeout)
+{
+    return tryLockForRead(QDeadlineTimer(timeout));
+}
+
+void QReadWriteLock::lockForWrite()
+{
+    tryLockForWrite(QDeadlineTimer(QDeadlineTimer::Forever));
+}
+
+bool QReadWriteLock::tryLockForWrite(int timeout)
+{
+    return tryLockForWrite(QDeadlineTimer(timeout));
+}
+// ========== My define ==========
+
 QT_END_NAMESPACE

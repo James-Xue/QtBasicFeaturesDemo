@@ -44,6 +44,7 @@ file(GLOB SOURCES
     "qgregoriancalendar.cpp"
     "qromancalendar.cpp"
     "qmilankoviccalendar.cpp"
+    "qdeadlinetimer.cpp"
 
     # Thread and synchronization classes
     "qthread.cpp"
@@ -72,7 +73,7 @@ file(GLOB SOURCES
 
     # Event and signal classes
     "qcoreevent.cpp"
-    #"qevent.cpp"
+    "qevent.cpp"
 
     # UI classes
     #"qfiledialog.cpp"
