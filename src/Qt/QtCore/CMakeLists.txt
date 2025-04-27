@@ -13,6 +13,7 @@ file(GLOB SOURCES
  "qbytearraymatcher.cpp"
  "qdatastream.cpp"
  "qmetaobject.cpp"
+ "qmetatype.cpp"
 )
 #file(GLOB TEST_SOURCES "./test/*.cpp")
 file(GLOB TEST_SOURCES
