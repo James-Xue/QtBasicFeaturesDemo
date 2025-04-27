@@ -15,7 +15,7 @@
 // We mean it.
 //
 
-#include "qlocale_p.h"
+#include <private/qlocale_p.h>
 #include "qstring.h"
 
 #if !defined(QT_SUPPORTS_INT128) && (defined(Q_CC_MSVC) && (_MSC_VER >= 1930) && __has_include(<__msvc_int128.hpp>))

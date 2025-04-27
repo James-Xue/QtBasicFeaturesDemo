@@ -11,8 +11,8 @@
 
 #include <qeventloop.h>
 
-#include "qthread_p.h"
-#include "private/qcoreapplication_p.h"
+#include <private/qthread_p.h>
+#include <private/qcoreapplication_p.h>
 
 #include <limits>
 

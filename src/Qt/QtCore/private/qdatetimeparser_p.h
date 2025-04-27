@@ -16,7 +16,7 @@
 //
 
 #include <QtCore/private/qglobal_p.h>
-#include "qplatformdefs.h"
+#include "win32-msvc-qplatformdefs.h"
 #include "QtCore/qatomic.h"
 #include "QtCore/qcalendar.h"
 #include "QtCore/qcoreapplication.h"

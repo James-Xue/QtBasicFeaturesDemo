@@ -3,16 +3,16 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qtimer.h"
-#include "qtimer_p.h"
-#include "qsingleshottimer_p.h"
+#include <private/qtimer_p.h>
+#include <private/qsingleshottimer_p.h>
 
 #include "qabstracteventdispatcher.h"
 #include "qcoreapplication.h"
 #include "qcoreapplication_p.h"
 #include "qdeadlinetimer.h"
 #include "qmetaobject_p.h"
-#include "qobject_p.h"
-#include "qproperty_p.h"
+#include <private/qobject_p.h>
+#include <private/qproperty_p.h>
 #include "qthread.h"
 
 using namespace std::chrono_literals;

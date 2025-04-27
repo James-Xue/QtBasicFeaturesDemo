@@ -3,14 +3,14 @@
 // Copyright (C) 2012 Olivier Goffart <ogoffart@woboq.com>
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "global/qglobal.h"
+#include "qglobal.h"
 #include "win32-msvc-qplatformdefs.h"
 #include "qmutex.h"
 #include <qdebug.h>
 #include "qatomic.h"
-#include "qfutex_p.h"
+#include <private/qfutex_p.h>
 #include "qthread.h"
-#include "qmutex_p.h"
+#include <private/qmutex_p.h>
 
 #ifndef QT_ALWAYS_USE_FUTEX
 #include "private/qfreelist_p.h"

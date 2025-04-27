@@ -9,9 +9,9 @@
 #include "qmetaobject_p.h"
 
 #include "qabstracteventdispatcher.h"
-#include "qabstracteventdispatcher_p.h"
+#include <private/qabstracteventdispatcher_p.h>
 #include "qcoreapplication.h"
-#include "qcoreapplication_p.h"
+#include <private/qcoreapplication_p.h>
 #include <QtCore/private/qcoreevent_p.h>
 #include "qloggingcategory.h"
 #include "qvariant.h"

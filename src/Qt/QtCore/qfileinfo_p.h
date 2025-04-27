@@ -19,7 +19,7 @@
 #include "qdatetime.h"
 #include "qatomic.h"
 #include "qshareddata.h"
-#include "qfilesystemengine_p.h"
+#include <private/qfilesystemengine_p.h>
 
 #include <QtCore/private/qabstractfileengine_p.h>
 #include <QtCore/private/qfilesystementry_p.h>

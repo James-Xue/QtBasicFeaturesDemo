@@ -3,11 +3,11 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qsemaphore.h"
-#include "qfutex_p.h"
+#include <private/qfutex_p.h>
 #include "qdeadlinetimer.h"
 #include "qdatetime.h"
 #include "qdebug.h"
-#include "qlocking_p.h"
+#include <private/qlocking_p.h>
 #include "qwaitcondition_p.h"
 
 #include <chrono>

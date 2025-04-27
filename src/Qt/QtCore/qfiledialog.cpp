@@ -7,7 +7,7 @@
 #include <private/qwidgetitemdata_p.h>
 #include "qfiledialog.h"
 
-#include "qfiledialog_p.h"
+#include <private/qfiledialog_p.h>
 #include <private/qapplication_p.h>
 #include <private/qguiapplication_p.h>
 #include <qfontmetrics.h>

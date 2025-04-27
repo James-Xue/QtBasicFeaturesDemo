@@ -11,8 +11,11 @@ file(GLOB SOURCES
     "qmetatype.cpp"
 
     # Container classes
-    "qchar.cpp"
+    #"qchar.cpp"
     "qstring.cpp"
+    "qstringview.cpp"
+    "qlocale_tools.cpp"
+    "qstringconverter.cpp"
     #"qlist.cpp"
     #"qvector.cpp"
     #"qmap.cpp"
@@ -48,13 +51,18 @@ file(GLOB SOURCES
     "qdir.cpp"
     "qfileinfo.cpp"
     "qfiledevice.cpp"
-    "qfileiconprovider.cpp"
-    "qfiledialog.cpp"
     "qfsfileengine.cpp"
-
+    
     # internationalization and localization classes
     "qlocale.cpp"
     "qtranslator.cpp"
+    
+    # UI classes
+    #"qfiledialog.cpp"
+    #"qfileiconprovider.cpp"
+    #"qmessagebox.cpp"
+    #"qinputdialog.cpp"
+    #"qprogressdialog.cpp"
 
     # Miscellaneous classes
     "qlogging.cpp"
@@ -93,6 +101,7 @@ target_include_directories(${MODULE_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/..
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ZLib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../DoubleConversion
 )
 
 # Add preprocessor definitions (precompiled macros)

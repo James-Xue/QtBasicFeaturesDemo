@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qfuturewatcher.h"
-#include "qfuturewatcher_p.h"
-
+#include <private/qfuturewatcher_p.h>
 #include <QtCore/qcoreevent.h>
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qmetaobject.h>

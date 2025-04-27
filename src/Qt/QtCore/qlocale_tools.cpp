@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qlocale_tools_p.h"
-#include "qdoublescanprint_p.h"
-#include "qlocale_p.h"
+#include <private/qdoublescanprint_p.h>
+#include <private/qlocale_p.h>
 #include "qstring.h"
 
 #include <private/qtools_p.h>
