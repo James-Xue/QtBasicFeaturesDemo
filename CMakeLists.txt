@@ -36,6 +36,13 @@ else()
     )
 endif()
 
+if(wIN32)
+add_compile_options(
+    -MP # Enable multi-threaded precompiled headers
+    -INCREMENTAL # Enable incremental linking    
+)
+endif()
+
 # Define UNICODE and _UNICODE for all targets
 add_compile_definitions(UNICODE _UNICODE)
 
