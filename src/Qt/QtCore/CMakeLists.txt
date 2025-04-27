@@ -40,6 +40,10 @@ file(GLOB SOURCES
     "qjalalicalendar.cpp"
     "qhijricalendar.cpp"
     "qislamiccivilcalendar.cpp"
+    "qjuliancalendar.cpp"
+    "qgregoriancalendar.cpp"
+    "qromancalendar.cpp"
+    "qmilankoviccalendar.cpp"
 
     # Thread and synchronization classes
     "qthread.cpp"
