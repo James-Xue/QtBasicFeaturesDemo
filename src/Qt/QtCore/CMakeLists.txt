@@ -13,16 +13,21 @@ file(GLOB SOURCES
  "qarraydata.cpp"
  "qbytearraymatcher.cpp"
 )
+#file(GLOB TEST_SOURCES "./test/*.cpp")
+file(GLOB TEST_SOURCES
+ "./test/src_corelib_text_qbytearray.cpp"
+ )
 file(GLOB HEADERS "*.h")
 file(GLOB PRIVATE_HEADERS "./private/*.h")
 
 # Organize files into filters for Visual Studio
 source_group("Header Files" FILES ${HEADERS})
-source_group("Header Files\\Private" FILES ${PRIVATE_HEADERS})
+source_group("Header Files/Private" FILES ${PRIVATE_HEADERS})
 source_group("Source Files" FILES ${SOURCES})
+source_group("Source Files/Test" FILES ${TEST_SOURCES})
 
 # Set the output directory for the dynamic library
-add_library(${MODULE_NAME} SHARED ${SOURCES} ${HEADERS} ${PRIVATE_HEADERS})
+add_library(${MODULE_NAME} SHARED ${SOURCES} ${HEADERS} ${PRIVATE_HEADERS} ${TEST_SOURCES})
 
 # Specify include directories for header file lookup
 target_include_directories(${MODULE_NAME} PRIVATE
@@ -43,7 +48,3 @@ set_target_properties(${MODULE_NAME} PROPERTIES
 
 # Define UNICODE and _UNICODE for all targets
 add_compile_definitions(UNICODE _UNICODE)
-
-# Add the subdirectory for the Qt modules
-# This is where the Qt modules will be located
-# add_subdirectory(private)
