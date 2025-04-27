@@ -6,16 +6,17 @@ set(MODULE_NAME QtCore)
 file(GLOB SOURCES
  "qstring.cpp"
  "qfile.cpp"
- #"moc_qfile.cpp"
  "qassert.cpp"
  "qlogging.cpp"
  "qbytearray.cpp"
  "qarraydata.cpp"
  "qbytearraymatcher.cpp"
+ "qdatastream.cpp"
+ "qmetaobject.cpp"
 )
 #file(GLOB TEST_SOURCES "./test/*.cpp")
 file(GLOB TEST_SOURCES
- "./test/src_corelib_text_qbytearray.cpp"
+ #"./test/src_corelib_text_qbytearray.cpp"
  )
 file(GLOB HEADERS "*.h")
 file(GLOB PRIVATE_HEADERS "./private/*.h")

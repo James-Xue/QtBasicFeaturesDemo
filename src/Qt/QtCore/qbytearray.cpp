@@ -2524,12 +2524,12 @@ QByteArray &QByteArray::replace(QByteArrayView before, QByteArrayView after)
     QByteArrayMatcher matcher(b, bsize);
     qsizetype index = 0;
     qsizetype len = size();
-    char *d = data(); // detaches
+    char *szData = data(); // detaches
 
     if (bsize == asize) {
         if (bsize) {
             while ((index = matcher.indexIn(*this, index)) != -1) {
-                memcpy(d + index, a, asize);
+                memcpy(szData + index, a, asize);
                 index += bsize;
             }
         }
@@ -2541,14 +2541,14 @@ QByteArray &QByteArray::replace(QByteArrayView before, QByteArrayView after)
             if (num) {
                 qsizetype msize = index - movestart;
                 if (msize > 0) {
-                    memmove(d + to, d + movestart, msize);
+                    memmove(szData + to, szData + movestart, msize);
                     to += msize;
                 }
             } else {
                 to = index;
             }
             if (asize) {
-                memcpy(d + to, a, asize);
+                memcpy(szData + to, a, asize);
                 to += asize;
             }
             index += bsize;
@@ -2558,7 +2558,7 @@ QByteArray &QByteArray::replace(QByteArrayView before, QByteArrayView after)
         if (num) {
             qsizetype msize = len - movestart;
             if (msize > 0)
-                memmove(d + to, d + movestart, msize);
+                memmove(szData + to, szData + movestart, msize);
             resize(len - num*(bsize-asize));
         }
     } else {
@@ -2591,16 +2591,16 @@ QByteArray &QByteArray::replace(QByteArrayView before, QByteArrayView after)
                 resize(newlen);
                 len = newlen;
             }
-            d = this->d.data(); // data(), without the detach() check
+            szData = this->d.data(); // data(), without the detach() check
 
             while(pos) {
                 pos--;
                 qsizetype movestart = indices[pos] + bsize;
                 qsizetype insertstart = indices[pos] + pos*(asize-bsize);
                 qsizetype moveto = insertstart + asize;
-                memmove(d + moveto, d + movestart, (moveend - movestart));
+                memmove(szData + moveto, szData + movestart, (moveend - movestart));
                 if (asize)
-                    memcpy(d + insertstart, a, asize);
+                    memcpy(szData + insertstart, a, asize);
                 moveend = movestart - bsize;
             }
         }
@@ -5150,5 +5150,23 @@ size_t qHash(const QByteArray::FromBase64Result &key, size_t seed) noexcept
 
     \sa erase
 */
+
+
+// ========== My define ==========
+bool QByteArray::isNull() const noexcept
+{
+    return d.isNull();
+}
+
+qsizetype QByteArray::indexOf(char ch, qsizetype from) const
+{
+    return qToByteArrayViewIgnoringNull(*this).indexOf(ch, from);
+}
+
+qsizetype QByteArray::lastIndexOf(char ch, qsizetype from) const
+{
+    return qToByteArrayViewIgnoringNull(*this).lastIndexOf(ch, from);
+}
+// ========== My define ==========
 
 QT_END_NAMESPACE

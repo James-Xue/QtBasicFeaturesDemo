@@ -10430,6 +10430,18 @@ void QAbstractConcatenable::appendLatin1To(QLatin1StringView in, QChar *out) noe
     \sa qPrintable(), qDebug(), qInfo(), qWarning(), qCritical(), qFatal()
 */
 
+// ========== My define ==========
+qsizetype QString::indexOf(QChar ch, qsizetype from, Qt::CaseSensitivity cs) const
+{
+    return qToStringViewIgnoringNull(*this).indexOf(ch, from, cs);
+}
+
+qsizetype QString::lastIndexOf(QChar ch, qsizetype from, Qt::CaseSensitivity cs) const
+{
+    return qToStringViewIgnoringNull(*this).lastIndexOf(ch, from, cs);
+}
+// ========== My define ==========
+
 QT_END_NAMESPACE
 
 #undef REHASH

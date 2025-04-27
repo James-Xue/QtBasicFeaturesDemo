@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qdatastream.h"
-#include "qdatastream_p.h"
+#include <Private/qdatastream_p.h>
 
 #if !defined(QT_NO_DATASTREAM) || defined(QT_BOOTSTRAPPED)
 #include "qbuffer.h"
@@ -377,13 +377,14 @@ QDataStream::~QDataStream()
     \sa device()
 */
 
-void QDataStream::setDevice(QIODevice *d)
+void QDataStream::setDevice(QIODevice *pDevice)
 {
-    if (owndev) {
+    if (owndev)
+    {
         delete dev;
         owndev = false;
     }
-    dev = d;
+    dev = pDevice;
 }
 
 /*!
@@ -495,10 +496,14 @@ void QDataStream::setByteOrder(ByteOrder bo)
     // accessed by inline byteOrder() prior to Qt 6.8
     byteorder = bo;
 #endif
-    if (QSysInfo::ByteOrder == QSysInfo::BigEndian)
+    if constexpr (QSysInfo::ByteOrder == QSysInfo::BigEndian)
+    {
         noswap = (bo == BigEndian);
+    }
     else
+    {
         noswap = (bo == LittleEndian);
+    }
 }
 
 
@@ -917,9 +922,9 @@ QDataStream &QDataStream::operator>>(float &f)
 {
     if (version() >= QDataStream::Qt_4_6
         && floatingPointPrecision() == QDataStream::DoublePrecision) {
-        double d;
-        *this >> d;
-        f = d;
+        double dVal;
+        *this >> dVal;
+        f = dVal;
         return *this;
     }
 
@@ -954,9 +959,9 @@ QDataStream &QDataStream::operator>>(double &f)
 {
     if (version() >= QDataStream::Qt_4_6
         && floatingPointPrecision() == QDataStream::SinglePrecision) {
-        float d;
-        *this >> d;
-        f = d;
+        float fVal;
+        *this >> fVal;
+        f = fVal;
         return *this;
     }
 
