@@ -4,30 +4,80 @@ set(MODULE_NAME QtCore)
 # Collect source and header files
 #file(GLOB SOURCES "*.cpp")
 file(GLOB SOURCES
- "qstring.cpp"
- "qfile.cpp"
- "qassert.cpp"
- "qlogging.cpp"
- "qbytearray.cpp"
- "qarraydata.cpp"
- "qbytearraymatcher.cpp"
- "qdatastream.cpp"
- "qmetaobject.cpp"
- "qmetatype.cpp"
- "qhash.cpp"
- "QTextStream.cpp"
- "qfloat16.cpp"
- "QDebug.cpp"
- "qproperty.cpp"
- "qobject.cpp"
- "qvariant.cpp"
+    # Base classes
+    "qobject.cpp"
+    "qmetaobject.cpp"
+    "qproperty.cpp"
+    "qmetatype.cpp"
+
+    # Container classes
+    "qchar.cpp"
+    "qstring.cpp"
+    #"qlist.cpp"
+    #"qvector.cpp"
+    #"qmap.cpp"
+    #"qset.cpp"
+    #"qpair.cpp"
+    "qvariant.cpp"
+    "qbytearray.cpp"
+    "qbytearraymatcher.cpp"
+    "qhash.cpp"
+    "qstringlist.cpp"
+    "qfloat16.cpp"
+    "qarraydata.cpp"
+    "qdatastream.cpp"
+    "qtextStream.cpp"
+
+    # Time and date classes
+    "qdatetime.cpp"
+    "qtimer.cpp"
+    "qdatetime.cpp"
+
+    # Thread and synchronization classes
+    "qthread.cpp"
+    "qmutex.cpp"
+    "qwaitcondition_win.cpp"
+    "qreadwritelock.cpp"
+    "qsemaphore.cpp"
+    "qthreadpool.cpp"
+    #"qfuture.cpp"
+    "qfuturewatcher.cpp"
+
+    # File and directory classes
+    "qfile.cpp"
+    "qdir.cpp"
+    "qfileinfo.cpp"
+    "qfiledevice.cpp"
+    "qfileiconprovider.cpp"
+    "qfiledialog.cpp"
+    "qfsfileengine.cpp"
+
+    # internationalization and localization classes
+    "qlocale.cpp"
+    "qtranslator.cpp"
+
+    # Miscellaneous classes
+    "qlogging.cpp"
+    "qassert.cpp"
+    "qdebug.cpp"
 )
+
+# Check if any required files are missing
+if (SOURCES STREQUAL "" OR HEADERS STREQUAL "" OR PRIVATE_HEADERS STREQUAL "")
+    message(FATAL_ERROR "Error: Required source or header files are missing!")
+endif()
+
 #file(GLOB TEST_SOURCES "./test/*.cpp")
 file(GLOB TEST_SOURCES
  #"./test/src_corelib_text_qbytearray.cpp"
  )
 file(GLOB HEADERS "*.h")
 file(GLOB PRIVATE_HEADERS "./private/*.h")
+
+# Check if any required files are missing
+if (SOURCES STREQUAL "" OR HEADERS STREQUAL "" OR PRIVATE_HEADERS STREQUAL "")
+    message(FATAL_ERROR "Error: Required source or header files are missing!")
+endif()
 
 # Organize files into filters for Visual Studio
 source_group("Header Files" FILES ${HEADERS})
