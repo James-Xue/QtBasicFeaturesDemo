@@ -16,6 +16,7 @@ file(GLOB SOURCES
  "qmetatype.cpp"
  "qhash.cpp"
  "QTextStream.cpp"
+ "qfloat16.cpp"
 )
 #file(GLOB TEST_SOURCES "./test/*.cpp")
 file(GLOB TEST_SOURCES
