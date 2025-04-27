@@ -1,23 +1,23 @@
 // Copyright (C) 2021 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 #include "qcalendar.h"
-#include "qcalendarbackend_p.h"
-#include "qgregoriancalendar_p.h"
+#include <private/qcalendarbackend_p.h>
+#include <private/qgregoriancalendar_p.h>
 #ifndef QT_BOOTSTRAPPED
-#include "qjuliancalendar_p.h"
-#include "qmilankoviccalendar_p.h"
+#include <private/qjuliancalendar_p.h>
+#include <private/qmilankoviccalendar_p.h>
 #endif
 #if QT_CONFIG(jalalicalendar)
-#include "qjalalicalendar_p.h"
+#include <private/qjalalicalendar_p.h>
 #endif
 #if QT_CONFIG(islamiccivilcalendar)
-#include "qislamiccivilcalendar_p.h"
+#include <private/qislamiccivilcalendar_p.h>
 #endif
 
 #include <private/qflatmap_p.h>
 #include "qatomic.h"
 #include "qdatetime.h"
-#include "qcalendarmath_p.h"
+#include <private/qcalendarmath_p.h>
 #include <qhash.h>
 #include <qreadwritelock.h>
 

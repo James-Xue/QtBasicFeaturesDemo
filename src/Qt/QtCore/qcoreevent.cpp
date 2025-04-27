@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qcoreevent.h"
-#include "qcoreevent_p.h"
+#include <private/qcoreevent_p.h>
 #include "qcoreapplication.h"
-#include "qcoreapplication_p.h"
+#include <private/qcoreapplication_p.h>
 
 #include "qbasicatomic.h"
 

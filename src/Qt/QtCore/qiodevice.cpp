@@ -5,7 +5,7 @@
 
 #include "qbytearray.h"
 #include "qdebug.h"
-#include "qiodevice_p.h"
+#include <private/qiodevice_p.h>
 #include "qfile.h"
 #include "qstringlist.h"
 #include "qdir.h"

@@ -1462,6 +1462,18 @@ qint64 QDataStream::skipRawData(qint64 len)
     \sa {Serializing Qt Data Types}
 */
 
+// ========== My define ==========
+QDataStream::Status QDataStream::status() const
+{
+    return Status(q_status);
+}
+
+QDataStream::FloatingPointPrecision QDataStream::floatingPointPrecision() const
+{
+    return FloatingPointPrecision(fpPrecision);
+}
+// ========== My define ==========
+
 QT_END_NAMESPACE
 
 #endif // QT_NO_DATASTREAM

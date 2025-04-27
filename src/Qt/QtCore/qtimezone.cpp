@@ -4,7 +4,7 @@
 
 #include "qtimezone.h"
 #if QT_CONFIG(timezone)
-#  include "qtimezoneprivate_p.h"
+#  include <private/qtimezoneprivate_p.h>
 #endif
 
 #include <QtCore/qdatastream.h>

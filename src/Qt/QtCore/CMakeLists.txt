@@ -35,6 +35,11 @@ file(GLOB SOURCES
     "qdatetime.cpp"
     "qtimer.cpp"
     "qdatetime.cpp"
+    "qtimezone.cpp"
+    "qcalendar.cpp"
+    "qjalalicalendar.cpp"
+    "qhijricalendar.cpp"
+    "qislamiccivilcalendar.cpp"
 
     # Thread and synchronization classes
     "qthread.cpp"
@@ -48,15 +53,23 @@ file(GLOB SOURCES
 
     # File and directory classes
     "qfile.cpp"
+    "qiodevice.cpp"
+    "qbuffer.cpp"
     "qdir.cpp"
     "qfileinfo.cpp"
     "qfiledevice.cpp"
     "qfsfileengine.cpp"
-    
+
     # internationalization and localization classes
     "qlocale.cpp"
     "qtranslator.cpp"
-    
+    "qromancalendar.cpp"
+    "qgregoriancalendar.cpp"
+
+    # Event and signal classes
+    "qcoreevent.cpp"
+    #"qevent.cpp"
+
     # UI classes
     #"qfiledialog.cpp"
     #"qfileiconprovider.cpp"
@@ -100,9 +113,13 @@ add_library(${MODULE_NAME} SHARED ${SOURCES} ${HEADERS} ${PRIVATE_HEADERS} ${TES
 target_include_directories(${MODULE_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/..
+    ${CMAKE_CURRENT_SOURCE_DIR}/../..
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ZLib
     ${CMAKE_CURRENT_SOURCE_DIR}/../../DoubleConversion
 )
+
+# Link against the QtCore dynamic library
+target_link_libraries(${MODULE_NAME} PRIVATE ZLib)
 
 # Add preprocessor definitions (precompiled macros)
 target_compile_definitions(${MODULE_NAME} PRIVATE
