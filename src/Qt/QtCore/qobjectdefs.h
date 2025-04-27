@@ -661,7 +661,7 @@ public:
     // still using the restricted bool trick here, in order to support
     // code using copy-init (e.g. `bool ok = connect(...)`)
     typedef void *Connection::*RestrictedBool;
-    operator RestrictedBool() const { return d_ptr && isConnected_helper() ? &Connection::d_ptr : nullptr; }
+    operator RestrictedBool() const { return d_ptr/* && isConnected_helper()*/ ? &Connection::d_ptr : nullptr; }
 #endif
 
     Connection(Connection &&other) noexcept : d_ptr(std::exchange(other.d_ptr, nullptr)) {}
