@@ -1,4 +1,0 @@
-# ignore the pyc files created while compile
-*.pyc
-generateBase/*.pyc
-generateTemplates/*.pyc
