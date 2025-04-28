@@ -1,12 +1,23 @@
+add_subdirectory(Build)
+add_subdirectory(3rdParty)
+add_subdirectory(Base)
+add_subdirectory(App)
+add_subdirectory(Main)
+add_subdirectory(Mod)
+add_subdirectory(Ext)
+add_subdirectory(Doc)
 
-# Add the subdirectory for the main demo application
-# This is where the main application code will be located
-add_subdirectory(DemoMain)
+if(BUILD_GUI)
+    add_subdirectory(Gui)
+    if(UNIX AND NOT APPLE)
+        add_subdirectory(XDGData)
+    endif()
+endif(BUILD_GUI)
 
-# Add the subdirectory for the Qt modules
-# This is where the Qt modules will be located
-add_subdirectory(Qt)
+if(BUILD_TEMPLATE)
+    add_subdirectory(Tools/_TEMPLATE_)
+endif(BUILD_TEMPLATE)
 
-# Add the subdirectory for the bundled ZLib library
-# This is where the bundled ZLib library will be located
-add_subdirectory(ZLib)
+# "if" clause moved into local CMakeLists.txt file to support Conda and Homebrew builds
+add_subdirectory(MacAppBundle)
+
