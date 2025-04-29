@@ -152,7 +152,7 @@ void callPythonFunction(void)
     Py_Finalize();
 }
 
-int main(int argc, char** argv)
+int main1(int argc, char** argv)
 {
     // 1. Initialize the Qt application
     QApplication app(argc, argv);
@@ -175,7 +175,7 @@ int main(int argc, char** argv)
     return app.exec();
 }
 
-int main2(int argc, char** argv)
+int main(int argc, char** argv)
 {
 #if defined(FC_OS_LINUX) || defined(FC_OS_BSD)
     setlocale(LC_ALL, "");       // use native environment settings
