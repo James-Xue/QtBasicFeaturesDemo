@@ -1,6 +1,4 @@
-# As of January 2023 we require CMake 3.16.3
-# see https://forum.freecad.org/viewtopic.php?f=10&t=72173
-# for further info why
+# As of January 2023 we require CMake 3.16.3 or higher
 cmake_minimum_required(VERSION 3.16.3 FATAL_ERROR)
 
 # policy CMP0072 was introduced with CMake 3.11
