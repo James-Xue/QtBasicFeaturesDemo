@@ -7,7 +7,6 @@
 #include <QtCore/private/qobject_p.h>
 #include <QtCore/private/qobject_p_p.h>
 #include "qmetaobject_p.h"
-
 #include "qabstracteventdispatcher.h"
 #include <private/qabstracteventdispatcher_p.h>
 #include "qcoreapplication.h"
@@ -17,7 +16,7 @@
 #include "qvariant.h"
 #include "qmetaobject.h"
 #if QT_CONFIG(regularexpression)
-#  include <qregularexpression.h>
+    #include <qregularexpression.h>
 #endif
 #include <qthread.h>
 #include <private/qthread_p.h>
@@ -32,11 +31,9 @@
 #include <private/qorderedmutexlocker_p.h>
 #include <private/qhooks_p.h>
 #include <qtcore_tracepoints_p.h>
-
 #include <new>
 #include <mutex>
 #include <memory>
-
 #include <ctype.h>
 #include <limits.h>
 
