@@ -30,6 +30,8 @@ if(BUILD_GUI)
         ${CMAKE_CURRENT_BINARY_DIR}/freecad.rc
         icon.ico
         MainGui.cpp
+        CSVHelper.cpp
+        CSVHelper.h
     )
 
     SET(FreeCAD_LIBS

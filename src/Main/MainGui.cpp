@@ -36,6 +36,9 @@
 #include <Gui/Application.h>
 #include "../../include/QtWidgets/QPushButton"
 
+// My header
+#include "CSVHelper.h"
+
 void PrintInitHelp();
 
 const char sBanner[] =
@@ -76,7 +79,7 @@ private:
 
 #include <Python.h>
 
-void callPythonFunction(void)
+void CallPythonFunction(void)
 {
     // 1. Initialize the Python interpreter
     Py_Initialize();
@@ -130,7 +133,15 @@ void callPythonFunction(void)
     Py_Finalize();
 }
 
-int main1(int argc, char** argv)
+void ReadCSV(void)
+{
+    Demo::CSVHelper csv;
+    //csv.ReadCSV(u8"C:/Users/52738/Documents/9_Tmp/20250116/20250116rcd84d7677220250116095027_p1.csv");
+    csv.ReadCSVFromFloder(QString::fromUtf8(u8"C:/Users/52738/Documents/9_Tmp/20250116"));
+    return;
+}
+
+int main(int argc, char** argv)
 {
     // 1. Initialize the Qt application
     QApplication app(argc, argv);
@@ -144,7 +155,8 @@ int main1(int argc, char** argv)
     pButton->setGeometry(50, 30, 100, 40);
 
     // 4. Connect the button's clicked signal to a custom slot
-    QObject::connect(pButton, &QPushButton::clicked, callPythonFunction);
+    //QObject::connect(pButton, &QPushButton::clicked, callPythonFunction);
+    QObject::connect(pButton, &QPushButton::clicked, ReadCSV);
 
     // 5. Show the window
     window.show();
@@ -153,7 +165,7 @@ int main1(int argc, char** argv)
     return app.exec();
 }
 
-int main(int argc, char** argv)
+int main1(int argc, char** argv)
 {
 #if defined(FC_OS_LINUX) || defined(FC_OS_BSD)
     setlocale(LC_ALL, "");       // use native environment settings
