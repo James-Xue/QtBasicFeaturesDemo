@@ -1,18 +1,23 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <qglobal.h>
-#include "qsystemerror_p.h"
+#include <private/qsystemerror_p.h>
 #include <errno.h>
+
 #if defined(Q_CC_MSVC)
-#  include <crtdbg.h>
+    #include <crtdbg.h>
 #endif
+
 #ifdef Q_OS_WIN
-#  include <qt_windows.h>
-#  include <comdef.h>
+    #include <qt_windows.h>
+    #include <comdef.h>
 #endif
+
 #ifndef QT_BOOTSTRAPPED
-#  include <qcoreapplication.h>
+    #include <qcoreapplication.h>
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -21,7 +26,8 @@ using namespace Qt::StringLiterals;
 
 #if !defined(Q_OS_WIN) && QT_CONFIG(thread) && !defined(Q_OS_INTEGRITY) && !defined(Q_OS_QNX) && \
     defined(_POSIX_THREAD_SAFE_FUNCTIONS) && _POSIX_VERSION >= 200112L
-namespace {
+namespace
+{
     // There are two incompatible versions of strerror_r:
     // a) the XSI/POSIX.1 version, which returns an int,
     //    indicating success or not
