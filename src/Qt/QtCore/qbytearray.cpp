@@ -3,17 +3,17 @@
 #include "qbytearray.h"
 #include "qbytearraymatcher.h"
 #include <private/qtools_p.h>
-#include "qhashfunctions.h"
-#include "qlist.h"
-#include <private/qlocale_p.h>
+//#include "qhashfunctions.h"
+//#include "qlist.h"
+//#include <private/qlocale_p.h>
 #include <private/qlocale_tools_p.h>
-#include <private/qnumeric_p.h>
-#include <private/qsimd_p.h>
+//#include <private/qnumeric_p.h>
+//#include <private/qsimd_p.h>
 #include <private/qstringalgorithms_p.h>
-#include "qscopedpointer.h"
+//#include "qscopedpointer.h"
 #include <private/qstringconverter_p.h>
-#include <qdatastream.h>
-#include <qmath.h>
+//#include <qdatastream.h>
+//#include <qmath.h>
 
 #if defined(Q_OS_WASM)
     #include "private/qstdweb_p.h"

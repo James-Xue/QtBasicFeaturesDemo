@@ -5,13 +5,13 @@
 #ifndef QBYTEARRAY_H
     #define QBYTEARRAY_H
 
-    #include <QtCore/qrefcount.h>
-    #include <QtCore/qnamespace.h>
-    #include <QtCore/qarraydata.h>
+    //#include <QtCore/qrefcount.h>
+    //#include <QtCore/qnamespace.h>
+    //#include <QtCore/qarraydata.h>
     #include <QtCore/qarraydatapointer.h>
-    #include <QtCore/qcompare.h>
-    #include <QtCore/qcontainerfwd.h>
-    #include <QtCore/qbytearrayalgorithms.h>
+    //#include <QtCore/qcompare.h>
+    //#include <QtCore/qcontainerfwd.h>
+    //#include <QtCore/qbytearrayalgorithms.h>
     #include <QtCore/qbytearrayview.h>
 
     // STL
