@@ -179,7 +179,9 @@ template <typename String>
 Q_NORETURN
 #endif
 static void qt_message_fatal(QtMsgType, const QMessageLogContext &context, String &&message);
+
 static void qt_message_print(QtMsgType, const QMessageLogContext &context, const QString &message);
+
 static void preformattedMessageHandler(QtMsgType type, const QMessageLogContext &context,
                                        const QString &formattedMessage);
 static QString formatLogMessage(QtMsgType type, const QMessageLogContext &context, const QString &str);
