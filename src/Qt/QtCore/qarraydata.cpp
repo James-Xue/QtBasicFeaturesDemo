@@ -1,7 +1,7 @@
 #include <QtCore/qarraydata.h>
-#include <QtCore/private/qnumeric_p.h>
+//#include <QtCore/private/qnumeric_p.h>
 #include <QtCore/private/qtools_p.h>
-#include <QtCore/qmath.h>
+//#include <QtCore/qmath.h>
 //#include <QtCore/qbytearray.h> // QBA::value_type
 //#include <QtCore/qstring.h>    // QString::value_type
 
@@ -80,21 +80,27 @@ qsizetype qCalculateBlockSize(qsizetype elementCount, qsizetype elementSize, qsi
 CalculateGrowingBlockSizeResult
 qCalculateGrowingBlockSize(qsizetype elementCount, qsizetype elementSize, qsizetype headerSize) noexcept
 {
-    CalculateGrowingBlockSizeResult result = {
+    CalculateGrowingBlockSizeResult result =
+    {
         qsizetype(-1), qsizetype(-1)
     };
 
     qsizetype bytes = qCalculateBlockSize(elementCount, elementSize, headerSize);
     if (bytes < 0)
+    {
         return result;
+    }
 
     size_t morebytes = static_cast<size_t>(qNextPowerOfTwo(quint64(bytes)));
-    if (Q_UNLIKELY(qsizetype(morebytes) < 0)) {
+    if (Q_UNLIKELY(qsizetype(morebytes) < 0))
+    {
         // grow by half the difference between bytes and morebytes
         // this slows the growth and avoids trying to allocate exactly
         // 2G of memory (on 32bit), something that many OSes can't deliver
         bytes += (morebytes - bytes) / 2;
-    } else {
+    }
+    else
+    {
         bytes = qsizetype(morebytes);
     }
 
