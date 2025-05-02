@@ -2115,4 +2115,77 @@ static char32_t inline ligatureHelper(char32_t u1, char32_t u2)
 //    return true;
 //}
 
+// ========== My define ==========
+QChar::Category QChar::category() const noexcept { return QChar::category(ucs); }
+QChar::Direction QChar::direction() const noexcept { return QChar::direction(ucs); }
+QChar::JoiningType QChar::joiningType() const noexcept { return QChar::joiningType(ucs); }
+unsigned char QChar::combiningClass() const noexcept { return QChar::combiningClass(ucs); }
+QChar QChar::mirroredChar() const noexcept { return QChar(QChar::mirroredChar(ucs)); }
+bool QChar::hasMirrored() const noexcept { return QChar::hasMirrored(ucs); }
+
+QChar::Decomposition QChar::decompositionTag() const noexcept { return QChar::decompositionTag(ucs); }
+int QChar::digitValue() const noexcept { return QChar::digitValue(ucs); }
+QChar QChar::toLower() const noexcept { return QChar(QChar::toLower(ucs)); }
+QChar QChar::toUpper() const noexcept { return QChar(QChar::toUpper(ucs)); }
+QChar QChar::toTitleCase() const noexcept { return QChar(QChar::toTitleCase(ucs)); }
+QChar QChar::toCaseFolded() const noexcept { return QChar(QChar::toCaseFolded(ucs)); }
+QChar::Script QChar::script() const noexcept { return QChar::script(ucs); }
+QChar::UnicodeVersion QChar::unicodeVersion() const noexcept { return QChar::unicodeVersion(ucs); }
+
+bool QChar::isPrint() const noexcept { return QChar::isPrint(ucs); }
+bool QChar::isSpace() const noexcept { return QChar::isSpace(ucs); }
+bool QChar::isMark() const noexcept { return QChar::isMark(ucs); }
+bool QChar::isPunct() const noexcept { return QChar::isPunct(ucs); }
+bool QChar::isSymbol() const noexcept { return QChar::isSymbol(ucs); }
+bool QChar::isLetter() const noexcept { return QChar::isLetter(ucs); }
+bool QChar::isNumber() const noexcept { return QChar::isNumber(ucs); }
+bool QChar::isLetterOrNumber() const noexcept { return QChar::isLetterOrNumber(ucs); }
+bool QChar::isDigit() const noexcept { return QChar::isDigit(ucs); }
+bool QChar::isLower() const noexcept { return QChar::isLower(ucs); }
+bool QChar::isUpper() const noexcept { return QChar::isUpper(ucs); }
+bool QChar::isTitleCase() const noexcept { return QChar::isTitleCase(ucs); }
+bool QChar::isNonCharacter() const noexcept { return QChar::isNonCharacter(ucs); }
+bool QChar::isHighSurrogate() const noexcept { return QChar::isHighSurrogate(ucs); }
+bool QChar::isLowSurrogate() const noexcept { return QChar::isLowSurrogate(ucs); }
+bool QChar::isSurrogate() const noexcept { return QChar::isSurrogate(ucs); }
+
+bool QChar::isSpace(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
+{
+    // note that [0x09..0x0d] + 0x85 are exceptional Cc-s and must be handled explicitly
+    return ucs4 == 0x20 || (ucs4 <= 0x0d && ucs4 >= 0x09)
+        || (ucs4 > 127 && (ucs4 == 0x85 || ucs4 == 0xa0 || QChar::isSpace_helper(ucs4)));
+}
+bool QChar::isLetter(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
+{
+    return (ucs4 >= 'A' && ucs4 <= 'z' && (ucs4 >= 'a' || ucs4 <= 'Z'))
+        || (ucs4 > 127 && QChar::isLetter_helper(ucs4));
+}
+bool QChar::isNumber(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
+{
+    return (ucs4 <= '9' && ucs4 >= '0') || (ucs4 > 127 && QChar::isNumber_helper(ucs4));
+}
+bool QChar::isLetterOrNumber(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
+{
+    return (ucs4 >= 'A' && ucs4 <= 'z' && (ucs4 >= 'a' || ucs4 <= 'Z'))
+        || (ucs4 >= '0' && ucs4 <= '9')
+        || (ucs4 > 127 && QChar::isLetterOrNumber_helper(ucs4));
+}
+bool QChar::isDigit(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
+{
+    return (ucs4 <= '9' && ucs4 >= '0') || (ucs4 > 127 && QChar::category(ucs4) == Number_DecimalDigit);
+}
+bool QChar::isLower(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
+{
+    return (ucs4 <= 'z' && ucs4 >= 'a') || (ucs4 > 127 && QChar::category(ucs4) == Letter_Lowercase);
+}
+bool QChar::isUpper(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
+{
+    return (ucs4 <= 'Z' && ucs4 >= 'A') || (ucs4 > 127 && QChar::category(ucs4) == Letter_Uppercase);
+}
+bool QChar::isTitleCase(char32_t ucs4) noexcept Q_DECL_CONST_FUNCTION
+{
+    return ucs4 > 127 && QChar::category(ucs4) == Letter_Titlecase;
+}
+// ========== My define ==========
+
 QT_END_NAMESPACE
