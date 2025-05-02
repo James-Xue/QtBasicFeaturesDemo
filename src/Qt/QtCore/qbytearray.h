@@ -13,36 +13,39 @@
     #include <QtCore/qcontainerfwd.h>
     #include <QtCore/qbytearrayalgorithms.h>
     #include <QtCore/qbytearrayview.h>
+
+    // STL
     #include <stdlib.h>
     #include <string.h>
     #include <string>
     #include <iterator>
 
     #ifndef QT5_NULL_STRINGS
-    // Would ideally be off, but in practice breaks too much (Qt 6.0).
-    #define QT5_NULL_STRINGS 1
+        // Would ideally be off, but in practice breaks too much (Qt 6.0).
+        #define QT5_NULL_STRINGS 1
     #endif
 
     #ifdef truncate
-    #error qbytearray.h must be included before any header file that defines truncate
+        #error qbytearray.h must be included before any header file that defines truncate
     #endif
 
     #if defined(Q_OS_DARWIN) || defined(Q_QDOC)
-    Q_FORWARD_DECLARE_CF_TYPE(CFData);
-    Q_FORWARD_DECLARE_OBJC_CLASS(NSData);
+        Q_FORWARD_DECLARE_CF_TYPE(CFData);
+        Q_FORWARD_DECLARE_OBJC_CLASS(NSData);
     #endif
 
     #if defined(Q_OS_WASM) || defined(Q_QDOC)
-    namespace emscripten {
-        class val;
-    }
+        namespace emscripten
+        {
+            class val;
+        }
     #endif
 
     class tst_QByteArray;
 
     QT_BEGIN_NAMESPACE
 
-    class QString;
+    //class QString;
     class QDataStream;
 
     using QByteArrayData = QArrayDataPointer<char>;
@@ -66,7 +69,8 @@
         template <typename InputIterator>
         using if_input_iterator = QtPrivate::IfIsInputIterator<InputIterator>;
     public:
-        enum Base64Option {
+        enum Base64Option
+        {
             Base64Encoding = 0,
             Base64UrlEncoding = 1,
 
@@ -76,9 +80,11 @@
             IgnoreBase64DecodingErrors = 0,
             AbortOnBase64DecodingErrors = 4,
         };
+
         Q_DECLARE_FLAGS(Base64Options, Base64Option)
 
-        enum class Base64DecodingStatus {
+        enum class Base64DecodingStatus
+        {
             Ok,
             IllegalInputLength,
             IllegalCharacter,
@@ -89,7 +95,8 @@
         QByteArray(const char *, qsizetype size = -1);
         QByteArray(qsizetype size, char c);
         QByteArray(qsizetype size, Qt::Initialization);
-        explicit QByteArray(QByteArrayView v) : QByteArray(v.data(), v.size()) {}
+        explicit QByteArray(QByteArrayView v);
+            //: QByteArray(v.data(), v.size()) {}
         inline QByteArray(const QByteArray &) noexcept;
         inline ~QByteArray();
 
@@ -135,23 +142,23 @@
 
         QT_CORE_INLINE_SINCE(6, 8)
         qsizetype indexOf(char c, qsizetype from = 0) const;
-        qsizetype indexOf(QByteArrayView bv, qsizetype from = 0) const
-        { return QtPrivate::findByteArray(qToByteArrayViewIgnoringNull(*this), from, bv); }
+        qsizetype indexOf(QByteArrayView bv, qsizetype from = 0) const;
+        //{ return 0/*QtPrivate::findByteArray(qToByteArrayViewIgnoringNull(*this), from, bv)*/; }
 
         QT_CORE_INLINE_SINCE(6, 8)
         qsizetype lastIndexOf(char c, qsizetype from = -1) const;
-        qsizetype lastIndexOf(QByteArrayView bv) const
-        { return lastIndexOf(bv, size()); }
-        qsizetype lastIndexOf(QByteArrayView bv, qsizetype from) const
-        { return QtPrivate::lastIndexOf(qToByteArrayViewIgnoringNull(*this), from, bv); }
+        qsizetype lastIndexOf(QByteArrayView bv) const;
+        //{ return lastIndexOf(bv, size()); }
+        qsizetype lastIndexOf(QByteArrayView bv, qsizetype from) const;
+        //{ return 0/*QtPrivate::lastIndexOf(qToByteArrayViewIgnoringNull(*this), from, bv)*/; }
 
         inline bool contains(char c) const;
         inline bool contains(QByteArrayView bv) const;
         qsizetype count(char c) const;
-        qsizetype count(QByteArrayView bv) const
-        { return QtPrivate::count(qToByteArrayViewIgnoringNull(*this), bv); }
+        qsizetype count(QByteArrayView bv) const;
+        //{ return 0/*QtPrivate::count(qToByteArrayViewIgnoringNull(*this), bv)*/; }
 
-        inline int compare(QByteArrayView a, Qt::CaseSensitivity cs = Qt::CaseSensitive) const noexcept;
+        /*inline*/ int compare(QByteArrayView a, Qt::CaseSensitivity cs = Qt::CaseSensitive) const noexcept;
 
     #if QT_CORE_REMOVED_SINCE(6, 7)
         QByteArray left(qsizetype len) const;
@@ -217,25 +224,23 @@
         { verify(0, len); return std::move(*this).first(size() - len); }
     #endif
 
-        bool startsWith(QByteArrayView bv) const
-        { return QtPrivate::startsWith(qToByteArrayViewIgnoringNull(*this), bv); }
-        bool startsWith(char c) const { return size() > 0 && front() == c; }
-
-        bool endsWith(char c) const { return size() > 0 && back() == c; }
-        bool endsWith(QByteArrayView bv) const
-        { return QtPrivate::endsWith(qToByteArrayViewIgnoringNull(*this), bv); }
-
+        bool startsWith(QByteArrayView /*bv*/) const;
+        //{ return false/*QtPrivate::startsWith(qToByteArrayViewIgnoringNull(*this), bv)*/; }
+        bool startsWith(char c) const;
+        //{ return size() > 0 && front() == c; }
+        bool endsWith(char c) const;
+        //{ return size() > 0 && back() == c; }
+        bool endsWith(QByteArrayView /*bv*/) const;
+        //{ return false/*QtPrivate::endsWith(qToByteArrayViewIgnoringNull(*this), bv)*/; }
         bool isUpper() const;
         bool isLower() const;
-
-        [[nodiscard]] bool isValidUtf8() const noexcept
-        {
-            return QtPrivate::isValidUtf8(qToByteArrayViewIgnoringNull(*this));
-        }
+        [[nodiscard]] bool isValidUtf8() const noexcept;
+        //{
+        //    return false/*QtPrivate::isValidUtf8(qToByteArrayViewIgnoringNull(*this))*/;
+        //}
 
         void truncate(qsizetype pos);
         void chop(qsizetype n);
-
         QByteArray &slice(qsizetype pos)
         { verify(pos, 0); return remove(0, pos); }
         QByteArray &slice(qsizetype pos, qsizetype n)
@@ -587,7 +592,7 @@
             return result;
         }
 
-        friend class QString;
+        //friend class QString;
         friend Q_CORE_EXPORT QByteArray qUncompress(const uchar *data, qsizetype nbytes);
 
         template <typename T> friend qsizetype erase(QByteArray &ba, const T &t);
@@ -663,11 +668,11 @@
     { return indexOf(c) != -1; }
     inline bool QByteArray::contains(QByteArrayView bv) const
     { return indexOf(bv) != -1; }
-    inline int QByteArray::compare(QByteArrayView a, Qt::CaseSensitivity cs) const noexcept
-    {
-        return cs == Qt::CaseSensitive ? QtPrivate::compareMemory(*this, a) :
-                                         qstrnicmp(data(), size(), a.data(), a.size());
-    }
+    //inline int QByteArray::compare(QByteArrayView /*a*/, Qt::CaseSensitivity cs) const noexcept
+    //{
+    //    return cs == Qt::CaseSensitive ? 0/*QtPrivate::compareMemory(*this, a)*/ :
+    //                                     1/*qstrnicmp(data(), size(), a.data(), a.size())*/;
+    //}
     #if !defined(QT_USE_QSTRINGBUILDER)
     inline QByteArray operator+(const QByteArray &a1, const QByteArray &a2)
     { return QByteArray(a1) += a2; }
@@ -792,9 +797,7 @@
         return ba.removeIf_helper(pred);
     }
 
-    //
     // QByteArrayView members that require QByteArray:
-    //
     QByteArray QByteArrayView::toByteArray() const
     {
         return QByteArray(*this);

@@ -466,7 +466,8 @@ static void createCRC16Table()                        // build CRC16 lookup tabl
 }
 #endif
 
-static const quint16 crc_tbl[16] = {
+static const quint16 crc_tbl[16] =
+{
     0x0000, 0x1081, 0x2102, 0x3183,
     0x4204, 0x5285, 0x6306, 0x7387,
     0x8408, 0x9489, 0xa50a, 0xb58b,
@@ -5153,19 +5154,75 @@ size_t qHash(const QByteArray::FromBase64Result &key, size_t seed) noexcept
 
 
 // ========== My define ==========
+QByteArray::QByteArray(QByteArrayView v)
+    : QByteArray(v.data(), v.size())
+{
+}
+
+bool QByteArray::startsWith(QByteArrayView bv) const
+{
+    return QtPrivate::startsWith(qToByteArrayViewIgnoringNull(*this), bv);
+}
+
+bool QByteArray::startsWith(char c) const
+{
+    return size() > 0 && front() == c;
+}
+
+bool QByteArray::endsWith(char c) const
+{
+    return size() > 0 && back() == c;
+}
+
+bool QByteArray::endsWith(QByteArrayView bv) const
+{
+    return QtPrivate::endsWith(qToByteArrayViewIgnoringNull(*this), bv);
+}
+
+[[nodiscard]] bool QByteArray::isValidUtf8() const noexcept
+{
+    return QtPrivate::isValidUtf8(qToByteArrayViewIgnoringNull(*this));
+}
+
 bool QByteArray::isNull() const noexcept
 {
     return d.isNull();
 }
 
-qsizetype QByteArray::indexOf(char ch, qsizetype from) const
+qsizetype QByteArray::indexOf(char ch, qsizetype from/* = 0*/) const
 {
     return qToByteArrayViewIgnoringNull(*this).indexOf(ch, from);
 }
 
-qsizetype QByteArray::lastIndexOf(char ch, qsizetype from) const
+qsizetype QByteArray::indexOf(QByteArrayView bv, qsizetype from /*= 0*/) const
+{
+    return QtPrivate::findByteArray(qToByteArrayViewIgnoringNull(*this), from, bv);
+}
+
+qsizetype QByteArray::lastIndexOf(char ch, qsizetype from/* = -1*/) const
 {
     return qToByteArrayViewIgnoringNull(*this).lastIndexOf(ch, from);
+}
+
+qsizetype QByteArray::lastIndexOf(QByteArrayView bv) const
+{
+    return lastIndexOf(bv, size());
+}
+
+qsizetype QByteArray::lastIndexOf(QByteArrayView bv, qsizetype from) const
+{
+    return QtPrivate::lastIndexOf(qToByteArrayViewIgnoringNull(*this), from, bv);
+}
+
+qsizetype QByteArray::count(QByteArrayView bv) const
+{
+    return QtPrivate::count(qToByteArrayViewIgnoringNull(*this), bv);
+}
+
+int QByteArray::compare(QByteArrayView a, Qt::CaseSensitivity cs) const noexcept
+{
+    return cs == Qt::CaseSensitive ? QtPrivate::compareMemory(*this, a) :
+        qstrnicmp(data(), size(), a.data(), a.size());
 }
 // ========== My define ==========
 

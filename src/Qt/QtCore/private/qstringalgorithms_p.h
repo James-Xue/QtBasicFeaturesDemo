@@ -77,8 +77,13 @@ template <typename StringType> struct QStringAlgorithms
         const auto [begin, end] = trimmed_helper_positions(str);
         if (begin == str.cbegin() && end == str.cend())
             return str;
-        if (!isConst && str.isDetached())
-            return trimmed_helper_inplace(str, begin, end);
+        if constexpr (false == isConst)
+        {
+            if (true == str.isDetached())
+            {
+                return trimmed_helper_inplace(str, begin, end);
+            }
+        }
         return StringType(begin, end - begin);
     }
 
@@ -110,9 +115,13 @@ template <typename StringType> struct QStringAlgorithms
             --ptr;
 
         qsizetype newlen = ptr - dst;
-        if (isConst && newlen == str.size() && unmodified) {
-            // nothing happened, return the original
-            return str;
+        if constexpr (true == isConst)
+        {
+            if (newlen == str.size() && unmodified)
+            {
+                // nothing happened, return the original
+                return str;
+            }
         }
         result.resize(newlen);
         return result;

@@ -143,8 +143,9 @@
         template <typename Byte>
         static const storage_type *castHelper(const Byte *data) noexcept
         { return reinterpret_cast<const storage_type*>(data); }
-        static constexpr const storage_type *castHelper(const storage_type *data) noexcept;
-        //{ return data; }
+
+        static constexpr const storage_type *castHelper(const storage_type *data) noexcept
+        { return data; }
 
     public:
         constexpr QByteArrayView() noexcept;
@@ -366,9 +367,9 @@
                     && (!lhs.size() || memcmp(lhs.data(), rhs.data(), lhs.size()) == 0);
         }
         friend Qt::strong_ordering
-        compareThreeWay(const QByteArrayView &lhs, const QByteArrayView &rhs) noexcept
+        compareThreeWay(const QByteArrayView &/*lhs*/, const QByteArrayView &/*rhs*/) noexcept
         {
-            const int res = QtPrivate::compareMemory(lhs, rhs);
+            const int res = 0/*QtPrivate::compareMemory(lhs, rhs)*/;
             return Qt::compareThreeWay(res, 0);
         }
         Q_DECLARE_STRONGLY_ORDERED(QByteArrayView)

@@ -9,11 +9,6 @@ constexpr qsizetype QByteArrayView::lengthHelperCharArray(const char *data, size
     return qsizetype(std::distance(data, end));
 }
 
-constexpr const QByteArrayView::storage_type *QByteArrayView::castHelper(const storage_type *data) noexcept
-{
-    return data;
-}
-
 constexpr QByteArrayView::QByteArrayView() noexcept
     : m_size(0)
     , m_data(nullptr)
