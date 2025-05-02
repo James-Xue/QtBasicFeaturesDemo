@@ -5,10 +5,10 @@
 #ifndef QARRAYDATA_H
     #define QARRAYDATA_H
 
-    #include <QtCore/qpair.h>
+    //#include <QtCore/qpair.h>
     #include <QtCore/qatomic.h>
     #include <QtCore/qflags.h>
-    #include <QtCore/qcontainerfwd.h>
+    //#include <QtCore/qcontainerfwd.h>
     #include <string.h>
 
     QT_BEGIN_NAMESPACE
