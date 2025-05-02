@@ -1,8 +1,3 @@
-// Copyright (C) 2021 The Qt Company Ltd.
-// Copyright (C) 2016 Intel Corporation.
-// Copyright (C) 2013 Olivier Goffart <ogoffart@woboq.com>
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
-
 #include "qobject.h"
 #include <QtCore/private/qobject_p.h>
 #include <QtCore/private/qobject_p_p.h>
@@ -25,12 +20,13 @@
 #include <qscopeguard.h>
 #include <qset.h>
 #if QT_CONFIG(thread)
-#include <qsemaphore.h>
+    #include <qsemaphore.h>
 #endif
-
 #include <private/qorderedmutexlocker_p.h>
 #include <private/qhooks_p.h>
 #include <qtcore_tracepoints_p.h>
+
+// STL
 #include <new>
 #include <mutex>
 #include <memory>
