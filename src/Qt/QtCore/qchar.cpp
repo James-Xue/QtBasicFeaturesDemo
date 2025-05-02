@@ -1,9 +1,6 @@
-// Copyright (C) 2022 The Qt Company Ltd.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
-
 #include "qchar.h"
 #include "qdatastream.h"
-#include "qunicodetables_p.h"
+#include <private/qunicodetables_p.h>
 #include "qunicodetables.cpp"
 #include <algorithm>
 
@@ -1812,8 +1809,6 @@ QDataStream &operator>>(QDataStream &in, QChar &chr)
 */
 
 // ---------------------------------------------------------------------------
-
-
 static void decomposeHelper(QString *str, bool canonical, QChar::UnicodeVersion version, qsizetype from)
 {
     qsizetype length;
@@ -1849,8 +1844,8 @@ static void decomposeHelper(QString *str, bool canonical, QChar::UnicodeVersion 
     }
 }
 
-
-struct UCS2Pair {
+struct UCS2Pair
+{
     ushort u1;
     ushort u2;
 };
@@ -1862,15 +1857,18 @@ inline bool operator<(ushort u1, const UCS2Pair &ligature)
 inline bool operator<(const UCS2Pair &ligature, ushort u1)
 { return ligature.u1 < u1; }
 
-struct UCS2SurrogatePair {
+struct UCS2SurrogatePair
+{
     UCS2Pair p1;
     UCS2Pair p2;
 };
 
 inline bool operator<(const UCS2SurrogatePair &ligature1, const UCS2SurrogatePair &ligature2)
 { return QChar::surrogateToUcs4(ligature1.p1.u1, ligature1.p1.u2) < QChar::surrogateToUcs4(ligature2.p1.u1, ligature2.p1.u2); }
+
 inline bool operator<(char32_t u1, const UCS2SurrogatePair &ligature)
 { return u1 < QChar::surrogateToUcs4(ligature.p1.u1, ligature.p1.u2); }
+
 inline bool operator<(const UCS2SurrogatePair &ligature, char32_t u1)
 { return QChar::surrogateToUcs4(ligature.p1.u1, ligature.p1.u2) < u1; }
 
@@ -1972,7 +1970,6 @@ static void composeHelper(QString *str, QChar::UnicodeVersion version, qsizetype
         ++pos;
     }
 }
-
 
 static void canonicalOrderHelper(QString *str, QChar::UnicodeVersion version, qsizetype from)
 {
