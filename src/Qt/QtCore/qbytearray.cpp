@@ -1,8 +1,4 @@
-// Copyright (C) 2022 The Qt Company Ltd.
-// Copyright (C) 2016 Intel Corporation.
-// Copyright (C) 2019 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com, author Giuseppe D'Angelo <giuseppe.dangelo@kdab.com>
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
-#define  _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 
 #include "qbytearray.h"
 #include "qbytearraymatcher.h"
@@ -18,20 +14,22 @@
 #include <private/qstringconverter_p.h>
 #include <qdatastream.h>
 #include <qmath.h>
+
 #if defined(Q_OS_WASM)
-#include "private/qstdweb_p.h"
+    #include "private/qstdweb_p.h"
 #endif
 
 #ifndef QT_NO_COMPRESS
-#include <zconf.h>
-#include <zlib.h>
-#include <qxpfunctional.h>
+    #include <zconf.h>
+    #include <zlib.h>
+    #include <qxpfunctional.h>
 #endif
+
+// STL
 #include <ctype.h>
 #include <limits.h>
 #include <string.h>
 #include <stdlib.h>
-
 #include <algorithm>
 #include <QtCore/q26numeric.h>
 
@@ -556,7 +554,8 @@ enum class ZLibOp : bool { Compression, Decompression };
 Q_DECL_COLD_FUNCTION
 static const char *zlibOpAsString(ZLibOp op)
 {
-    switch (op) {
+    switch (op)
+    {
     case ZLibOp::Compression: return "qCompress";
     case ZLibOp::Decompression: return "qUncompress";
     }
@@ -564,9 +563,9 @@ static const char *zlibOpAsString(ZLibOp op)
 }
 
 Q_DECL_COLD_FUNCTION
-static QByteArray zlibError(ZLibOp op, const char *what)
+static QByteArray zlibError(ZLibOp /*op*/, const char */*what*/)
 {
-    qWarning("%s: %s", zlibOpAsString(op), what);
+    //qWarning("%s: %s", zlibOpAsString(op), what);
     return QByteArray();
 }
 
@@ -595,12 +594,12 @@ static QByteArray invalidCompressedData()
 }
 
 Q_DECL_COLD_FUNCTION
-static QByteArray unexpectedZlibError(ZLibOp op, int err, const char *msg)
+static QByteArray unexpectedZlibError(ZLibOp /*op*/, int /*err*/, const char */*msg*/)
 {
-    qWarning("%s unexpected zlib error: %s (%d)",
-             zlibOpAsString(op),
-             msg ? msg : "",
-             err);
+    //qWarning("%s unexpected zlib error: %s (%d)",
+    //         zlibOpAsString(op),
+    //         msg ? msg : "",
+    //         err);
     return QByteArray();
 }
 
