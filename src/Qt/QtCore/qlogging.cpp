@@ -1,6 +1,9 @@
 #include <QtCore/private/qglobal_p.h>
+
 #include "qlogging.h"
+
 #include <QtCore/private/qlogging_p.h>
+
 #include "qlist.h"
 #include "qbytearray.h"
 #include "qscopeguard.h"
@@ -8,81 +11,91 @@
 #include "qvarlengtharray.h"
 #include "qdebug.h"
 #include "qmutex.h"
+
 #include <QtCore/private/qlocking_p.h>
+
 #include "qloggingcategory.h"
+
 #ifndef QT_BOOTSTRAPPED
-#include "qelapsedtimer.h"
-#include "qdeadlinetimer.h"
-#include "qdatetime.h"
-#include "qcoreapplication.h"
-#include "qthread.h"
-#include "private/qloggingregistry_p.h"
-#include "private/qcoreapplication_p.h"
-#include <qtcore_tracepoints_p.h>
+    #include "qelapsedtimer.h"
+    #include "qdeadlinetimer.h"
+    #include "qdatetime.h"
+    #include "qcoreapplication.h"
+    #include "qthread.h"
+    #include "private/qloggingregistry_p.h"
+    #include "private/qcoreapplication_p.h"
+    #include <qtcore_tracepoints_p.h>
 #endif
+
 #ifdef Q_OS_WIN
-#include <qt_windows.h>
+    #include <qt_windows.h>
 #endif
+
 #ifdef Q_CC_MSVC
-#include <intrin.h>
+    #include <intrin.h>
 #endif
+
 #if QT_CONFIG(slog2)
-#include <sys/slog2.h>
+    #include <sys/slog2.h>
 #endif
+
 #if __has_include(<paths.h>)
-#include <paths.h>
+    #include <paths.h>
 #endif
 
 #ifdef Q_OS_ANDROID
-#include <android/log.h>
+    #include <android/log.h>
 #endif
 
 #ifdef Q_OS_DARWIN
-#include <QtCore/private/qcore_mac_p.h>
+    #include <QtCore/private/qcore_mac_p.h>
 #endif
 
 #if QT_CONFIG(journald)
-# define SD_JOURNAL_SUPPRESS_LOCATION
-# include <systemd/sd-journal.h>
-# include <syslog.h>
+    #define SD_JOURNAL_SUPPRESS_LOCATION
+    #include <systemd/sd-journal.h>
+    #include <syslog.h>
 #endif
+
 #if QT_CONFIG(syslog)
-# include <syslog.h>
+    #include <syslog.h>
 #endif
+
 #ifdef Q_OS_UNIX
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <unistd.h>
-# include "private/qcore_unix_p.h"
+    #include <sys/types.h>
+    #include <sys/stat.h>
+    #include <unistd.h>
+    #include "private/qcore_unix_p.h"
 #endif
 
 #ifdef Q_OS_WASM
-#include <emscripten/emscripten.h>
+    #include <emscripten/emscripten.h>
 #endif
 
 #if QT_CONFIG(slog2)
-extern char *__progname;
+    extern char *__progname;
 #endif
 
 #ifdef QLOGGING_HAVE_BACKTRACE
-#  include <qregularexpression.h>
+    #include <qregularexpression.h>
 #endif
 
 #ifdef QLOGGING_USE_EXECINFO_BACKTRACE
-#  if QT_CONFIG(dladdr)
-#    include <dlfcn.h>
-#  endif
-#  include BACKTRACE_HEADER
-#  include <cxxabi.h>
+    #if QT_CONFIG(dladdr)
+        #include <dlfcn.h>
+    #endif
+
+    #include BACKTRACE_HEADER
+    #include <cxxabi.h>
 #endif // QLOGGING_USE_EXECINFO_BACKTRACE
 
 #ifndef QT_BOOTSTRAPPED
 #if defined(Q_OS_LINUX) && (defined(__GLIBC__) || __has_include(<sys/syscall.h>))
-#  include <sys/syscall.h>
+#include <sys/syscall.h>
 
-# if defined(Q_OS_ANDROID) && !defined(SYS_gettid)
-#  define SYS_gettid __NR_gettid
-# endif
+#if defined(Q_OS_ANDROID) && !defined(SYS_gettid)
+#define SYS_gettid __NR_gettid
+#endif
 
 static long qt_gettid()
 {
@@ -91,7 +104,7 @@ static long qt_gettid()
     return syscall(SYS_gettid);
 }
 #elif defined(Q_OS_DARWIN)
-#  include <pthread.h>
+#include <pthread.h>
 static int qt_gettid()
 {
     // no error handling: this call cannot fail
@@ -100,7 +113,7 @@ static int qt_gettid()
     return tid;
 }
 #elif defined(Q_OS_FREEBSD_KERNEL) && defined(__FreeBSD_version) && __FreeBSD_version >= 900031
-#  include <pthread_np.h>
+#include <pthread_np.h>
 static int qt_gettid()
 {
     return pthread_getthreadid_np();
@@ -265,9 +278,9 @@ static bool stderrHasConsoleAttached()
 #if defined(Q_OS_WIN)
         return GetConsoleWindow();
 #elif defined(Q_OS_UNIX)
-#       ifndef _PATH_TTY
-#       define _PATH_TTY "/dev/tty"
-#       endif
+#   ifndef _PATH_TTY
+#   define _PATH_TTY "/dev/tty"
+#   endif
 
         // If we can open /dev/tty, we have a controlling TTY
         int ttyDevice = -1;
@@ -1468,7 +1481,7 @@ backtraceFramesForLogMessage(int frameCount,
             return QString::fromUtf8(fn);       // restore
     };
 
-#  if QT_CONFIG(dladdr)
+#if QT_CONFIG(dladdr)
     // use dladdr() instead of backtrace_symbols()
     QString cachedLibrary;
     const char *cachedFname = nullptr;
@@ -1495,7 +1508,7 @@ backtraceFramesForLogMessage(int frameCount,
         }
         return { cachedLibrary, function };
     };
-#  else
+#else
     // The results of backtrace_symbols looks like this:
     //    /lib/libc.so.6(__libc_start_main+0xf3) [0x4a937413]
     // The offset and function name are optional.
@@ -1520,7 +1533,7 @@ backtraceFramesForLogMessage(int frameCount,
         function = demangled(function);
         return { library, function };
     };
-#  endif
+#endif
 
     for (void *const &addr : buffer) {
         DecodedFrame frame = decodeFrame(addr);
