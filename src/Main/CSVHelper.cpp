@@ -92,7 +92,7 @@ namespace Demo
             const QByteArray line = oneQFile.readLine();
             m_vctString.push_back(line.toStdString());
             const QString str = line;
-            if (true == str.isEmpty())
+            if (true == str.trimmed().isEmpty())
             {
                 bBlank = true;
                 break;
