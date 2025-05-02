@@ -303,25 +303,22 @@ static bool stderrHasConsoleAttached()
     return stderrHasConsoleAttached;
 }
 
-
-namespace QtPrivate {
-
-/*!
-    Returns true if logging \c stderr should be ensured.
-
-    This is normally the case if \c stderr has a console attached, but may be overridden
-    by the user by setting the QT_FORCE_STDERR_LOGGING environment variable to \c 1.
-
-    \internal
-    \sa stderrHasConsoleAttached()
-*/
-bool shouldLogToStderr()
+namespace QtPrivate
 {
-    static bool forceStderrLogging = qEnvironmentVariableIntValue("QT_FORCE_STDERR_LOGGING");
-    return forceStderrLogging || stderrHasConsoleAttached();
-}
+    /*!
+        Returns true if logging \c stderr should be ensured.
 
+        This is normally the case if \c stderr has a console attached, but may be overridden
+        by the user by setting the QT_FORCE_STDERR_LOGGING environment variable to \c 1.
 
+        \internal
+        \sa stderrHasConsoleAttached()
+    */
+    bool shouldLogToStderr()
+    {
+        static bool forceStderrLogging = qEnvironmentVariableIntValue("QT_FORCE_STDERR_LOGGING");
+        return forceStderrLogging || stderrHasConsoleAttached();
+    }
 } // QtPrivate
 
 using namespace QtPrivate;
@@ -1996,13 +1993,14 @@ static void stderr_message_handler(QtMsgType type, const QMessageLogContext &con
     fflush(stderr);
 }
 
-namespace {
-struct SystemMessageSink
+namespace
 {
-    using Fn = bool(QtMsgType, const QMessageLogContext &, const QString &);
-    Fn *sink;
-    bool messageIsUnformatted = false;
-};
+    struct SystemMessageSink
+    {
+        using Fn = bool(QtMsgType, const QMessageLogContext &, const QString &);
+        Fn *sink;
+        bool messageIsUnformatted = false;
+    };
 }
 
 static constexpr SystemMessageSink systemMessageSink = {
@@ -2428,6 +2426,7 @@ QMessageLogContext &QMessageLogContext::copyContextFrom(const QMessageLogContext
     Constructs a QMessageLogger to record log messages for \a file at \a line
     in \a function. The is equivalent to QMessageLogger(file, line, function, "default")
 */
+
 /*!
     \fn QMessageLogger::QMessageLogger(const char *file, int line, const char *function, const char *category)
 
