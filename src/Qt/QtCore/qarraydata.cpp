@@ -139,7 +139,8 @@ calculateBlockSize(qsizetype capacity, qsizetype objectSize, qsizetype headerSiz
 static QArrayData *allocateData(qsizetype allocSize)
 {
     QArrayData *header = static_cast<QArrayData *>(::malloc(size_t(allocSize)));
-    if (header) {
+    if (header)
+    {
         header->ref_.storeRelaxed(1);
         header->flags = {};
         header->alloc = 0;

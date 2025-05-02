@@ -5,13 +5,20 @@ set(MODULE_NAME QtCore)
 #file(GLOB SOURCES "*.cpp")
 file(GLOB SOURCES
     # Base classes
+    # "qarraydata.cpp"
+    # "qbytearray.cpp"
+    # "qbytearrayview.cpp"
+    # "qbytearraymatcher.cpp"
+    "qcompare.cpp"
+    # "qchar.cpp"
     # "qobject.cpp"
     # "qmetaobject.cpp"
     # "qproperty.cpp"
     # "qmetatype.cpp"
+    # "qatomic.cpp"
+
 
     # Container classes
-    # "qchar.cpp"
     # "qstring.cpp"
     # "qstringview.cpp"
     # "qlocale_tools.cpp"
@@ -22,12 +29,9 @@ file(GLOB SOURCES
     # "qset.cpp"
     # "qpair.cpp"
     # "qvariant.cpp"
-    # "qbytearray.cpp"
-    # "qbytearraymatcher.cpp"
     # "qhash.cpp"
     # "qstringlist.cpp"
     # "qfloat16.cpp"
-    # "qarraydata.cpp"
     # "qdatastream.cpp"
     # "qtextStream.cpp"
 
@@ -84,6 +88,7 @@ file(GLOB SOURCES
 
     # Debugging and logging classes
     "qassert.cpp"
+    # "qsystemerror.cpp"
     # "qlogging.cpp"
     # "qdebug.cpp"
 

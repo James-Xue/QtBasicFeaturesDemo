@@ -5,6 +5,8 @@
     #include <QtCore/qatomic.h>
     #include <QtCore/qflags.h>
     //#include <QtCore/qcontainerfwd.h>
+
+    // STL
     #include <string.h>
 
     QT_BEGIN_NAMESPACE

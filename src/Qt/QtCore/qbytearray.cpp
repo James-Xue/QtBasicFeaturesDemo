@@ -9,7 +9,7 @@
 #include <private/qlocale_tools_p.h>
 //#include <private/qnumeric_p.h>
 //#include <private/qsimd_p.h>
-#include <private/qstringalgorithms_p.h>
+//#include <private/qstringalgorithms_p.h>
 //#include "qscopedpointer.h"
 #include <private/qstringconverter_p.h>
 //#include <qdatastream.h>
@@ -3589,14 +3589,16 @@ QDataStream &operator>>(QDataStream &in, QByteArray &ba)
 
     \sa trimmed(), QChar::SpecialCharacter, {Spacing Characters}
 */
-QByteArray QByteArray::simplified_helper(const QByteArray &a)
+QByteArray QByteArray::simplified_helper(const QByteArray &/*a*/)
 {
-    return QStringAlgorithms<const QByteArray>::simplified_helper(a);
+    //return QStringAlgorithms<const QByteArray>::simplified_helper(a);
+    return 0;
 }
 
-QByteArray QByteArray::simplified_helper(QByteArray &a)
+QByteArray QByteArray::simplified_helper(QByteArray &/*a*/)
 {
-    return QStringAlgorithms<QByteArray>::simplified_helper(a);
+    //return QStringAlgorithms<QByteArray>::simplified_helper(a);
+    return 0;
 }
 
 /*!
@@ -3618,20 +3620,23 @@ QByteArray QByteArray::simplified_helper(QByteArray &a)
 
     \sa simplified(), QChar::SpecialCharacter, {Spacing Characters}
 */
-QByteArray QByteArray::trimmed_helper(const QByteArray &a)
+QByteArray QByteArray::trimmed_helper(const QByteArray &/*a*/)
 {
-    return QStringAlgorithms<const QByteArray>::trimmed_helper(a);
+    //return QStringAlgorithms<const QByteArray>::trimmed_helper(a);
+    return 0;
 }
 
-QByteArray QByteArray::trimmed_helper(QByteArray &a)
+QByteArray QByteArray::trimmed_helper(QByteArray &/*a*/)
 {
-    return QStringAlgorithms<QByteArray>::trimmed_helper(a);
+    //return QStringAlgorithms<QByteArray>::trimmed_helper(a);
+    return 0;
 }
 
-QByteArrayView QtPrivate::trimmed(QByteArrayView view) noexcept
+QByteArrayView QtPrivate::trimmed(QByteArrayView /*view*/) noexcept
 {
-    const auto [start, stop] = QStringAlgorithms<QByteArrayView>::trimmed_helper_positions(view);
-    return QByteArrayView(start, stop);
+    //const auto [start, stop] = QStringAlgorithms<QByteArrayView>::trimmed_helper_positions(view);
+    //return QByteArrayView(start, stop);
+    return QByteArrayView();
 }
 
 /*!
