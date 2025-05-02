@@ -1,50 +1,28 @@
-/***************************************************************************
- *   Copyright (c) 2008 Jürgen Riegel <juergen.riegel@web.de>              *
- *                                                                         *
- *   This file is part of the FreeCAD CAx development system.              *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Library General Public License (LGPL)   *
- *   as published by the Free Software Foundation; either version 2 of     *
- *   the License, or (at your option) any later version.                   *
- *   for detail see the LICENCE text file.                                 *
- *                                                                         *
- *   FreeCAD is distributed in the hope that it will be useful,            *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Library General Public License for more details.                  *
- *                                                                         *
- *   You should have received a copy of the GNU Library General Public     *
- *   License along with FreeCAD; if not, write to the Free Software        *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
- *                                                                         *
- ***************************************************************************/
-
 #include <FCConfig.h>
 
 #if defined(_MSC_VER)
-#include <windows.h>
-#include <dbghelp.h>
+    #include <windows.h>
+    #include <dbghelp.h>
 #endif
 
-
 #ifdef _PreComp_
-#undef _PreComp_
+    #undef _PreComp_
 #endif
 
 #ifdef FC_OS_LINUX
-#include <unistd.h>
+    #include <unistd.h>
 #endif
 
 #if HAVE_CONFIG_H
-#include <config.h>
-#endif  // HAVE_CONFIG_H
+    #include <config.h>
+#endif
 
+// STL
 #include <cstdio>
 #include <map>
 #include <stdexcept>
 
+// Qt
 #include <QApplication>
 #include <QLocale>
 #include <QMessageBox>
@@ -58,15 +36,14 @@
 #include <Gui/Application.h>
 #include "../../include/QtWidgets/QPushButton"
 
-
 void PrintInitHelp();
 
 const char sBanner[] =
-    "(C) 2001-2025 FreeCAD contributors\n"
-    "FreeCAD is free and open-source software licensed under the terms of LGPL2+ license.\n\n";
+    u8"(C) 2001-2025 FreeCAD contributors\n"
+    u8"FreeCAD is free and open-source software licensed under the terms of LGPL2+ license.\n\n";
 
 #if defined(_MSC_VER)
-void InitMiniDumpWriter(const std::string&);
+    void InitMiniDumpWriter(const std::string&);
 #endif
 
 class Redirection
@@ -85,6 +62,7 @@ public:
             std::cerr << "Failed to reopen file" << std::endl;
         }
     }
+
     ~Redirection()
     {
         fclose(file);
@@ -203,10 +181,12 @@ int main(int argc, char** argv)
     // https://forum.freecad.org/viewtopic.php?f=4&t=18288
     // https://forum.freecad.org/viewtopic.php?f=3&t=20515
     const char* fc_py_home = getenv("FC_PYTHONHOME");
-    if (fc_py_home) {
+    if (fc_py_home)
+    {
         _putenv_s("PYTHONHOME", fc_py_home);
     }
-    else {
+    else
+    {
         _putenv("PYTHONHOME=");
     }
 #endif
@@ -224,7 +204,8 @@ int main(int argc, char** argv)
     {
         QCoreApplication app(argc, argv);
         QStringList args = app.arguments();
-        for (QStringList::iterator it = args.begin(); it != args.end(); ++it) {
+        for (QStringList::iterator it = args.begin(); it != args.end(); ++it)
+        {
             data.push_back(it->toUtf8());
             argv_.push_back(data.back().data());
         }
@@ -256,7 +237,8 @@ int main(int argc, char** argv)
 
     QGuiApplication::setDesktopFileName(QStringLiteral("org.freecad.FreeCAD"));
 
-    try {
+    try
+    {
         // Init phase ===========================================================
         // sets the default run mode for FC, starts with gui if not overridden in InitConfig...
         App::Application::Config()["RunMode"] = "Gui";
@@ -277,7 +259,8 @@ int main(int argc, char** argv)
 #endif
         std::map<std::string, std::string>::iterator it =
             App::Application::Config().find("NavigationStyle");
-        if (it != App::Application::Config().end()) {
+        if (it != App::Application::Config().end())
+        {
             ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath(
                 "User parameter:BaseApp/Preferences/View");
             // if not already defined do it now (for the very first start)
@@ -288,11 +271,13 @@ int main(int argc, char** argv)
         Gui::Application::initApplication();
 
         // Only if 'RunMode' is set to 'Gui' do the replacement
-        if (App::Application::Config()["RunMode"] == "Gui") {
+        if (App::Application::Config()["RunMode"] == "Gui")
+        {
             Base::Interpreter().replaceStdOutput();
         }
     }
-    catch (const Base::UnknownProgramOption& e) {
+    catch (const Base::UnknownProgramOption& e)
+    {
         QApplication app(argc, argv);
         QString appName = QString::fromLatin1(App::Application::Config()["ExeName"].c_str());
         QString msg = QString::fromLatin1(e.what());
@@ -300,7 +285,8 @@ int main(int argc, char** argv)
         QMessageBox::critical(nullptr, appName, s);
         exit(1);
     }
-    catch (const Base::ProgramInformation& e) {
+    catch (const Base::ProgramInformation& e)
+    {
         QApplication app(argc, argv);
         QString appName = QString::fromLatin1(App::Application::Config()["ExeName"].c_str());
         QString msg = QString::fromUtf8(e.what());
@@ -314,7 +300,8 @@ int main(int argc, char** argv)
         msgBox.exec();
         exit(0);
     }
-    catch (const Base::Exception& e) {
+    catch (const Base::Exception& e)
+    {
         // Popup an own dialog box instead of that one of Windows
         QApplication app(argc, argv);
         QString appName = QString::fromLatin1(App::Application::Config()["ExeName"].c_str());
@@ -327,13 +314,15 @@ int main(int argc, char** argv)
                        QString::fromUtf8(Py_EncodeLocale(Py_GetPath(), nullptr)),
                        QString::fromLatin1(Py_GetVersion()));
         const char* pythonhome = getenv("PYTHONHOME");
-        if (pythonhome) {
+        if (pythonhome)
+        {
             msg += QObject::tr("\nThe environment variable PYTHONHOME is set to '%1'.")
                        .arg(QString::fromUtf8(pythonhome));
             msg += QObject::tr("\nSetting this environment variable might cause Python to fail. "
                                "Please contact your administrator to unset it on your system.\n\n");
         }
-        else {
+        else
+        {
             msg += QObject::tr(
                 "\nPlease contact the application's support team for more information.\n\n");
         }
@@ -343,7 +332,8 @@ int main(int argc, char** argv)
                               msg);
         exit(100);
     }
-    catch (...) {
+    catch (...)
+    {
         // Popup an own dialog box instead of that one of Windows
         QApplication app(argc, argv);
         QString appName = QString::fromLatin1(App::Application::Config()["ExeName"].c_str());
@@ -365,31 +355,40 @@ int main(int argc, char** argv)
     std::streambuf* oldclog = std::clog.rdbuf(&stdclog);
     std::streambuf* oldcerr = std::cerr.rdbuf(&stdcerr);
 
-    try {
+    try
+    {
         // if console option is set then run in cmd mode
-        if (App::Application::Config()["Console"] == "1") {
+        if (App::Application::Config()["Console"] == "1")
+        {
             App::Application::runApplication();
         }
+
         if (App::Application::Config()["RunMode"] == "Gui"
-            || App::Application::Config()["RunMode"] == "Internal") {
+            || App::Application::Config()["RunMode"] == "Internal")
+        {
             Gui::Application::runApplication();
         }
-        else {
+        else
+        {
             App::Application::runApplication();
         }
     }
-    catch (const Base::SystemExitException& e) {
+    catch (const Base::SystemExitException& e)
+    {
         exit(e.getExitCode());
     }
-    catch (const Base::Exception& e) {
+    catch (const Base::Exception& e)
+    {
         e.ReportException();
         exit(1);
     }
-    catch (const std::exception& e) {
+    catch (const std::exception& e)
+    {
         Base::Console().Error("Application unexpectedly terminated: %s\n", e.what());
         exit(1);
     }
-    catch (...) {
+    catch (...)
+    {
         Base::Console().Error("Application unexpectedly terminated\n");
         exit(1);
     }
@@ -406,132 +405,136 @@ int main(int argc, char** argv)
 
     Base::Console().Log("%s completely terminated\n",
                         App::Application::Config()["ExeName"].c_str());
-
     return 0;
 }
 
 #if defined(_MSC_VER)
-
-typedef BOOL(__stdcall* tMDWD)(IN HANDLE hProcess,
-                               IN DWORD ProcessId,
-                               IN HANDLE hFile,
-                               IN MINIDUMP_TYPE DumpType,
-                               IN CONST PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
-                               OPTIONAL IN CONST PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam,
-                               OPTIONAL IN CONST PMINIDUMP_CALLBACK_INFORMATION CallbackParam
+    typedef BOOL(__stdcall* tMDWD)(IN HANDLE hProcess,
+                                   IN DWORD ProcessId,
+                                   IN HANDLE hFile,
+                                   IN MINIDUMP_TYPE DumpType,
+                                   IN CONST PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
+                                   OPTIONAL IN CONST PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam,
+                                   OPTIONAL IN CONST PMINIDUMP_CALLBACK_INFORMATION CallbackParam
                                    OPTIONAL);
 
-static tMDWD s_pMDWD;
-static HMODULE s_hDbgHelpMod;
-static MINIDUMP_TYPE s_dumpTyp = MiniDumpNormal;
-static std::wstring s_szMiniDumpFileName;  // initialize with whatever appropriate...
+    static tMDWD s_pMDWD;
+    static HMODULE s_hDbgHelpMod;
+    static MINIDUMP_TYPE s_dumpTyp = MiniDumpNormal;
+    static std::wstring s_szMiniDumpFileName;  // initialize with whatever appropriate...
 
-#include <Base/StackWalker.h>
-class MyStackWalker: public StackWalker
-{
-    DWORD threadId;
-
-public:
-    MyStackWalker()
-        : StackWalker()
-        , threadId(GetCurrentThreadId())
+    #include <Base/StackWalker.h>
+    class MyStackWalker : public StackWalker
     {
-        std::string name = App::Application::Config()["UserAppData"] + "crash.log";
-        Base::Console().AttachObserver(new Base::ConsoleObserverFile(name.c_str()));
-    }
-    MyStackWalker(DWORD dwProcessId, HANDLE hProcess)
-        : StackWalker(dwProcessId, hProcess)
-    {}
-    virtual void OnOutput(LPCSTR szText)
-    {
-        Base::Console().Log("Id: %ld: %s", threadId, szText);
-        // StackWalker::OnOutput(szText);
-    }
-};
+        DWORD threadId;
 
-static LONG __stdcall MyCrashHandlerExceptionFilter(EXCEPTION_POINTERS* pEx)
-{
-#ifdef _M_IX86
-    if (pEx->ExceptionRecord->ExceptionCode == EXCEPTION_STACK_OVERFLOW) {
-        // be sure that we have enough space...
-        static char MyStack[1024 * 128];
-        // it assumes that DS and SS are the same!!! (this is the case for Win32)
-        // change the stack only if the selectors are the same (this is the case for Win32)
-        //__asm push offset MyStack[1024*128];
-        //__asm pop esp;
-        __asm mov eax, offset MyStack[1024 * 128];
-        __asm mov esp, eax;
-    }
-#endif
-    MyStackWalker sw;
-    sw.ShowCallstack(GetCurrentThread(), pEx->ContextRecord);
-    Base::Console().Log("*** Unhandled Exception!\n");
-    Base::Console().Log("   ExpCode: 0x%8.8X\n", pEx->ExceptionRecord->ExceptionCode);
-    Base::Console().Log("   ExpFlags: %d\n", pEx->ExceptionRecord->ExceptionFlags);
-    Base::Console().Log("   ExpAddress: 0x%8.8X\n", pEx->ExceptionRecord->ExceptionAddress);
-
-    bool bFailed = true;
-    HANDLE hFile;
-    hFile = CreateFileW(s_szMiniDumpFileName.c_str(),
-                        GENERIC_WRITE,
-                        0,
-                        NULL,
-                        CREATE_ALWAYS,
-                        FILE_ATTRIBUTE_NORMAL,
-                        NULL);
-    if (hFile != INVALID_HANDLE_VALUE) {
-        MINIDUMP_EXCEPTION_INFORMATION stMDEI;
-        stMDEI.ThreadId = GetCurrentThreadId();
-        stMDEI.ExceptionPointers = pEx;
-        stMDEI.ClientPointers = true;
-        // try to create a miniDump:
-        if (s_pMDWD(GetCurrentProcess(),
-                    GetCurrentProcessId(),
-                    hFile,
-                    s_dumpTyp,
-                    &stMDEI,
-                    NULL,
-                    NULL)) {
-            bFailed = false;  // succeeded
+    public:
+        MyStackWalker()
+            : StackWalker()
+            , threadId(GetCurrentThreadId())
+        {
+            std::string name = App::Application::Config()["UserAppData"] + "crash.log";
+            Base::Console().AttachObserver(new Base::ConsoleObserverFile(name.c_str()));
         }
-        CloseHandle(hFile);
+
+        MyStackWalker(DWORD dwProcessId, HANDLE hProcess)
+            : StackWalker(dwProcessId, hProcess)
+        {}
+
+        virtual void OnOutput(LPCSTR szText)
+        {
+            Base::Console().Log("Id: %ld: %s", threadId, szText);
+            // StackWalker::OnOutput(szText);
+        }
+    };
+
+    static LONG __stdcall MyCrashHandlerExceptionFilter(EXCEPTION_POINTERS* pEx)
+    {
+    #ifdef _M_IX86
+        if (pEx->ExceptionRecord->ExceptionCode == EXCEPTION_STACK_OVERFLOW) {
+            // be sure that we have enough space...
+            static char MyStack[1024 * 128];
+            // it assumes that DS and SS are the same!!! (this is the case for Win32)
+            // change the stack only if the selectors are the same (this is the case for Win32)
+            //__asm push offset MyStack[1024*128];
+            //__asm pop esp;
+            __asm mov eax, offset MyStack[1024 * 128];
+            __asm mov esp, eax;
+        }
+    #endif
+        MyStackWalker sw;
+        sw.ShowCallstack(GetCurrentThread(), pEx->ContextRecord);
+        Base::Console().Log("*** Unhandled Exception!\n");
+        Base::Console().Log("   ExpCode: 0x%8.8X\n", pEx->ExceptionRecord->ExceptionCode);
+        Base::Console().Log("   ExpFlags: %d\n", pEx->ExceptionRecord->ExceptionFlags);
+        Base::Console().Log("   ExpAddress: 0x%8.8X\n", pEx->ExceptionRecord->ExceptionAddress);
+
+        bool bFailed = true;
+        HANDLE hFile;
+        hFile = CreateFileW(s_szMiniDumpFileName.c_str(),
+                            GENERIC_WRITE,
+                            0,
+                            NULL,
+                            CREATE_ALWAYS,
+                            FILE_ATTRIBUTE_NORMAL,
+                            NULL);
+        if (hFile != INVALID_HANDLE_VALUE) {
+            MINIDUMP_EXCEPTION_INFORMATION stMDEI;
+            stMDEI.ThreadId = GetCurrentThreadId();
+            stMDEI.ExceptionPointers = pEx;
+            stMDEI.ClientPointers = true;
+            // try to create a miniDump:
+            if (s_pMDWD(GetCurrentProcess(),
+                        GetCurrentProcessId(),
+                        hFile,
+                        s_dumpTyp,
+                        &stMDEI,
+                        NULL,
+                        NULL)) {
+                bFailed = false;  // succeeded
+            }
+            CloseHandle(hFile);
+        }
+
+        if (bFailed) {
+            return EXCEPTION_CONTINUE_SEARCH;
+        }
+
+        // Optional display an error message
+        // FatalAppExit(-1, ("Application failed!"));
+
+
+        // or return one of the following:
+        // - EXCEPTION_CONTINUE_SEARCH
+        // - EXCEPTION_CONTINUE_EXECUTION
+        // - EXCEPTION_EXECUTE_HANDLER
+        return EXCEPTION_CONTINUE_SEARCH;  // this will trigger the "normal" OS error-dialog
     }
 
-    if (bFailed) {
-        return EXCEPTION_CONTINUE_SEARCH;
+    void InitMiniDumpWriter(const std::string& filename)
+    {
+        if (s_hDbgHelpMod != NULL)
+        {
+            return;
+        }
+
+        Base::FileInfo fi(filename);
+        s_szMiniDumpFileName = fi.toStdWString();
+
+        // Initialize the member, so we do not load the dll after the exception has occurred
+        // which might be not possible anymore...
+        s_hDbgHelpMod = LoadLibraryA(("dbghelp.dll"));
+
+        if (s_hDbgHelpMod != NULL)
+        {
+            s_pMDWD = (tMDWD)GetProcAddress(s_hDbgHelpMod, "MiniDumpWriteDump");
+        }
+
+        // Register Unhandled Exception-Filter:
+        SetUnhandledExceptionFilter(MyCrashHandlerExceptionFilter);
+
+        // Additional call "PreventSetUnhandledExceptionFilter"...
+        // See also: "SetUnhandledExceptionFilter" and VC8 (and later)
+        // http://blog.kalmbachnet.de/?postid=75
     }
-
-    // Optional display an error message
-    // FatalAppExit(-1, ("Application failed!"));
-
-
-    // or return one of the following:
-    // - EXCEPTION_CONTINUE_SEARCH
-    // - EXCEPTION_CONTINUE_EXECUTION
-    // - EXCEPTION_EXECUTE_HANDLER
-    return EXCEPTION_CONTINUE_SEARCH;  // this will trigger the "normal" OS error-dialog
-}
-
-void InitMiniDumpWriter(const std::string& filename)
-{
-    if (s_hDbgHelpMod != NULL) {
-        return;
-    }
-    Base::FileInfo fi(filename);
-    s_szMiniDumpFileName = fi.toStdWString();
-
-    // Initialize the member, so we do not load the dll after the exception has occurred
-    // which might be not possible anymore...
-    s_hDbgHelpMod = LoadLibraryA(("dbghelp.dll"));
-    if (s_hDbgHelpMod != NULL) {
-        s_pMDWD = (tMDWD)GetProcAddress(s_hDbgHelpMod, "MiniDumpWriteDump");
-    }
-
-    // Register Unhandled Exception-Filter:
-    SetUnhandledExceptionFilter(MyCrashHandlerExceptionFilter);
-
-    // Additional call "PreventSetUnhandledExceptionFilter"...
-    // See also: "SetUnhandledExceptionFilter" and VC8 (and later)
-    // http://blog.kalmbachnet.de/?postid=75
-}
 #endif
