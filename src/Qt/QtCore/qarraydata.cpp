@@ -1,15 +1,11 @@
-// Copyright (C) 2021 The Qt Company Ltd.
-// Copyright (C) 2016 Intel Corporation.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
-
 #include <QtCore/qarraydata.h>
 #include <QtCore/private/qnumeric_p.h>
 #include <QtCore/private/qtools_p.h>
 #include <QtCore/qmath.h>
+//#include <QtCore/qbytearray.h> // QBA::value_type
+//#include <QtCore/qstring.h>    // QString::value_type
 
-#include <QtCore/qbytearray.h>  // QBA::value_type
-#include <QtCore/qstring.h>  // QString::value_type
-
+// STL
 #include <stdlib.h>
 
 QT_BEGIN_NAMESPACE
@@ -145,11 +141,13 @@ static QArrayData *allocateData(qsizetype allocSize)
     return header;
 }
 
-namespace {
-struct AllocationResult {
-    void *data;
-    QArrayData *header;
-};
+namespace
+{
+    struct AllocationResult
+    {
+        void *data;
+        QArrayData *header;
+    };
 }
 using QtPrivate::AlignedQArrayData;
 
