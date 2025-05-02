@@ -1,22 +1,20 @@
-// Copyright (C) 2022 The Qt Company Ltd.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
-
 #include "qassert.h"
 
 #include <QtCore/qlogging.h>
-
 #include <cstdlib>
 #include <cstdio>
 #include <exception>
+
 #ifndef QT_NO_EXCEPTIONS
-#include <new>
+    #include <new>
 #endif
 
 #if defined(Q_CC_MSVC)
-#  include <crtdbg.h>
+    #include <crtdbg.h>
 #endif
+
 #ifdef Q_OS_WIN
-#  include <qt_windows.h>
+    #include <qt_windows.h>
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -33,12 +31,12 @@ Q_NORETURN void qAbort()
     // [support.start.term]). So we bypass std::abort() and directly
     // terminate the application.
 
-#  if defined(Q_CC_MSVC)
+#if defined(Q_CC_MSVC)
     if (IsProcessorFeaturePresent(PF_FASTFAIL_AVAILABLE))
         __fastfail(FAST_FAIL_FATAL_APP_EXIT);
-#  else
+#else
     RaiseFailFastException(nullptr, nullptr, 0);
-#  endif
+#endif
 
     // Fallback
     TerminateProcess(GetCurrentProcess(), STATUS_FATAL_APP_EXIT);
