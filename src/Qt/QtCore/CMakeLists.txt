@@ -11,16 +11,16 @@ file(GLOB SOURCES
     # "qmetatype.cpp"
 
     # Container classes
-    # #"qchar.cpp"
+    # "qchar.cpp"
     # "qstring.cpp"
     # "qstringview.cpp"
     # "qlocale_tools.cpp"
     # "qstringconverter.cpp"
-    # #"qlist.cpp"
-    # #"qvector.cpp"
-    # #"qmap.cpp"
-    # #"qset.cpp"
-    # #"qpair.cpp"
+    # "qlist.cpp"
+    # "qvector.cpp"
+    # "qmap.cpp"
+    # "qset.cpp"
+    # "qpair.cpp"
     # "qvariant.cpp"
     # "qbytearray.cpp"
     # "qbytearraymatcher.cpp"
@@ -53,7 +53,7 @@ file(GLOB SOURCES
     # "qreadwritelock.cpp"
     # "qsemaphore.cpp"
     # "qthreadpool.cpp"
-    # #"qfuture.cpp"
+    # "qfuture.cpp"
     # "qfuturewatcher.cpp"
 
     # File and directory classes
@@ -76,11 +76,11 @@ file(GLOB SOURCES
     # "qevent.cpp"
 
     # UI classes
-    # #"qfiledialog.cpp"
-    # #"qfileiconprovider.cpp"
-    # #"qmessagebox.cpp"
-    # #"qinputdialog.cpp"
-    # #"qprogressdialog.cpp"
+    # "qfiledialog.cpp"
+    # "qfileiconprovider.cpp"
+    # "qmessagebox.cpp"
+    # "qinputdialog.cpp"
+    # "qprogressdialog.cpp"
 
     # Debugging and logging classes
     "qassert.cpp"
