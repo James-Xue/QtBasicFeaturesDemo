@@ -1,5 +1,5 @@
 #include "qchar.h"
-#include "qdatastream.h"
+//#include "qdatastream.h"
 #include <private/qunicodetables_p.h>
 #include "qunicodetables.cpp"
 #include <algorithm>
@@ -757,7 +757,7 @@ bool QChar::isPrint(char32_t ucs4) noexcept
                      FLAG(Other_Surrogate) |
                      FLAG(Other_PrivateUse) |
                      FLAG(Other_NotAssigned);
-    return !(FLAG(qGetProp(ucs4)->category) & test);
+    return !(FLAG(QUnicodeTables::qGetProp(ucs4)->category) & test);
 }
 
 /*!
@@ -790,7 +790,7 @@ bool QT_FASTCALL QChar::isSpace_helper(char32_t ucs4) noexcept
     const int test = FLAG(Separator_Space) |
                      FLAG(Separator_Line) |
                      FLAG(Separator_Paragraph);
-    return FLAG(qGetProp(ucs4)->category) & test;
+    return FLAG(QUnicodeTables::qGetProp(ucs4)->category) & test;
 }
 
 /*!
@@ -818,7 +818,7 @@ bool QChar::isMark(char32_t ucs4) noexcept
     const int test = FLAG(Mark_NonSpacing) |
                      FLAG(Mark_SpacingCombining) |
                      FLAG(Mark_Enclosing);
-    return FLAG(qGetProp(ucs4)->category) & test;
+    return FLAG(QUnicodeTables::qGetProp(ucs4)->category) & test;
 }
 
 /*!
@@ -848,7 +848,7 @@ bool QChar::isPunct(char32_t ucs4) noexcept
                      FLAG(Punctuation_InitialQuote) |
                      FLAG(Punctuation_FinalQuote) |
                      FLAG(Punctuation_Other);
-    return FLAG(qGetProp(ucs4)->category) & test;
+    return FLAG(QUnicodeTables::qGetProp(ucs4)->category) & test;
 }
 
 /*!
@@ -875,7 +875,7 @@ bool QChar::isSymbol(char32_t ucs4) noexcept
                      FLAG(Symbol_Currency) |
                      FLAG(Symbol_Modifier) |
                      FLAG(Symbol_Other);
-    return FLAG(qGetProp(ucs4)->category) & test;
+    return FLAG(QUnicodeTables::qGetProp(ucs4)->category) & test;
 }
 
 /*!
@@ -908,7 +908,7 @@ bool QT_FASTCALL QChar::isLetter_helper(char32_t ucs4) noexcept
                      FLAG(Letter_Titlecase) |
                      FLAG(Letter_Modifier) |
                      FLAG(Letter_Other);
-    return FLAG(qGetProp(ucs4)->category) & test;
+    return FLAG(QUnicodeTables::qGetProp(ucs4)->category) & test;
 }
 
 /*!
@@ -943,7 +943,7 @@ bool QT_FASTCALL QChar::isNumber_helper(char32_t ucs4) noexcept
     const int test = FLAG(Number_DecimalDigit) |
                      FLAG(Number_Letter) |
                      FLAG(Number_Other);
-    return FLAG(qGetProp(ucs4)->category) & test;
+    return FLAG(QUnicodeTables::qGetProp(ucs4)->category) & test;
 }
 
 /*!
@@ -979,7 +979,7 @@ bool QT_FASTCALL QChar::isLetterOrNumber_helper(char32_t ucs4) noexcept
                      FLAG(Number_DecimalDigit) |
                      FLAG(Number_Letter) |
                      FLAG(Number_Other);
-    return FLAG(qGetProp(ucs4)->category) & test;
+    return FLAG(QUnicodeTables::qGetProp(ucs4)->category) & test;
 }
 
 /*!
@@ -1156,7 +1156,7 @@ int QChar::digitValue(char32_t ucs4) noexcept
 {
     if (ucs4 > LastValidCodePoint)
         return -1;
-    return qGetProp(ucs4)->digitValue;
+    return QUnicodeTables::qGetProp(ucs4)->digitValue;
 }
 
 /*!
@@ -1175,7 +1175,7 @@ QChar::Category QChar::category(char32_t ucs4) noexcept
 {
     if (ucs4 > LastValidCodePoint)
         return QChar::Other_NotAssigned;
-    return (QChar::Category) qGetProp(ucs4)->category;
+    return (QChar::Category)QUnicodeTables::qGetProp(ucs4)->category;
 }
 
 /*!
@@ -1194,7 +1194,7 @@ QChar::Direction QChar::direction(char32_t ucs4) noexcept
 {
     if (ucs4 > LastValidCodePoint)
         return QChar::DirL;
-    return (QChar::Direction) qGetProp(ucs4)->direction;
+    return (QChar::Direction)QUnicodeTables::qGetProp(ucs4)->direction;
 }
 
 /*!
@@ -1219,7 +1219,7 @@ QChar::JoiningType QChar::joiningType(char32_t ucs4) noexcept
 {
     if (ucs4 > LastValidCodePoint)
         return QChar::Joining_None;
-    return QChar::JoiningType(qGetProp(ucs4)->joining);
+    return QChar::JoiningType(QUnicodeTables::qGetProp(ucs4)->joining);
 }
 
 /*!
@@ -1250,7 +1250,7 @@ bool QChar::hasMirrored(char32_t ucs4) noexcept
 {
     if (ucs4 > LastValidCodePoint)
         return false;
-    return qGetProp(ucs4)->mirrorDiff != 0;
+    return QUnicodeTables::qGetProp(ucs4)->mirrorDiff != 0;
 }
 
 /*!
@@ -1340,7 +1340,7 @@ char32_t QChar::mirroredChar(char32_t ucs4) noexcept
 {
     if (ucs4 > LastValidCodePoint)
         return ucs4;
-    return ucs4 + qGetProp(ucs4)->mirrorDiff;
+    return ucs4 + QUnicodeTables::qGetProp(ucs4)->mirrorDiff;
 }
 
 // Constants for Hangul (de)composition, see UAX #15:
@@ -1376,7 +1376,7 @@ static const QChar * QT_FASTCALL decompositionHelper(
         return nullptr;
     }
 
-    const unsigned short *decomposition = uc_decomposition_map+index;
+    const unsigned short *decomposition = QUnicodeTables::uc_decomposition_map+index;
     *tag = QChar::Decomposition((*decomposition) & 0xff);
     *length = (*decomposition) >> 8;
     return reinterpret_cast<const QChar *>(decomposition + 1);
@@ -1386,10 +1386,10 @@ static const QChar * QT_FASTCALL decompositionHelper(
     Decomposes a character into it's constituent parts. Returns an empty string
     if no decomposition exists.
 */
-QString QChar::decomposition() const
-{
-    return QChar::decomposition(ucs);
-}
+//QString QChar::decomposition() const
+//{
+//    return QChar::decomposition(ucs);
+//}
 
 /*!
     \overload
@@ -1398,14 +1398,14 @@ QString QChar::decomposition() const
 
     \note Before Qt 6, this function took a \c uint argument.
 */
-QString QChar::decomposition(char32_t ucs4)
-{
-    QChar buffer[3];
-    qsizetype length;
-    QChar::Decomposition tag;
-    const QChar *d = decompositionHelper(ucs4, &length, &tag, buffer);
-    return QString(d, length);
-}
+//QString QChar::decomposition(char32_t ucs4)
+//{
+//    QChar buffer[3];
+//    qsizetype length;
+//    QChar::Decomposition tag;
+//    const QChar *d = decompositionHelper(ucs4, &length, &tag, buffer);
+//    return QString(d, length);
+//}
 
 /*!
     \fn QChar::Decomposition QChar::decompositionTag() const
@@ -1428,7 +1428,7 @@ QChar::Decomposition QChar::decompositionTag(char32_t ucs4) noexcept
     const unsigned short index = GET_DECOMPOSITION_INDEX(ucs4);
     if (index == 0xffff)
         return QChar::NoDecomposition;
-    return (QChar::Decomposition)(uc_decomposition_map[index] & 0xff);
+    return (QChar::Decomposition)(QUnicodeTables::uc_decomposition_map[index] & 0xff);
 }
 
 /*!
@@ -1453,7 +1453,7 @@ unsigned char QChar::combiningClass(char32_t ucs4) noexcept
 {
     if (ucs4 > LastValidCodePoint)
         return 0;
-    return (unsigned char) qGetProp(ucs4)->combiningClass;
+    return (unsigned char)QUnicodeTables::qGetProp(ucs4)->combiningClass;
 }
 
 /*!
@@ -1476,7 +1476,7 @@ QChar::Script QChar::script(char32_t ucs4) noexcept
 {
     if (ucs4 > LastValidCodePoint)
         return QChar::Script_Unknown;
-    return (QChar::Script) qGetProp(ucs4)->script;
+    return (QChar::Script)QUnicodeTables::qGetProp(ucs4)->script;
 }
 
 /*!
@@ -1496,7 +1496,7 @@ QChar::UnicodeVersion QChar::unicodeVersion(char32_t ucs4) noexcept
 {
     if (ucs4 > LastValidCodePoint)
         return QChar::Unicode_Unassigned;
-    return (QChar::UnicodeVersion) qGetProp(ucs4)->unicodeVersion;
+    return (QChar::UnicodeVersion)QUnicodeTables::qGetProp(ucs4)->unicodeVersion;
 }
 
 /*!
@@ -1509,8 +1509,9 @@ QChar::UnicodeVersion QChar::currentUnicodeVersion() noexcept
 
 static auto fullConvertCase(char32_t uc, QUnicodeTables::Case which) noexcept
 {
-    struct R {
-        char16_t chars[MaxSpecialCaseLength + 1];
+    struct Result__
+    {
+        char16_t chars[QUnicodeTables::MaxSpecialCaseLength + 1];
         qint8 sz;
 
         // iterable
@@ -1524,11 +1525,11 @@ static auto fullConvertCase(char32_t uc, QUnicodeTables::Case which) noexcept
 
     auto pp = result.chars;
 
-    const auto fold = qGetProp(uc)->cases[which];
+    const auto fold = QUnicodeTables::qGetProp(uc)->cases[which];
     const auto caseDiff = fold.diff;
 
     if (Q_UNLIKELY(fold.special)) {
-        const auto *specialCase = specialCaseMap + caseDiff;
+        const auto *specialCase = QUnicodeTables::specialCaseMap + caseDiff;
         auto length = *specialCase++;
         while (length--)
             *pp++ = *specialCase++;
@@ -1544,10 +1545,10 @@ static auto fullConvertCase(char32_t uc, QUnicodeTables::Case which) noexcept
 template <typename T>
 Q_DECL_CONST_FUNCTION static inline T convertCase_helper(T uc, QUnicodeTables::Case which) noexcept
 {
-    const auto fold = qGetProp(uc)->cases[which];
+    const auto fold = QUnicodeTables::qGetProp(uc)->cases[which];
 
     if (Q_UNLIKELY(fold.special)) {
-        const ushort *specialCase = specialCaseMap + fold.diff;
+        const ushort *specialCase = QUnicodeTables::specialCaseMap + fold.diff;
         // so far, there are no special cases beyond BMP (guaranteed by the qunicodetables generator)
         return *specialCase == 1 ? specialCase[1] : uc;
     }
@@ -1710,11 +1711,11 @@ char32_t QChar::toCaseFolded(char32_t ucs4) noexcept
 
     \sa {Serializing Qt Data Types}
 */
-QDataStream &operator<<(QDataStream &out, QChar chr)
-{
-    out << quint16(chr.unicode());
-    return out;
-}
+//QDataStream &operator<<(QDataStream &out, QChar chr)
+//{
+//    out << quint16(chr.unicode());
+//    return out;
+//}
 
 /*!
     \relates QChar
@@ -1723,13 +1724,13 @@ QDataStream &operator<<(QDataStream &out, QChar chr)
 
     \sa {Serializing Qt Data Types}
 */
-QDataStream &operator>>(QDataStream &in, QChar &chr)
-{
-    quint16 u;
-    in >> u;
-    chr.unicode() = char16_t(u);
-    return in;
-}
+//QDataStream &operator>>(QDataStream &in, QChar &chr)
+//{
+//    quint16 u;
+//    in >> u;
+//    chr.unicode() = char16_t(u);
+//    return in;
+//}
 #endif // QT_NO_DATASTREAM
 
 /*!
@@ -1809,40 +1810,40 @@ QDataStream &operator>>(QDataStream &in, QChar &chr)
 */
 
 // ---------------------------------------------------------------------------
-static void decomposeHelper(QString *str, bool canonical, QChar::UnicodeVersion version, qsizetype from)
-{
-    qsizetype length;
-    QChar::Decomposition tag;
-    QChar buffer[3];
-
-    QString &s = *str;
-
-    const unsigned short *utf16 = reinterpret_cast<unsigned short *>(s.data());
-    const unsigned short *uc = utf16 + s.size();
-    while (uc != utf16 + from) {
-        char32_t ucs4 = *(--uc);
-        if (QChar(ucs4).isLowSurrogate() && uc != utf16) {
-            ushort high = *(uc - 1);
-            if (QChar(high).isHighSurrogate()) {
-                --uc;
-                ucs4 = QChar::surrogateToUcs4(high, ucs4);
-            }
-        }
-
-        if (QChar::unicodeVersion(ucs4) > version)
-            continue;
-
-        const QChar *d = decompositionHelper(ucs4, &length, &tag, buffer);
-        if (!d || (canonical && tag != QChar::Canonical))
-            continue;
-
-        qsizetype pos = uc - utf16;
-        s.replace(pos, QChar::requiresSurrogates(ucs4) ? 2 : 1, d, length);
-        // since the replace invalidates the pointers and we do decomposition recursive
-        utf16 = reinterpret_cast<unsigned short *>(s.data());
-        uc = utf16 + pos + length;
-    }
-}
+//static void decomposeHelper(QString *str, bool canonical, QChar::UnicodeVersion version, qsizetype from)
+//{
+//    qsizetype length;
+//    QChar::Decomposition tag;
+//    QChar buffer[3];
+//
+//    QString &s = *str;
+//
+//    const unsigned short *utf16 = reinterpret_cast<unsigned short *>(s.data());
+//    const unsigned short *uc = utf16 + s.size();
+//    while (uc != utf16 + from) {
+//        char32_t ucs4 = *(--uc);
+//        if (QChar(ucs4).isLowSurrogate() && uc != utf16) {
+//            ushort high = *(uc - 1);
+//            if (QChar(high).isHighSurrogate()) {
+//                --uc;
+//                ucs4 = QChar::surrogateToUcs4(high, ucs4);
+//            }
+//        }
+//
+//        if (QChar::unicodeVersion(ucs4) > version)
+//            continue;
+//
+//        const QChar *d = decompositionHelper(ucs4, &length, &tag, buffer);
+//        if (!d || (canonical && tag != QChar::Canonical))
+//            continue;
+//
+//        qsizetype pos = uc - utf16;
+//        s.replace(pos, QChar::requiresSurrogates(ucs4) ? 2 : 1, d, length);
+//        // since the replace invalidates the pointers and we do decomposition recursive
+//        utf16 = reinterpret_cast<unsigned short *>(s.data());
+//        uc = utf16 + pos + length;
+//    }
+//}
 
 struct UCS2Pair
 {
@@ -1895,7 +1896,7 @@ static char32_t inline ligatureHelper(char32_t u1, char32_t u2)
     const unsigned short index = GET_LIGATURE_INDEX(u2);
     if (index == 0xffff)
         return 0;
-    const unsigned short *ligatures = uc_ligature_map+index;
+    const unsigned short *ligatures = QUnicodeTables::uc_ligature_map+index;
     ushort length = *ligatures++;
     if (QChar::requiresSurrogates(u1)) {
         const UCS2SurrogatePair *data = reinterpret_cast<const UCS2SurrogatePair *>(ligatures);
@@ -1912,204 +1913,204 @@ static char32_t inline ligatureHelper(char32_t u1, char32_t u2)
     return 0;
 }
 
-static void composeHelper(QString *str, QChar::UnicodeVersion version, qsizetype from)
-{
-    QString &s = *str;
+//static void composeHelper(QString *str, QChar::UnicodeVersion version, qsizetype from)
+//{
+//    QString &s = *str;
+//
+//    if (from < 0 || s.size() - from < 2)
+//        return;
+//
+//    char32_t stcode = 0; // starter code point
+//    qsizetype starter = -1; // starter position
+//    qsizetype next = -1; // to prevent i == next
+//    int lastCombining = 255; // to prevent combining > lastCombining
+//
+//    qsizetype pos = from;
+//    while (pos < s.size()) {
+//        qsizetype i = pos;
+//        char32_t uc = s.at(pos).unicode();
+//        if (QChar(uc).isHighSurrogate() && pos < s.size()-1) {
+//            ushort low = s.at(pos+1).unicode();
+//            if (QChar(low).isLowSurrogate()) {
+//                uc = QChar::surrogateToUcs4(uc, low);
+//                ++pos;
+//            }
+//        }
+//
+//        const QUnicodeTables::Properties *p = qGetProp(uc);
+//        if (p->unicodeVersion > version) {
+//            starter = -1;
+//            next = -1; // to prevent i == next
+//            lastCombining = 255; // to prevent combining > lastCombining
+//            ++pos;
+//            continue;
+//        }
+//
+//        int combining = p->combiningClass;
+//        if ((i == next || combining > lastCombining) && starter >= from) {
+//            // allowed to form ligature with S
+//            char32_t ligature = ligatureHelper(stcode, uc);
+//            if (ligature) {
+//                stcode = ligature;
+//                QChar *d = s.data();
+//                // ligatureHelper() never changes planes
+//                qsizetype j = 0;
+//                for (QChar ch : QChar::fromUcs4(ligature))
+//                    d[starter + j++] = ch;
+//                s.remove(i, j);
+//                continue;
+//            }
+//        }
+//        if (combining == 0) {
+//            starter = i;
+//            stcode = uc;
+//            next = pos + 1;
+//        }
+//        lastCombining = combining;
+//
+//        ++pos;
+//    }
+//}
 
-    if (from < 0 || s.size() - from < 2)
-        return;
-
-    char32_t stcode = 0; // starter code point
-    qsizetype starter = -1; // starter position
-    qsizetype next = -1; // to prevent i == next
-    int lastCombining = 255; // to prevent combining > lastCombining
-
-    qsizetype pos = from;
-    while (pos < s.size()) {
-        qsizetype i = pos;
-        char32_t uc = s.at(pos).unicode();
-        if (QChar(uc).isHighSurrogate() && pos < s.size()-1) {
-            ushort low = s.at(pos+1).unicode();
-            if (QChar(low).isLowSurrogate()) {
-                uc = QChar::surrogateToUcs4(uc, low);
-                ++pos;
-            }
-        }
-
-        const QUnicodeTables::Properties *p = qGetProp(uc);
-        if (p->unicodeVersion > version) {
-            starter = -1;
-            next = -1; // to prevent i == next
-            lastCombining = 255; // to prevent combining > lastCombining
-            ++pos;
-            continue;
-        }
-
-        int combining = p->combiningClass;
-        if ((i == next || combining > lastCombining) && starter >= from) {
-            // allowed to form ligature with S
-            char32_t ligature = ligatureHelper(stcode, uc);
-            if (ligature) {
-                stcode = ligature;
-                QChar *d = s.data();
-                // ligatureHelper() never changes planes
-                qsizetype j = 0;
-                for (QChar ch : QChar::fromUcs4(ligature))
-                    d[starter + j++] = ch;
-                s.remove(i, j);
-                continue;
-            }
-        }
-        if (combining == 0) {
-            starter = i;
-            stcode = uc;
-            next = pos + 1;
-        }
-        lastCombining = combining;
-
-        ++pos;
-    }
-}
-
-static void canonicalOrderHelper(QString *str, QChar::UnicodeVersion version, qsizetype from)
-{
-    QString &s = *str;
-    const qsizetype l = s.size()-1;
-
-    char32_t u1, u2;
-    char16_t c1, c2;
-
-    qsizetype pos = from;
-    while (pos < l) {
-        qsizetype p2 = pos+1;
-        u1 = s.at(pos).unicode();
-        if (QChar::isHighSurrogate(u1)) {
-            const char16_t low = s.at(p2).unicode();
-            if (QChar::isLowSurrogate(low)) {
-                u1 = QChar::surrogateToUcs4(u1, low);
-                if (p2 >= l)
-                    break;
-                ++p2;
-            }
-        }
-        c1 = 0;
-
-    advance:
-        u2 = s.at(p2).unicode();
-        if (QChar::isHighSurrogate(u2) && p2 < l) {
-            const char16_t low = s.at(p2+1).unicode();
-            if (QChar::isLowSurrogate(low)) {
-                u2 = QChar::surrogateToUcs4(u2, low);
-                ++p2;
-            }
-        }
-
-        c2 = 0;
-        {
-            const QUnicodeTables::Properties *p = qGetProp(u2);
-            if (p->unicodeVersion <= version)
-                c2 = p->combiningClass;
-        }
-        if (c2 == 0) {
-            pos = p2+1;
-            continue;
-        }
-
-        if (c1 == 0) {
-            const QUnicodeTables::Properties *p = qGetProp(u1);
-            if (p->unicodeVersion <= version)
-                c1 = p->combiningClass;
-        }
-
-        if (c1 > c2) {
-            QChar *uc = s.data();
-            qsizetype p = pos;
-            // exchange characters
-            for (QChar ch : QChar::fromUcs4(u2))
-                uc[p++] = ch;
-            for (QChar ch : QChar::fromUcs4(u1))
-                uc[p++] = ch;
-            if (pos > 0)
-                --pos;
-            if (pos > 0 && s.at(pos).isLowSurrogate())
-                --pos;
-        } else {
-            ++pos;
-            if (QChar::requiresSurrogates(u1))
-                ++pos;
-
-            u1 = u2;
-            c1 = c2; // != 0
-            p2 = pos + 1;
-            if (QChar::requiresSurrogates(u1))
-                ++p2;
-            if (p2 > l)
-                break;
-
-            goto advance;
-        }
-    }
-}
+//static void canonicalOrderHelper(QString *str, QChar::UnicodeVersion version, qsizetype from)
+//{
+//    QString &s = *str;
+//    const qsizetype l = s.size()-1;
+//
+//    char32_t u1, u2;
+//    char16_t c1, c2;
+//
+//    qsizetype pos = from;
+//    while (pos < l) {
+//        qsizetype p2 = pos+1;
+//        u1 = s.at(pos).unicode();
+//        if (QChar::isHighSurrogate(u1)) {
+//            const char16_t low = s.at(p2).unicode();
+//            if (QChar::isLowSurrogate(low)) {
+//                u1 = QChar::surrogateToUcs4(u1, low);
+//                if (p2 >= l)
+//                    break;
+//                ++p2;
+//            }
+//        }
+//        c1 = 0;
+//
+//    advance:
+//        u2 = s.at(p2).unicode();
+//        if (QChar::isHighSurrogate(u2) && p2 < l) {
+//            const char16_t low = s.at(p2+1).unicode();
+//            if (QChar::isLowSurrogate(low)) {
+//                u2 = QChar::surrogateToUcs4(u2, low);
+//                ++p2;
+//            }
+//        }
+//
+//        c2 = 0;
+//        {
+//            const QUnicodeTables::Properties *p = qGetProp(u2);
+//            if (p->unicodeVersion <= version)
+//                c2 = p->combiningClass;
+//        }
+//        if (c2 == 0) {
+//            pos = p2+1;
+//            continue;
+//        }
+//
+//        if (c1 == 0) {
+//            const QUnicodeTables::Properties *p = qGetProp(u1);
+//            if (p->unicodeVersion <= version)
+//                c1 = p->combiningClass;
+//        }
+//
+//        if (c1 > c2) {
+//            QChar *uc = s.data();
+//            qsizetype p = pos;
+//            // exchange characters
+//            for (QChar ch : QChar::fromUcs4(u2))
+//                uc[p++] = ch;
+//            for (QChar ch : QChar::fromUcs4(u1))
+//                uc[p++] = ch;
+//            if (pos > 0)
+//                --pos;
+//            if (pos > 0 && s.at(pos).isLowSurrogate())
+//                --pos;
+//        } else {
+//            ++pos;
+//            if (QChar::requiresSurrogates(u1))
+//                ++pos;
+//
+//            u1 = u2;
+//            c1 = c2; // != 0
+//            p2 = pos + 1;
+//            if (QChar::requiresSurrogates(u1))
+//                ++p2;
+//            if (p2 > l)
+//                break;
+//
+//            goto advance;
+//        }
+//    }
+//}
 
 // returns true if the text is in a desired Normalization Form already; false otherwise.
 // sets lastStable to the position of the last stable code point
-static bool normalizationQuickCheckHelper(QString *str, QString::NormalizationForm mode, qsizetype from, qsizetype *lastStable)
-{
-    static_assert(QString::NormalizationForm_D == 0);
-    static_assert(QString::NormalizationForm_C == 1);
-    static_assert(QString::NormalizationForm_KD == 2);
-    static_assert(QString::NormalizationForm_KC == 3);
-
-    enum { NFQC_YES = 0, NFQC_NO = 1, NFQC_MAYBE = 3 };
-
-    const auto *string = reinterpret_cast<const char16_t *>(str->constData());
-    qsizetype length = str->size();
-
-    // this avoids one out of bounds check in the loop
-    while (length > from && QChar::isHighSurrogate(string[length - 1]))
-        --length;
-
-    uchar lastCombining = 0;
-    for (qsizetype i = from; i < length; ++i) {
-        qsizetype pos = i;
-        char32_t uc = string[i];
-        if (uc < 0x80) {
-            // ASCII characters are stable code points
-            lastCombining = 0;
-            *lastStable = pos;
-            continue;
-        }
-
-        if (QChar::isHighSurrogate(uc)) {
-            ushort low = string[i + 1];
-            if (!QChar::isLowSurrogate(low)) {
-                // treat surrogate like stable code point
-                lastCombining = 0;
-                *lastStable = pos;
-                continue;
-            }
-            ++i;
-            uc = QChar::surrogateToUcs4(uc, low);
-        }
-
-        const QUnicodeTables::Properties *p = qGetProp(uc);
-
-        if (p->combiningClass < lastCombining && p->combiningClass > 0)
-            return false;
-
-        const uchar check = (p->nfQuickCheck >> (mode << 1)) & 0x03;
-        if (check != NFQC_YES)
-            return false; // ### can we quick check NFQC_MAYBE ?
-
-        lastCombining = p->combiningClass;
-        if (lastCombining == 0)
-            *lastStable = pos;
-    }
-
-    if (length != str->size()) // low surrogate parts at the end of text
-        *lastStable = str->size() - 1;
-
-    return true;
-}
+//static bool normalizationQuickCheckHelper(QString *str, QString::NormalizationForm mode, qsizetype from, qsizetype *lastStable)
+//{
+//    static_assert(QString::NormalizationForm_D == 0);
+//    static_assert(QString::NormalizationForm_C == 1);
+//    static_assert(QString::NormalizationForm_KD == 2);
+//    static_assert(QString::NormalizationForm_KC == 3);
+//
+//    enum { NFQC_YES = 0, NFQC_NO = 1, NFQC_MAYBE = 3 };
+//
+//    const auto *string = reinterpret_cast<const char16_t *>(str->constData());
+//    qsizetype length = str->size();
+//
+//    // this avoids one out of bounds check in the loop
+//    while (length > from && QChar::isHighSurrogate(string[length - 1]))
+//        --length;
+//
+//    uchar lastCombining = 0;
+//    for (qsizetype i = from; i < length; ++i) {
+//        qsizetype pos = i;
+//        char32_t uc = string[i];
+//        if (uc < 0x80) {
+//            // ASCII characters are stable code points
+//            lastCombining = 0;
+//            *lastStable = pos;
+//            continue;
+//        }
+//
+//        if (QChar::isHighSurrogate(uc)) {
+//            ushort low = string[i + 1];
+//            if (!QChar::isLowSurrogate(low)) {
+//                // treat surrogate like stable code point
+//                lastCombining = 0;
+//                *lastStable = pos;
+//                continue;
+//            }
+//            ++i;
+//            uc = QChar::surrogateToUcs4(uc, low);
+//        }
+//
+//        const QUnicodeTables::Properties *p = qGetProp(uc);
+//
+//        if (p->combiningClass < lastCombining && p->combiningClass > 0)
+//            return false;
+//
+//        const uchar check = (p->nfQuickCheck >> (mode << 1)) & 0x03;
+//        if (check != NFQC_YES)
+//            return false; // ### can we quick check NFQC_MAYBE ?
+//
+//        lastCombining = p->combiningClass;
+//        if (lastCombining == 0)
+//            *lastStable = pos;
+//    }
+//
+//    if (length != str->size()) // low surrogate parts at the end of text
+//        *lastStable = str->size() - 1;
+//
+//    return true;
+//}
 
 QT_END_NAMESPACE

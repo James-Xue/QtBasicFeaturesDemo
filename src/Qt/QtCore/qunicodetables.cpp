@@ -12758,9 +12758,9 @@ namespace QUnicodeTables
 
     #define GET_DECOMPOSITION_INDEX(ucs4) \
            (ucs4 < 0x3400 \
-            ? (uc_decomposition_trie[uc_decomposition_trie[ucs4 >> 4] + (ucs4 & 0xf)]) \
+            ? (QUnicodeTables::uc_decomposition_trie[QUnicodeTables::uc_decomposition_trie[ucs4 >> 4] + (ucs4 & 0xf)]) \
             : ucs4 < 0x30000 \
-            ? uc_decomposition_trie[uc_decomposition_trie[((ucs4 - 0x3400) >> 8) + 0x340] + (ucs4 & 0xff)] \
+            ? QUnicodeTables::uc_decomposition_trie[QUnicodeTables::uc_decomposition_trie[((ucs4 - 0x3400) >> 8) + 0x340] + (ucs4 & 0xff)] \
             : 0xffff)
 
     static constexpr unsigned short uc_decomposition_map[] =
@@ -15030,9 +15030,9 @@ namespace QUnicodeTables
 
     #define GET_LIGATURE_INDEX(ucs4) \
            (ucs4 < 0x3100 \
-            ? (uc_ligature_trie[uc_ligature_trie[ucs4 >> 5] + (ucs4 & 0x1f)]) \
+            ? (QUnicodeTables::uc_ligature_trie[QUnicodeTables::uc_ligature_trie[ucs4 >> 5] + (ucs4 & 0x1f)]) \
             : ucs4 < 0x12000 \
-            ? uc_ligature_trie[uc_ligature_trie[((ucs4 - 0x3100) >> 8) + 0x188] + (ucs4 & 0xff)] \
+            ? QUnicodeTables::uc_ligature_trie[QUnicodeTables::uc_ligature_trie[((ucs4 - 0x3100) >> 8) + 0x188] + (ucs4 & 0xff)] \
             : 0xffff)
 
     static constexpr unsigned short uc_ligature_map[] =
@@ -21327,6 +21327,6 @@ namespace QUnicodeTables
     }
 } // namespace QUnicodeTables
 
-using namespace QUnicodeTables;
+//using namespace QUnicodeTables;
 
 QT_END_NAMESPACE
