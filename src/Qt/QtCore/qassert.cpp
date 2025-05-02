@@ -1,6 +1,6 @@
 #include "qassert.h"
 
-#include <QtCore/qlogging.h>
+//#include <QtCore/qlogging.h>
 #include <cstdlib>
 #include <cstdio>
 #include <exception>
@@ -97,19 +97,19 @@ Q_NORETURN void qAbort()
 /*
     The Q_ASSERT macro calls this function when the test fails.
 */
-void qt_assert(const char *assertion, const char *file, int line) noexcept
+void qt_assert(const char */*assertion*/, const char */*file*/, int /*line*/) noexcept
 {
-    QMessageLogger(file, line, nullptr)
-            .fatal("ASSERT: \"%s\" in file %s, line %d", assertion, file, line);
+    //QMessageLogger(file, line, nullptr)
+            //.fatal("ASSERT: \"%s\" in file %s, line %d", assertion, file, line);
 }
 
 /*
     The Q_ASSERT_X macro calls this function when the test fails.
 */
-void qt_assert_x(const char *where, const char *what, const char *file, int line) noexcept
+void qt_assert_x(const char */*where*/, const char */*what*/, const char */*file*/, int /*line*/) noexcept
 {
-    QMessageLogger(file, line, nullptr)
-            .fatal("ASSERT failure in %s: \"%s\", file %s, line %d", where, what, file, line);
+    //QMessageLogger(file, line, nullptr)
+            //.fatal("ASSERT failure in %s: \"%s\", file %s, line %d", where, what, file, line);
 }
 
 /*!
