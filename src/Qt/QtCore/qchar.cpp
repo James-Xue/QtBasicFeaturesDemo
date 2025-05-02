@@ -2,6 +2,7 @@
 //#include "qdatastream.h"
 #include <private/qunicodetables_p.h>
 #include "qunicodetables.cpp"
+
 #include <algorithm>
 
 QT_BEGIN_NAMESPACE
@@ -1547,7 +1548,8 @@ Q_DECL_CONST_FUNCTION static inline T convertCase_helper(T uc, QUnicodeTables::C
 {
     const auto fold = QUnicodeTables::qGetProp(uc)->cases[which];
 
-    if (Q_UNLIKELY(fold.special)) {
+    if (Q_UNLIKELY(fold.special))
+    {
         const ushort *specialCase = QUnicodeTables::specialCaseMap + fold.diff;
         // so far, there are no special cases beyond BMP (guaranteed by the qunicodetables generator)
         return *specialCase == 1 ? specialCase[1] : uc;
