@@ -6,7 +6,7 @@ set(MODULE_NAME QtCore)
 file(GLOB SOURCES
     # Base classes
     "qtprivate.cpp"
-    # "qarraydata.cpp"
+    "qarraydata.cpp"
     # "qbytearray.cpp"
     # "qbytearrayview.cpp"
     # "qbytearraymatcher.cpp"
@@ -142,3 +142,11 @@ target_compile_definitions(${MODULE_NAME} PRIVATE
 set_target_properties(${MODULE_NAME} PROPERTIES
     DEBUG_POSTFIX "_d"
 )
+
+# Add compile options to generate preprocessed files with comments for the entire module
+# target_compile_options(${MODULE_NAME} PRIVATE /P /C)
+
+# add_custom_target(preprocess ALL
+#     COMMAND ${CMAKE_CXX_COMPILER} /P /C /Fi${CMAKE_CURRENT_BINARY_DIR}/preprocessed_file.i ${CMAKE_CURRENT_SOURCE_DIR}/source_file.cpp
+#     COMMENT "Generating preprocessed file with comments"
+# )
