@@ -1,24 +1,19 @@
-// Copyright (C) 2016 The Qt Company Ltd.
-// Copyright (C) 2016 Intel Corporation.
-// Copyright (C) 2012 Olivier Goffart <ogoffart@woboq.com>
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
-
 #include "qglobal.h"
 #include "win32-msvc-qplatformdefs.h"
 #include "qmutex.h"
-#include <qdebug.h>
-#include "qatomic.h"
+//#include <qdebug.h>
+//#include "qatomic.h"
 #include <private/qfutex_p.h>
 #include "qthread.h"
 #include <private/qmutex_p.h>
 
 #ifndef QT_ALWAYS_USE_FUTEX
-#include "private/qfreelist_p.h"
+    #include <private/qfreelist_p.h>
 #endif
 
 QT_BEGIN_NAMESPACE
 
-using namespace QtFutex;
+//using namespace QtFutex;
 static inline QMutexPrivate *dummyFutexValue()
 {
     return reinterpret_cast<QMutexPrivate *>(quintptr(3));
@@ -103,15 +98,20 @@ static inline QMutexPrivate *dummyFutexValue()
 */
 void QBasicMutex::destroyInternal(QMutexPrivate *d)
 {
-    if (!d)
+    if (nullptr == d)
+    {
         return;
-    if (!futexAvailable()) {
-        if (d != dummyLocked() && d->possiblyUnlocked.loadRelaxed() && tryLock()) {
+    }
+
+    if (false == QtFutex::futexAvailable())
+    {
+        if (d != dummyLocked() && d->possiblyUnlocked.loadRelaxed() && tryLock())
+        {
             unlock();
             return;
         }
     }
-    qWarning("QMutex: destroying locked mutex");
+    //qWarning("QMutex: destroying locked mutex");
 }
 
 /*! \fn void QMutex::lock()
@@ -640,17 +640,21 @@ void QRecursiveMutex::unlock() noexcept
 Q_NEVER_INLINE
 void QBasicMutex::lockInternal() QT_MUTEX_LOCK_NOEXCEPT
 {
-    if (futexAvailable()) {
+    if (true == QtFutex::futexAvailable())
+    {
         // note we must set to dummyFutexValue because there could be other threads
         // also waiting
-        while (d_ptr.fetchAndStoreAcquire(dummyFutexValue()) != nullptr) {
+        while (d_ptr.fetchAndStoreAcquire(dummyFutexValue()) != nullptr)
+        {
             // successfully set the waiting bit, now sleep
-            futexWait(d_ptr, dummyFutexValue());
+            QtFutex::futexWait(d_ptr, dummyFutexValue());
 
             // we got woken up, so try to acquire the mutex
         }
         Q_ASSERT(d_ptr.loadRelaxed());
-    } else {
+    }
+    else
+    {
         lockInternal(-1);
     }
 }
@@ -659,13 +663,13 @@ void QBasicMutex::lockInternal() QT_MUTEX_LOCK_NOEXCEPT
     \internal helper for lock(int)
  */
 #if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
-bool QBasicMutex::lockInternal(int timeout) QT_MUTEX_LOCK_NOEXCEPT
-{
-    if (timeout == 0)
-        return false;
+    bool QBasicMutex::lockInternal(int timeout) QT_MUTEX_LOCK_NOEXCEPT
+    {
+        if (timeout == 0)
+            return false;
 
-    return lockInternal(QDeadlineTimer(timeout));
-}
+        return lockInternal(QDeadlineTimer(timeout));
+    }
 #endif
 
 /*!
@@ -674,11 +678,15 @@ bool QBasicMutex::lockInternal(int timeout) QT_MUTEX_LOCK_NOEXCEPT
 Q_NEVER_INLINE
 bool QBasicMutex::lockInternal(QDeadlineTimer deadlineTimer) QT_MUTEX_LOCK_NOEXCEPT
 {
-    if (deadlineTimer.hasExpired())
+    if (true == deadlineTimer.hasExpired())
+    {
         return false;
+    }
 
-    if (futexAvailable()) {
-        if (Q_UNLIKELY(deadlineTimer.isForever())) {
+    if (true == QtFutex::futexAvailable())
+    {
+        if (Q_UNLIKELY(deadlineTimer.isForever()))
+        {
             lockInternal();
             return true;
         }
@@ -686,37 +694,49 @@ bool QBasicMutex::lockInternal(QDeadlineTimer deadlineTimer) QT_MUTEX_LOCK_NOEXC
         // The mutex is already locked, set a bit indicating we're waiting.
         // Note we must set to dummyFutexValue because there could be other threads
         // also waiting.
-        if (d_ptr.fetchAndStoreAcquire(dummyFutexValue()) == nullptr)
+        if (nullptr == d_ptr.fetchAndStoreAcquire(dummyFutexValue()))
+        {
             return true;
+        }
 
-        for (;;) {
-            if (!futexWait(d_ptr, dummyFutexValue(), deadlineTimer))
+        for (;;)
+        {
+            if (false == QtFutex::futexWait(d_ptr, dummyFutexValue(), deadlineTimer))
+            {
                 return false;
+            }
 
             // We got woken up, so must try to acquire the mutex. We must set
             // to dummyFutexValue() again because there could be other threads
             // waiting.
-            if (d_ptr.fetchAndStoreAcquire(dummyFutexValue()) == nullptr)
+            if (nullptr == d_ptr.fetchAndStoreAcquire(dummyFutexValue()))
+            {
                 return true;
+            }
 
-            if (deadlineTimer.hasExpired())
+            if (true == deadlineTimer.hasExpired())
+            {
                 return false;
+            }
         }
     }
 
 #if !defined(QT_ALWAYS_USE_FUTEX)
-    while (!fastTryLock()) {
+    while (!fastTryLock())
+    {
         QMutexPrivate *copy = d_ptr.loadAcquire();
         if (!copy) // if d is 0, the mutex is unlocked
             continue;
 
-        if (copy == dummyLocked()) {
+        if (copy == dummyLocked())
+        {
             if (deadlineTimer.hasExpired())
                 return false;
             // The mutex is locked but does not have a QMutexPrivate yet.
             // we need to allocate a QMutexPrivate
             QMutexPrivate *newD = QMutexPrivate::allocate();
-            if (!d_ptr.testAndSetOrdered(dummyLocked(), newD)) {
+            if (!d_ptr.testAndSetOrdered(dummyLocked(), newD))
+            {
                 //Either the mutex is already unlocked, or another thread already set it.
                 newD->deref();
                 continue;
@@ -818,9 +838,10 @@ void QBasicMutex::unlockInternal() noexcept
     Q_ASSERT(copy); //we must be locked
     Q_ASSERT(copy != dummyLocked()); // testAndSetRelease(dummyLocked(), 0) failed
 
-    if (futexAvailable()) {
+    if (true == QtFutex::futexAvailable())
+    {
         d_ptr.storeRelease(nullptr);
-        return futexWakeOne(d_ptr);
+        return QtFutex::futexWakeOne(d_ptr);
     }
 
 #if !defined(QT_ALWAYS_USE_FUTEX)
@@ -831,15 +852,19 @@ void QBasicMutex::unlockInternal() noexcept
     // to the waiters variable (BigNumber). That way, we avoid the race in which waiters is
     // incremented right after we checked, because we won't increment waiters if is
     // equal to -BigNumber
-    if (d->waiters.fetchAndAddRelease(-QMutexPrivate::BigNumber) == 0) {
+    if (d->waiters.fetchAndAddRelease(-QMutexPrivate::BigNumber) == 0)
+    {
         //there is no one waiting on this mutex anymore, set the mutex as unlocked (d = 0)
-        if (d_ptr.testAndSetRelease(d, 0)) {
+        if (d_ptr.testAndSetRelease(d, 0))
+        {
             // reset the possiblyUnlocked flag if needed (and deref its corresponding reference)
             if (d->possiblyUnlocked.loadRelaxed() && d->possiblyUnlocked.testAndSetRelaxed(true, false))
                 d->deref();
         }
         d->derefWaiters(0);
-    } else {
+    }
+    else
+    {
         d->derefWaiters(0);
         //there are thread waiting, transfer the lock.
         d->wakeUp();
@@ -852,8 +877,10 @@ void QBasicMutex::unlockInternal() noexcept
 
 #if !defined(QT_ALWAYS_USE_FUTEX)
 //The freelist management
-namespace {
-struct FreeListConstants : QFreeListDefaultConstants {
+namespace
+{
+struct FreeListConstants : QFreeListDefaultConstants
+{
     enum { BlockCount = 4, MaxIndex=0xffff };
     static const int Sizes[BlockCount];
 };
@@ -912,9 +939,9 @@ void QMutexPrivate::derefWaiters(int value) noexcept
 QT_END_NAMESPACE
 
 #if defined(QT_ALWAYS_USE_FUTEX)
-// nothing
+    // nothing
 #elif defined(Q_OS_DARWIN)
-#  include "qmutex_mac.cpp"
+    include "qmutex_mac.cpp"
 #else
-#  include "qmutex_unix.cpp"
+    include "qmutex_unix.cpp"
 #endif
