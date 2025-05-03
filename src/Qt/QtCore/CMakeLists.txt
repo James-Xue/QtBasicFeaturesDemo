@@ -144,6 +144,18 @@ set_target_properties(${MODULE_NAME} PROPERTIES
 )
 
 # Add compile options to generate preprocessed files with comments for the entire module
+# if (MSVC)
+#     foreach(SOURCE_FILE ${SOURCES})
+#         # Get the file name without extension
+#         get_filename_component(FILE_NAME ${SOURCE_FILE} NAME_WE)
+#         # Set the output path for the preprocessed file
+#         set(PREPROCESSED_FILE "${CMAKE_CURRENT_BINARY_DIR}/${FILE_NAME}.i")
+#         # Add compile options for each source file
+#         set_source_files_properties(${SOURCE_FILE} PROPERTIES COMPILE_FLAGS "/P /C /Fi${PREPROCESSED_FILE}")
+#     endforeach()
+# endif()
+
+# Add compile options to generate preprocessed files with comments for the entire module
 # target_compile_options(${MODULE_NAME} PRIVATE /P /C)
 
 # add_custom_target(preprocess ALL

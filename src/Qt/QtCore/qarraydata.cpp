@@ -1,6 +1,6 @@
 #include <QtCore/qarraydata.h>
 //#include <QtCore/private/qnumeric_p.h>
-#include <QtCore/private/qtools_p.h>
+//#include <QtCore/private/qtools_p.h>
 //#include <QtCore/qmath.h>
 //#include <QtCore/qbytearray.h> // QBA::value_type
 //#include <QtCore/qstring.h>    // QString::value_type
@@ -45,19 +45,20 @@ QT_BEGIN_NAMESPACE
     This function returns -1 on overflow or if the memory block size
     would not fit a qsizetype.
 */
-qsizetype qCalculateBlockSize(qsizetype elementCount, qsizetype elementSize, qsizetype headerSize) noexcept
-{
-    Q_ASSERT(elementSize);
 
-    size_t bytes;
-    if (Q_UNLIKELY(qMulOverflow(size_t(elementSize), size_t(elementCount), &bytes)) ||
-            Q_UNLIKELY(qAddOverflow(bytes, size_t(headerSize), &bytes)))
-        return -1;
-    if (Q_UNLIKELY(qsizetype(bytes) < 0))
-        return -1;
-
-    return qsizetype(bytes);
-}
+//qsizetype qCalculateBlockSize(qsizetype elementCount, qsizetype elementSize, qsizetype headerSize) noexcept
+//{
+//    Q_ASSERT(elementSize);
+//
+//    size_t bytes;
+//    if (Q_UNLIKELY(qMulOverflow(size_t(elementSize), size_t(elementCount), &bytes)) ||
+//            Q_UNLIKELY(qAddOverflow(bytes, size_t(headerSize), &bytes)))
+//        return -1;
+//    if (Q_UNLIKELY(qsizetype(bytes) < 0))
+//        return -1;
+//
+//    return qsizetype(bytes);
+//}
 
 /*!
     \internal
@@ -77,37 +78,38 @@ qsizetype qCalculateBlockSize(qsizetype elementCount, qsizetype elementSize, qsi
     \note The memory block may contain up to \a elementSize - 1 bytes more than
     needed.
 */
-CalculateGrowingBlockSizeResult
-qCalculateGrowingBlockSize(qsizetype elementCount, qsizetype elementSize, qsizetype headerSize) noexcept
-{
-    CalculateGrowingBlockSizeResult result =
-    {
-        qsizetype(-1), qsizetype(-1)
-    };
 
-    qsizetype bytes = qCalculateBlockSize(elementCount, elementSize, headerSize);
-    if (bytes < 0)
-    {
-        return result;
-    }
-
-    size_t morebytes = static_cast<size_t>(qNextPowerOfTwo(quint64(bytes)));
-    if (Q_UNLIKELY(qsizetype(morebytes) < 0))
-    {
-        // grow by half the difference between bytes and morebytes
-        // this slows the growth and avoids trying to allocate exactly
-        // 2G of memory (on 32bit), something that many OSes can't deliver
-        bytes += (morebytes - bytes) / 2;
-    }
-    else
-    {
-        bytes = qsizetype(morebytes);
-    }
-
-    result.elementCount = (bytes - headerSize) / elementSize;
-    result.size = result.elementCount * elementSize + headerSize;
-    return result;
-}
+//CalculateGrowingBlockSizeResult
+//qCalculateGrowingBlockSize(qsizetype elementCount, qsizetype elementSize, qsizetype headerSize) noexcept
+//{
+//    CalculateGrowingBlockSizeResult result =
+//    {
+//        qsizetype(-1), qsizetype(-1)
+//    };
+//
+//    qsizetype bytes = qCalculateBlockSize(elementCount, elementSize, headerSize);
+//    if (bytes < 0)
+//    {
+//        return result;
+//    }
+//
+//    size_t morebytes = static_cast<size_t>(qNextPowerOfTwo(quint64(bytes)));
+//    if (Q_UNLIKELY(qsizetype(morebytes) < 0))
+//    {
+//        // grow by half the difference between bytes and morebytes
+//        // this slows the growth and avoids trying to allocate exactly
+//        // 2G of memory (on 32bit), something that many OSes can't deliver
+//        bytes += (morebytes - bytes) / 2;
+//    }
+//    else
+//    {
+//        bytes = qsizetype(morebytes);
+//    }
+//
+//    result.elementCount = (bytes - headerSize) / elementSize;
+//    result.size = result.elementCount * elementSize + headerSize;
+//    return result;
+//}
 
 /*
     Calculate the byte size for a block of \a capacity objects of size \a
@@ -117,24 +119,25 @@ qCalculateGrowingBlockSize(qsizetype elementCount, qsizetype elementSize, qsizet
 
     Returns a structure containing the size in bytes and elements available.
 */
-static inline CalculateGrowingBlockSizeResult
-calculateBlockSize(qsizetype capacity, qsizetype objectSize, qsizetype headerSize, QArrayData::AllocationOption option)
-{
-    // Adjust the header size up to account for the trailing null for QString
-    // and QByteArray. This is not checked for overflow because headers sizes
-    // should not be anywhere near the overflow limit.
-    constexpr qsizetype FooterSize = qMax(sizeof(QString::value_type), sizeof(QByteArray::value_type));
-    if (objectSize <= FooterSize)
-        headerSize += FooterSize;
 
-    // allocSize = objectSize * capacity + headerSize, but checked for overflow
-    // plus padded to grow in size
-    if (option == QArrayData::Grow) {
-        return qCalculateGrowingBlockSize(capacity, objectSize, headerSize);
-    } else {
-        return { qCalculateBlockSize(capacity, objectSize, headerSize), capacity };
-    }
-}
+//static inline CalculateGrowingBlockSizeResult
+//calculateBlockSize(qsizetype capacity, qsizetype objectSize, qsizetype headerSize, QArrayData::AllocationOption option)
+//{
+//    // Adjust the header size up to account for the trailing null for QString
+//    // and QByteArray. This is not checked for overflow because headers sizes
+//    // should not be anywhere near the overflow limit.
+//    constexpr qsizetype FooterSize = qMax(sizeof(QString::value_type), sizeof(QByteArray::value_type));
+//    if (objectSize <= FooterSize)
+//        headerSize += FooterSize;
+//
+//    // allocSize = objectSize * capacity + headerSize, but checked for overflow
+//    // plus padded to grow in size
+//    if (option == QArrayData::Grow) {
+//        return qCalculateGrowingBlockSize(capacity, objectSize, headerSize);
+//    } else {
+//        return { qCalculateBlockSize(capacity, objectSize, headerSize), capacity };
+//    }
+//}
 
 static QArrayData *allocateData(qsizetype allocSize)
 {
@@ -177,9 +180,11 @@ allocateHelper(qsizetype objectSize, qsizetype alignment, qsizetype capacity,
     }
     Q_ASSERT(headerSize > 0);
 
-    auto blockSize = calculateBlockSize(capacity, objectSize, headerSize, option);
-    capacity = blockSize.elementCount;
-    qsizetype allocSize = blockSize.size;
+    //auto blockSize = calculateBlockSize(capacity, objectSize, headerSize, option);
+    //capacity = blockSize.elementCount;
+    //qsizetype allocSize = blockSize.size;
+    capacity = 1024;
+    qsizetype allocSize = 1024;
     if (Q_UNLIKELY(allocSize < 0))      // handle overflow. cannot allocate reliably
         return {};
 
@@ -234,9 +239,11 @@ QArrayData::reallocateUnaligned(QArrayData *data, void *dataPointer,
     Q_ASSERT(!data || !data->isShared());
 
     const qsizetype headerSize = sizeof(AlignedQArrayData);
-    auto r = calculateBlockSize(capacity, objectSize, headerSize, option);
-    qsizetype allocSize = r.size;
-    capacity = r.elementCount;
+    //auto r = calculateBlockSize(capacity, objectSize, headerSize, option);
+    //qsizetype allocSize = r.size;
+    //capacity = r.elementCount;
+    qsizetype allocSize = 1024;
+    capacity = 1024;
     if (Q_UNLIKELY(allocSize < 0))
         return {};
 
@@ -262,8 +269,8 @@ void QArrayData::deallocate(QArrayData *data, qsizetype objectSize,
     // Alignment is a power of two
     Q_ASSERT(alignment >= qsizetype(alignof(QArrayData))
             && !(alignment & (alignment - 1)));
-    Q_UNUSED(objectSize);
-    Q_UNUSED(alignment);
+    //Q_UNUSED(objectSize);
+    //Q_UNUSED(alignment);
 
     ::free(data);
 }
