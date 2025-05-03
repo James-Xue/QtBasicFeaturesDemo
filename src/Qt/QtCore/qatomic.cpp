@@ -1,7 +1,3 @@
-// Copyright (C) 2016 The Qt Company Ltd.
-// Copyright (C) 2016 Intel Corporation.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
-
 #include "qatomic.h"
 
 /*!
@@ -222,7 +218,6 @@
     Assigns \a other to this QAtomicInteger and returns a reference to
     this QAtomicInteger.
 */
-
 
 /*!
     \fn template <typename T> T QAtomicInteger<T>::loadRelaxed() const
@@ -1216,9 +1211,6 @@
     \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
-
-
-
 /*!
     \class QAtomicPointer
     \inmodule QtCore
@@ -1391,7 +1383,6 @@
 
     \sa storeRelaxed(), loadAcquire()
 */
-
 
 /*!
     \fn template <typename T> T *QAtomicPointer<T>::loadAcquire() const
@@ -1743,17 +1734,20 @@
 
 // static checks
 #ifndef Q_ATOMIC_INT8_IS_SUPPORTED
-#  error "Q_ATOMIC_INT8_IS_SUPPORTED must be defined"
+    #error "Q_ATOMIC_INT8_IS_SUPPORTED must be defined"
 #endif
+
 #ifndef Q_ATOMIC_INT16_IS_SUPPORTED
-#  error "Q_ATOMIC_INT16_IS_SUPPORTED must be defined"
+    #error "Q_ATOMIC_INT16_IS_SUPPORTED must be defined"
 #endif
+
 #ifndef Q_ATOMIC_INT32_IS_SUPPORTED
-#  error "Q_ATOMIC_INT32_IS_SUPPORTED must be defined"
+    #error "Q_ATOMIC_INT32_IS_SUPPORTED must be defined"
 #endif
+
 #if !defined(Q_ATOMIC_INT64_IS_SUPPORTED) && QT_POINTER_SIZE == 8
-// 64-bit platform
-#  error "Q_ATOMIC_INT64_IS_SUPPORTED must be defined on a 64-bit platform"
+    // 64-bit platform
+    #error "Q_ATOMIC_INT64_IS_SUPPORTED must be defined on a 64-bit platform"
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -1765,20 +1759,18 @@ static_assert(sizeof(QAtomicInteger<unsigned long>));
 static_assert(sizeof(QAtomicInteger<quintptr>));
 static_assert(sizeof(QAtomicInteger<qptrdiff>));
 static_assert(sizeof(QAtomicInteger<char32_t>));
-
 static_assert(sizeof(QAtomicInteger<short>));
 static_assert(sizeof(QAtomicInteger<unsigned short>));
 static_assert(sizeof(QAtomicInteger<wchar_t>));
 static_assert(sizeof(QAtomicInteger<char16_t>));
-
 static_assert(sizeof(QAtomicInteger<char>));
 static_assert(sizeof(QAtomicInteger<unsigned char>));
 static_assert(sizeof(QAtomicInteger<signed char>));
 static_assert(sizeof(QAtomicInteger<bool>));
 
 #ifdef Q_ATOMIC_INT64_IS_SUPPORTED
-static_assert(sizeof(QAtomicInteger<qint64>));
-static_assert(sizeof(QAtomicInteger<quint64>));
+    static_assert(sizeof(QAtomicInteger<qint64>));
+    static_assert(sizeof(QAtomicInteger<quint64>));
 #endif
 
 QT_END_NAMESPACE

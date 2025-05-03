@@ -15,8 +15,6 @@ file(GLOB SOURCES
     # "qmetaobject.cpp"
     # "qproperty.cpp"
     # "qmetatype.cpp"
-    # "qatomic.cpp"
-
 
     # Container classes
     # "qstring.cpp"
@@ -51,6 +49,7 @@ file(GLOB SOURCES
     # "qdeadlinetimer.cpp"
 
     # Thread and synchronization classes
+    "qatomic.cpp"
     # "qthread.cpp"
     # "qmutex.cpp"
     # "qwaitcondition_win.cpp"
