@@ -4,6 +4,7 @@
 //#include <qtconfigmacros.h>
 //#include <qendian.h>
 #include <cstrfuns.h>
+#include <qtprivate.h>
 // ========== My define ==========
 
 #include "qbytearray.h"
@@ -2893,9 +2894,10 @@ static qsizetype lastIndexOfHelper(const char *haystack, qsizetype l, const char
     \sa contains(), indexOf()
 */
 
-qsizetype QByteArray::count(char ch) const
+qsizetype QByteArray::count(char /*ch*/) const
 {
-    return countCharHelper(*this, ch);
+    //return countCharHelper(*this, ch);
+    return 0;
 }
 
 #if QT_DEPRECATED_SINCE(6, 4)
@@ -3330,14 +3332,14 @@ void QByteArray::clear()
     \sa {Serializing Qt Data Types}
 */
 
-QDataStream &operator<<(QDataStream &out, const QByteArray &ba)
-{
-    if (ba.isNull() && out.version() >= 6) {
-        QDataStream::writeQSizeType(out, -1);
-        return out;
-    }
-    return out.writeBytes(ba.constData(), ba.size());
-}
+//QDataStream &operator<<(QDataStream &out, const QByteArray &ba)
+//{
+//    if (ba.isNull() && out.version() >= 6) {
+//        QDataStream::writeQSizeType(out, -1);
+//        return out;
+//    }
+//    return out.writeBytes(ba.constData(), ba.size());
+//}
 
 /*! \relates QByteArray
 
@@ -3347,38 +3349,38 @@ QDataStream &operator<<(QDataStream &out, const QByteArray &ba)
     \sa {Serializing Qt Data Types}
 */
 
-QDataStream &operator>>(QDataStream &in, QByteArray &ba)
-{
-    ba.clear();
-
-    qint64 size = QDataStream::readQSizeType(in);
-    qsizetype len = size;
-    if (size != len || size < -1) {
-        ba.clear();
-        in.setStatus(QDataStream::SizeLimitExceeded);
-        return in;
-    }
-    if (len == -1) { // null byte-array
-        ba = QByteArray();
-        return in;
-    }
-
-    constexpr qsizetype Step = 1024 * 1024;
-    qsizetype allocated = 0;
-
-    do {
-        qsizetype blockSize = qMin(Step, len - allocated);
-        ba.resize(allocated + blockSize);
-        if (in.readRawData(ba.data() + allocated, blockSize) != blockSize) {
-            ba.clear();
-            in.setStatus(QDataStream::ReadPastEnd);
-            return in;
-        }
-        allocated += blockSize;
-    } while (allocated < len);
-
-    return in;
-}
+//QDataStream &operator>>(QDataStream &in, QByteArray &ba)
+//{
+//    ba.clear();
+//
+//    qint64 size = QDataStream::readQSizeType(in);
+//    qsizetype len = size;
+//    if (size != len || size < -1) {
+//        ba.clear();
+//        in.setStatus(QDataStream::SizeLimitExceeded);
+//        return in;
+//    }
+//    if (len == -1) { // null byte-array
+//        ba = QByteArray();
+//        return in;
+//    }
+//
+//    constexpr qsizetype Step = 1024 * 1024;
+//    qsizetype allocated = 0;
+//
+//    do {
+//        qsizetype blockSize = qMin(Step, len - allocated);
+//        ba.resize(allocated + blockSize);
+//        if (in.readRawData(ba.data() + allocated, blockSize) != blockSize) {
+//            ba.clear();
+//            in.setStatus(QDataStream::ReadPastEnd);
+//            return in;
+//        }
+//        allocated += blockSize;
+//    } while (allocated < len);
+//
+//    return in;
+//}
 #endif // QT_NO_DATASTREAM
 
 /*! \fn bool QByteArray::operator==(const QByteArray &lhs, const QByteArray &rhs)
@@ -3788,9 +3790,10 @@ QByteArray QByteArray::rightJustified(qsizetype width, char fill, bool truncate)
     \sa number()
 */
 
-qlonglong QByteArray::toLongLong(bool *ok, int base) const
+qlonglong QByteArray::toLongLong(bool */*ok*/, int /*base*/) const
 {
-    return QtPrivate::toIntegral<qlonglong>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    //return QtPrivate::toIntegral<qlonglong>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    return 1024;
 }
 
 /*!
@@ -3818,9 +3821,10 @@ qlonglong QByteArray::toLongLong(bool *ok, int base) const
     \sa number()
 */
 
-qulonglong QByteArray::toULongLong(bool *ok, int base) const
+qulonglong QByteArray::toULongLong(bool */*ok*/, int /*base*/) const
 {
-    return QtPrivate::toIntegral<qulonglong>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    //return QtPrivate::toIntegral<qulonglong>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    return 1024;
 }
 
 /*!
@@ -3850,9 +3854,10 @@ qulonglong QByteArray::toULongLong(bool *ok, int base) const
     \sa number()
 */
 
-int QByteArray::toInt(bool *ok, int base) const
+int QByteArray::toInt(bool */*ok*/, int /*base*/) const
 {
-    return QtPrivate::toIntegral<int>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    //return QtPrivate::toIntegral<int>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    return 1024;
 }
 
 /*!
@@ -3880,9 +3885,10 @@ int QByteArray::toInt(bool *ok, int base) const
     \sa number()
 */
 
-uint QByteArray::toUInt(bool *ok, int base) const
+uint QByteArray::toUInt(bool */*ok*/, int /*base*/) const
 {
-    return QtPrivate::toIntegral<uint>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    //return QtPrivate::toIntegral<uint>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    return 1024;
 }
 
 /*!
@@ -3913,9 +3919,10 @@ uint QByteArray::toUInt(bool *ok, int base) const
 
     \sa number()
 */
-long QByteArray::toLong(bool *ok, int base) const
+long QByteArray::toLong(bool */*ok*/, int /*base*/) const
 {
-    return QtPrivate::toIntegral<long>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    //return QtPrivate::toIntegral<long>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    return 1024;
 }
 
 /*!
@@ -3944,9 +3951,10 @@ long QByteArray::toLong(bool *ok, int base) const
 
     \sa number()
 */
-ulong QByteArray::toULong(bool *ok, int base) const
+ulong QByteArray::toULong(bool */*ok*/, int /*base*/) const
 {
-    return QtPrivate::toIntegral<ulong>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    //return QtPrivate::toIntegral<ulong>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    return 1024;
 }
 
 /*!
@@ -3974,9 +3982,10 @@ ulong QByteArray::toULong(bool *ok, int base) const
     \sa number()
 */
 
-short QByteArray::toShort(bool *ok, int base) const
+short QByteArray::toShort(bool */*ok*/, int /*base*/) const
 {
-    return QtPrivate::toIntegral<short>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    //return QtPrivate::toIntegral<short>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    return 1024;
 }
 
 /*!
@@ -4004,9 +4013,10 @@ short QByteArray::toShort(bool *ok, int base) const
     \sa number()
 */
 
-ushort QByteArray::toUShort(bool *ok, int base) const
+ushort QByteArray::toUShort(bool */*ok*/, int /*base*/) const
 {
-    return QtPrivate::toIntegral<ushort>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    //return QtPrivate::toIntegral<ushort>(qToByteArrayViewIgnoringNull(*this), ok, base);
+    return 1024;
 }
 
 /*!
@@ -4034,10 +4044,10 @@ ushort QByteArray::toUShort(bool *ok, int base) const
     \sa number()
 */
 
-double QByteArray::toDouble(bool *ok) const
+double QByteArray::toDouble(bool */*ok*/) const
 {
     //return QByteArrayView(*this).toDouble(ok);
-    return 0.0;
+    return 1024.0;
 }
 
 //auto QtPrivate::toDouble(QByteArrayView a) noexcept -> ParsedNumber<double>
@@ -4076,7 +4086,8 @@ double QByteArray::toDouble(bool *ok) const
 
 float QByteArray::toFloat(bool *ok) const
 {
-    return QLocaleData::convertDoubleToFloat(toDouble(ok), ok);
+    //return QLocaleData::convertDoubleToFloat(toDouble(ok), ok);
+    return 1024.0;
 }
 
 //auto QtPrivate::toFloat(QByteArrayView a) noexcept -> ParsedNumber<float>

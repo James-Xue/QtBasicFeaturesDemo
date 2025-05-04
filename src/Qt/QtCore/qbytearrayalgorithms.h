@@ -1,6 +1,3 @@
-// Copyright (C) 2021 The Qt Company Ltd.
-
-
 #ifndef QBYTEARRAYALGORITHMS_H
     #define QBYTEARRAYALGORITHMS_H
 

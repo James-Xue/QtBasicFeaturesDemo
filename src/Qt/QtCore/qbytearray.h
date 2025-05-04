@@ -728,8 +728,8 @@
     #endif
 
     #if !defined(QT_NO_DATASTREAM) || defined(QT_BOOTSTRAPPED)
-    Q_CORE_EXPORT QDataStream &operator<<(QDataStream &, const QByteArray &);
-    Q_CORE_EXPORT QDataStream &operator>>(QDataStream &, QByteArray &);
+    //Q_CORE_EXPORT QDataStream &operator<<(QDataStream &, const QByteArray &);
+    //Q_CORE_EXPORT QDataStream &operator>>(QDataStream &, QByteArray &);
     #endif
 
     #ifndef QT_NO_COMPRESS

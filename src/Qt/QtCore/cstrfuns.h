@@ -2,6 +2,7 @@
     #define CSTRFUNS_H
 
     #include <qtypes.h>
+
     /*****************************************************************************
       Safe and portable C string functions;
       extensions to standard string.h
