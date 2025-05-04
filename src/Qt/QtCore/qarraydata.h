@@ -33,10 +33,10 @@
             GrowsAtBeginning
         };
 
-       enum ArrayOption
-       {
+        enum ArrayOption
+        {
             ArrayOptionDefault = 0,
-            CapacityReserved     = 0x1  //!< the capacity was reserved by the user, try to keep it
+            CapacityReserved   = 0x1  //!< the capacity was reserved by the user, try to keep it
         };
 
         Q_DECLARE_FLAGS(ArrayOptions, ArrayOption)
@@ -194,31 +194,38 @@
             {
                 qsizetype &position = *_position;
                 qsizetype &length = *_length;
-                if (position > originalLength) {
+                if (position > originalLength)
+                {
                     position = 0;
                     length = 0;
                     return Null;
                 }
 
-                if (position < 0) {
-                    if (length < 0 || length + position >= originalLength) {
+                if (position < 0)
+                {
+                    if (length < 0 || length + position >= originalLength)
+                    {
                         position = 0;
                         length = originalLength;
                         return Full;
                     }
-                    if (length + position <= 0) {
+                    if (length + position <= 0)
+                    {
                         position = length = 0;
                         return Null;
                     }
                     length += position;
                     position = 0;
                 }
-                else if (size_t(length) > size_t(originalLength - position)) {
+                else if (size_t(length) > size_t(originalLength - position))
+                {
                     length = originalLength - position;
                 }
 
                 if (position == 0 && length == originalLength)
+                {
                     return Full;
+                }
 
                 return length > 0 ? Subset : Empty;
             }
