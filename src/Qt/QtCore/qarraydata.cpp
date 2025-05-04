@@ -1,3 +1,7 @@
+// ========== My define ==========
+#include <qcompilerdetection.h>
+// ========== My define ==========
+
 #include <QtCore/qarraydata.h>
 //#include <QtCore/private/qnumeric_p.h>
 //#include <QtCore/private/qtools_p.h>
@@ -46,19 +50,20 @@ QT_BEGIN_NAMESPACE
     would not fit a qsizetype.
 */
 
-//qsizetype qCalculateBlockSize(qsizetype elementCount, qsizetype elementSize, qsizetype headerSize) noexcept
-//{
-//    Q_ASSERT(elementSize);
-//
-//    size_t bytes;
-//    if (Q_UNLIKELY(qMulOverflow(size_t(elementSize), size_t(elementCount), &bytes)) ||
-//            Q_UNLIKELY(qAddOverflow(bytes, size_t(headerSize), &bytes)))
-//        return -1;
-//    if (Q_UNLIKELY(qsizetype(bytes) < 0))
-//        return -1;
-//
-//    return qsizetype(bytes);
-//}
+qsizetype qCalculateBlockSize(qsizetype /*elementCount*/, qsizetype elementSize, qsizetype /*headerSize*/) noexcept
+{
+    Q_ASSERT(elementSize);
+
+    //size_t bytes;
+    size_t bytes = 1024;
+    //if (Q_UNLIKELY(qMulOverflow(size_t(elementSize), size_t(elementCount), &bytes)) ||
+    //    Q_UNLIKELY(qAddOverflow(bytes, size_t(headerSize), &bytes)))
+    //    return -1;
+    //if (Q_UNLIKELY(qsizetype(bytes) < 0))
+    //    return -1;
+
+    return qsizetype(bytes);
+}
 
 /*!
     \internal
@@ -79,37 +84,39 @@ QT_BEGIN_NAMESPACE
     needed.
 */
 
-//CalculateGrowingBlockSizeResult
-//qCalculateGrowingBlockSize(qsizetype elementCount, qsizetype elementSize, qsizetype headerSize) noexcept
-//{
-//    CalculateGrowingBlockSizeResult result =
-//    {
-//        qsizetype(-1), qsizetype(-1)
-//    };
-//
-//    qsizetype bytes = qCalculateBlockSize(elementCount, elementSize, headerSize);
-//    if (bytes < 0)
-//    {
-//        return result;
-//    }
-//
-//    size_t morebytes = static_cast<size_t>(qNextPowerOfTwo(quint64(bytes)));
-//    if (Q_UNLIKELY(qsizetype(morebytes) < 0))
-//    {
-//        // grow by half the difference between bytes and morebytes
-//        // this slows the growth and avoids trying to allocate exactly
-//        // 2G of memory (on 32bit), something that many OSes can't deliver
-//        bytes += (morebytes - bytes) / 2;
-//    }
-//    else
-//    {
-//        bytes = qsizetype(morebytes);
-//    }
-//
-//    result.elementCount = (bytes - headerSize) / elementSize;
-//    result.size = result.elementCount * elementSize + headerSize;
-//    return result;
-//}
+CalculateGrowingBlockSizeResult qCalculateGrowingBlockSize(qsizetype elementCount, qsizetype elementSize,
+    qsizetype headerSize) noexcept
+{
+    CalculateGrowingBlockSizeResult result =
+    {
+        qsizetype(-1),
+        qsizetype(-1),
+    };
+
+    qsizetype bytes = qCalculateBlockSize(elementCount, elementSize, headerSize);
+    if (bytes < 0)
+    {
+        return result;
+    }
+
+    //size_t morebytes = static_cast<size_t>(qNextPowerOfTwo(quint64(bytes)));
+    size_t morebytes = static_cast<size_t>(1024);
+    if (Q_UNLIKELY(qsizetype(morebytes) < 0))
+    {
+        // grow by half the difference between bytes and morebytes
+        // this slows the growth and avoids trying to allocate exactly
+        // 2G of memory (on 32bit), something that many OSes can't deliver
+        bytes += (morebytes - bytes) / 2;
+    }
+    else
+    {
+        bytes = qsizetype(morebytes);
+    }
+
+    result.elementCount = (bytes - headerSize) / elementSize;
+    result.size = result.elementCount * elementSize + headerSize;
+    return result;
+}
 
 /*
     Calculate the byte size for a block of \a capacity objects of size \a
@@ -162,8 +169,8 @@ namespace
 using QtPrivate::AlignedQArrayData;
 
 static inline AllocationResult
-allocateHelper(qsizetype objectSize, qsizetype alignment, qsizetype capacity,
-               QArrayData::AllocationOption option) noexcept
+allocateHelper(qsizetype /*objectSize*/, qsizetype alignment, qsizetype capacity,
+               QArrayData::AllocationOption /*option*/) noexcept
 {
     if (capacity == 0)
         return {};
@@ -171,7 +178,8 @@ allocateHelper(qsizetype objectSize, qsizetype alignment, qsizetype capacity,
     qsizetype headerSize = sizeof(AlignedQArrayData);
     const qsizetype headerAlignment = alignof(AlignedQArrayData);
 
-    if (alignment > headerAlignment) {
+    if (alignment > headerAlignment)
+    {
         // Allocate extra (alignment - Q_ALIGNOF(AlignedQArrayData)) padding
         // bytes so we can properly align the data array. This assumes malloc is
         // able to provide appropriate alignment for the header -- as it should!
@@ -234,7 +242,7 @@ void *QArrayData::allocate2(QArrayData **dptr, qsizetype capacity, AllocationOpt
 
 std::pair<QArrayData *, void *>
 QArrayData::reallocateUnaligned(QArrayData *data, void *dataPointer,
-                                qsizetype objectSize, qsizetype capacity, AllocationOption option) noexcept
+                                qsizetype /*objectSize*/, qsizetype capacity, AllocationOption /*option*/) noexcept
 {
     Q_ASSERT(!data || !data->isShared());
 
@@ -263,8 +271,7 @@ QArrayData::reallocateUnaligned(QArrayData *data, void *dataPointer,
     return {header, dataPointer};
 }
 
-void QArrayData::deallocate(QArrayData *data, qsizetype objectSize,
-        qsizetype alignment) noexcept
+void QArrayData::deallocate(QArrayData *data, qsizetype /*objectSize*/, qsizetype alignment) noexcept
 {
     // Alignment is a power of two
     Q_ASSERT(alignment >= qsizetype(alignof(QArrayData))

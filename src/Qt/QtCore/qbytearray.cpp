@@ -1,19 +1,24 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+// ========== My define ==========
+//#include <qtconfigmacros.h>
+// ========== My define ==========
+
 #include "qbytearray.h"
-#include "qbytearraymatcher.h"
+//#include "qbytearraymatcher.h"
 #include <private/qtools_p.h>
 //#include "qhashfunctions.h"
 //#include "qlist.h"
 //#include <private/qlocale_p.h>
-#include <private/qlocale_tools_p.h>
+//#include <private/qlocale_tools_p.h>
 //#include <private/qnumeric_p.h>
 //#include <private/qsimd_p.h>
 //#include <private/qstringalgorithms_p.h>
 //#include "qscopedpointer.h"
-#include <private/qstringconverter_p.h>
+//#include <private/qstringconverter_p.h>
 //#include <qdatastream.h>
 //#include <qmath.h>
+
 
 #if defined(Q_OS_WASM)
     #include "private/qstdweb_p.h"
@@ -408,26 +413,26 @@ int qstrnicmp(const char *str1, qsizetype len1, const char *str2, qsizetype len2
 /*!
     \internal
  */
-int QtPrivate::compareMemory(QByteArrayView lhs, QByteArrayView rhs)
-{
-    if (!lhs.isNull() && !rhs.isNull()) {
-        int ret = memcmp(lhs.data(), rhs.data(), qMin(lhs.size(), rhs.size()));
-        if (ret != 0)
-            return ret;
-    }
-
-    // they matched qMin(l1, l2) bytes
-    // so the longer one is lexically after the shorter one
-    return lhs.size() == rhs.size() ? 0 : lhs.size() > rhs.size() ? 1 : -1;
-}
+//int QtPrivate::compareMemory(QByteArrayView lhs, QByteArrayView rhs)
+//{
+//    if (!lhs.isNull() && !rhs.isNull()) {
+//        int ret = memcmp(lhs.data(), rhs.data(), qMin(lhs.size(), rhs.size()));
+//        if (ret != 0)
+//            return ret;
+//    }
+//
+//    // they matched qMin(l1, l2) bytes
+//    // so the longer one is lexically after the shorter one
+//    return lhs.size() == rhs.size() ? 0 : lhs.size() > rhs.size() ? 1 : -1;
+//}
 
 /*!
     \internal
 */
-bool QtPrivate::isValidUtf8(QByteArrayView s) noexcept
-{
-    return QUtf8::isValidUtf8(s).isValidUtf8;
-}
+//bool QtPrivate::isValidUtf8(QByteArrayView s) noexcept
+//{
+//    return QUtf8::isValidUtf8(s).isValidUtf8;
+//}
 
 // the CRC table below is created by the following piece of code
 #if 0
@@ -487,35 +492,35 @@ static const quint16 crc_tbl[16] =
     \note This function is a 16-bit cache conserving (16 entry table)
     implementation of the CRC-16-CCITT algorithm.
 */
-quint16 qChecksum(QByteArrayView data, Qt::ChecksumType standard)
-{
-    quint16 crc = 0x0000;
-    switch (standard) {
-    case Qt::ChecksumIso3309:
-        crc = 0xffff;
-        break;
-    case Qt::ChecksumItuV41:
-        crc = 0x6363;
-        break;
-    }
-    uchar c;
-    const uchar *p = reinterpret_cast<const uchar *>(data.data());
-    qsizetype len = data.size();
-    while (len--) {
-        c = *p++;
-        crc = ((crc >> 4) & 0x0fff) ^ crc_tbl[((crc ^ c) & 15)];
-        c >>= 4;
-        crc = ((crc >> 4) & 0x0fff) ^ crc_tbl[((crc ^ c) & 15)];
-    }
-    switch (standard) {
-    case Qt::ChecksumIso3309:
-        crc = ~crc;
-        break;
-    case Qt::ChecksumItuV41:
-        break;
-    }
-    return crc & 0xffff;
-}
+//quint16 qChecksum(QByteArrayView data, Qt::ChecksumType standard)
+//{
+//    quint16 crc = 0x0000;
+//    switch (standard) {
+//    case Qt::ChecksumIso3309:
+//        crc = 0xffff;
+//        break;
+//    case Qt::ChecksumItuV41:
+//        crc = 0x6363;
+//        break;
+//    }
+//    uchar c;
+//    const uchar *p = reinterpret_cast<const uchar *>(data.data());
+//    qsizetype len = data.size();
+//    while (len--) {
+//        c = *p++;
+//        crc = ((crc >> 4) & 0x0fff) ^ crc_tbl[((crc ^ c) & 15)];
+//        c >>= 4;
+//        crc = ((crc >> 4) & 0x0fff) ^ crc_tbl[((crc ^ c) & 15)];
+//    }
+//    switch (standard) {
+//    case Qt::ChecksumIso3309:
+//        crc = ~crc;
+//        break;
+//    case Qt::ChecksumItuV41:
+//        break;
+//    }
+//    return crc & 0xffff;
+//}
 
 /*!
     \fn QByteArray qCompress(const QByteArray& data, int compressionLevel)
@@ -604,91 +609,91 @@ static QByteArray unexpectedZlibError(ZLibOp /*op*/, int /*err*/, const char */*
     return QByteArray();
 }
 
-static QByteArray xxflate(ZLibOp op, QArrayDataPointer<char> out, QByteArrayView input,
-                          qxp::function_ref<int(z_stream *) const> init,
-                          qxp::function_ref<int(z_stream *, size_t) const> processChunk,
-                          qxp::function_ref<void(z_stream *) const> deinit)
-{
-    if (out.data() == nullptr) // allocation failed
-        return tooMuchData(op);
-    qsizetype capacity = out.allocatedCapacity();
-
-    const auto initalSize = out.size;
-
-    z_stream zs = {};
-    zs.next_in = reinterpret_cast<uchar *>(const_cast<char *>(input.data())); // 1980s C API...
-    if (const int err = init(&zs); err != Z_OK)
-        return unexpectedZlibError(op, err, zs.msg);
-    const auto sg = qScopeGuard([&] { deinit(&zs); });
-
-    using ZlibChunkSize_t = decltype(zs.avail_in);
-    static_assert(!std::is_signed_v<ZlibChunkSize_t>);
-    static_assert(std::is_same_v<ZlibChunkSize_t, decltype(zs.avail_out)>);
-    constexpr auto MaxChunkSize = std::numeric_limits<ZlibChunkSize_t>::max();
-    [[maybe_unused]]
-    constexpr auto MaxStatisticsSize = std::numeric_limits<decltype(zs.total_out)>::max();
-
-    size_t inputLeft = size_t(input.size());
-
-    int res;
-    do {
-        Q_ASSERT(out.freeSpaceAtBegin() == 0); // ensure prepend optimization stays out of the way
-        Q_ASSERT(capacity == out.allocatedCapacity());
-
-        if (zs.avail_out == 0) {
-            Q_ASSERT(size_t(out.size) - initalSize > MaxStatisticsSize || // total_out overflow
-                     size_t(out.size) - initalSize == zs.total_out);
-            Q_ASSERT(out.size <= capacity);
-
-            qsizetype avail_out = capacity - out.size;
-            if (avail_out == 0) {
-                out->reallocateAndGrow(QArrayData::GrowsAtEnd, 1); // grow to next natural capacity
-                if (out.data() == nullptr) // reallocation failed
-                    return tooMuchData(op);
-                capacity = out.allocatedCapacity();
-                avail_out = capacity - out.size;
-            }
-            zs.next_out = reinterpret_cast<uchar *>(out.data()) + out.size;
-            zs.avail_out = size_t(avail_out) > size_t(MaxChunkSize) ? MaxChunkSize
-                                                                    : ZlibChunkSize_t(avail_out);
-            out.size += zs.avail_out;
-
-            Q_ASSERT(zs.avail_out > 0);
-        }
-
-        if (zs.avail_in == 0) {
-            // zs.next_in is kept up-to-date by processChunk(), so nothing to do
-            zs.avail_in = inputLeft > MaxChunkSize ? MaxChunkSize : ZlibChunkSize_t(inputLeft);
-            inputLeft -= zs.avail_in;
-        }
-
-        res = processChunk(&zs, inputLeft);
-    } while (res == Z_OK);
-
-    switch (res) {
-    case Z_STREAM_END:
-        out.size -= zs.avail_out;
-        Q_ASSERT(size_t(out.size) - initalSize > MaxStatisticsSize || // total_out overflow
-                 size_t(out.size) - initalSize == zs.total_out);
-        Q_ASSERT(out.size <= out.allocatedCapacity());
-        out.data()[out.size] = '\0';
-        return QByteArray(std::move(out));
-
-    case Z_MEM_ERROR:
-        return tooMuchData(op);
-
-    case Z_BUF_ERROR:
-        Q_UNREACHABLE(); // cannot happen - we supply a buffer that can hold the result,
-                         // or else error out early
-
-    case Z_DATA_ERROR:   // can only happen on decompression
-        Q_ASSERT(op == ZLibOp::Decompression);
-        return invalidCompressedData();
-
-    default:
-        return unexpectedZlibError(op, res, zs.msg);
-    }
-}
+//static QByteArray xxflate(ZLibOp op, QArrayDataPointer<char> out, QByteArrayView input,
+//                          qxp::function_ref<int(z_stream *) const> init,
+//                          qxp::function_ref<int(z_stream *, size_t) const> processChunk,
+//                          qxp::function_ref<void(z_stream *) const> deinit)
+//{
+//    if (out.data() == nullptr) // allocation failed
+//        return tooMuchData(op);
+//    qsizetype capacity = out.allocatedCapacity();
+//
+//    const auto initalSize = out.size;
+//
+//    z_stream zs = {};
+//    zs.next_in = reinterpret_cast<uchar *>(const_cast<char *>(input.data())); // 1980s C API...
+//    if (const int err = init(&zs); err != Z_OK)
+//        return unexpectedZlibError(op, err, zs.msg);
+//    const auto sg = qScopeGuard([&] { deinit(&zs); });
+//
+//    using ZlibChunkSize_t = decltype(zs.avail_in);
+//    static_assert(!std::is_signed_v<ZlibChunkSize_t>);
+//    static_assert(std::is_same_v<ZlibChunkSize_t, decltype(zs.avail_out)>);
+//    constexpr auto MaxChunkSize = std::numeric_limits<ZlibChunkSize_t>::max();
+//    [[maybe_unused]]
+//    constexpr auto MaxStatisticsSize = std::numeric_limits<decltype(zs.total_out)>::max();
+//
+//    size_t inputLeft = size_t(input.size());
+//
+//    int res;
+//    do {
+//        Q_ASSERT(out.freeSpaceAtBegin() == 0); // ensure prepend optimization stays out of the way
+//        Q_ASSERT(capacity == out.allocatedCapacity());
+//
+//        if (zs.avail_out == 0) {
+//            Q_ASSERT(size_t(out.size) - initalSize > MaxStatisticsSize || // total_out overflow
+//                     size_t(out.size) - initalSize == zs.total_out);
+//            Q_ASSERT(out.size <= capacity);
+//
+//            qsizetype avail_out = capacity - out.size;
+//            if (avail_out == 0) {
+//                out->reallocateAndGrow(QArrayData::GrowsAtEnd, 1); // grow to next natural capacity
+//                if (out.data() == nullptr) // reallocation failed
+//                    return tooMuchData(op);
+//                capacity = out.allocatedCapacity();
+//                avail_out = capacity - out.size;
+//            }
+//            zs.next_out = reinterpret_cast<uchar *>(out.data()) + out.size;
+//            zs.avail_out = size_t(avail_out) > size_t(MaxChunkSize) ? MaxChunkSize
+//                                                                    : ZlibChunkSize_t(avail_out);
+//            out.size += zs.avail_out;
+//
+//            Q_ASSERT(zs.avail_out > 0);
+//        }
+//
+//        if (zs.avail_in == 0) {
+//            // zs.next_in is kept up-to-date by processChunk(), so nothing to do
+//            zs.avail_in = inputLeft > MaxChunkSize ? MaxChunkSize : ZlibChunkSize_t(inputLeft);
+//            inputLeft -= zs.avail_in;
+//        }
+//
+//        res = processChunk(&zs, inputLeft);
+//    } while (res == Z_OK);
+//
+//    switch (res) {
+//    case Z_STREAM_END:
+//        out.size -= zs.avail_out;
+//        Q_ASSERT(size_t(out.size) - initalSize > MaxStatisticsSize || // total_out overflow
+//                 size_t(out.size) - initalSize == zs.total_out);
+//        Q_ASSERT(out.size <= out.allocatedCapacity());
+//        out.data()[out.size] = '\0';
+//        return QByteArray(std::move(out));
+//
+//    case Z_MEM_ERROR:
+//        return tooMuchData(op);
+//
+//    case Z_BUF_ERROR:
+//        Q_UNREACHABLE(); // cannot happen - we supply a buffer that can hold the result,
+//                         // or else error out early
+//
+//    case Z_DATA_ERROR:   // can only happen on decompression
+//        Q_ASSERT(op == ZLibOp::Decompression);
+//        return invalidCompressedData();
+//
+//    default:
+//        return unexpectedZlibError(op, res, zs.msg);
+//    }
+//}
 
 QByteArray qCompress(const uchar* data, qsizetype nbytes, int compressionLevel)
 {
@@ -2040,7 +2045,8 @@ QByteArray &QByteArray::prepend(const QByteArray &ba)
 {
     if (size() == 0 && ba.size() > d.constAllocatedCapacity() && ba.d.isMutable())
         return (*this = ba);
-    return prepend(QByteArrayView(ba));
+    //return prepend(QByteArrayView(ba));
+    return *this;
 }
 
 /*!
@@ -2107,7 +2113,7 @@ QByteArray &QByteArray::append(const QByteArray &ba)
             else
                 operator=(ba);
         } else if (ba.size()) {
-            append(QByteArrayView(ba));
+            //append(QByteArrayView(ba));
         }
     }
     return *this;
@@ -2218,22 +2224,22 @@ QByteArray& QByteArray::append(char ch)
     [\a first, \a last) is not a valid range.
 */
 
-QByteArray &QByteArray::assign(QByteArrayView v)
-{
-    const auto len = v.size();
-
-    if (len <= capacity() &&  isDetached()) {
-        const auto offset = d.freeSpaceAtBegin();
-        if (offset)
-            d.setBegin(d.begin() - offset);
-        std::memcpy(d.begin(), v.data(), len);
-        d.size = len;
-        d.data()[d.size] = '\0';
-    } else {
-        *this = v.toByteArray();
-    }
-    return *this;
-}
+//QByteArray &QByteArray::assign(QByteArrayView v)
+//{
+//    const auto len = v.size();
+//
+//    if (len <= capacity() &&  isDetached()) {
+//        const auto offset = d.freeSpaceAtBegin();
+//        if (offset)
+//            d.setBegin(d.begin() - offset);
+//        std::memcpy(d.begin(), v.data(), len);
+//        d.size = len;
+//        d.data()[d.size] = '\0';
+//    } else {
+//        *this = v.toByteArray();
+//    }
+//    return *this;
+//}
 
 /*!
     Inserts \a data at index position \a i and returns a
@@ -2255,37 +2261,37 @@ QByteArray &QByteArray::assign(QByteArrayView v)
 
     \sa append(), prepend(), replace(), remove()
 */
-QByteArray &QByteArray::insert(qsizetype i, QByteArrayView data)
-{
-    const char *str = data.data();
-    qsizetype size = data.size();
-    if (i < 0 || size <= 0)
-        return *this;
-
-    // handle this specially, as QArrayDataOps::insert() doesn't handle out of
-    // bounds positions
-    if (i >= d->size) {
-        // In case when data points into the range or is == *this, we need to
-        // defer a call to free() so that it comes after we copied the data from
-        // the old memory:
-        DataPointer detached{};  // construction is free
-        d.detachAndGrow(Data::GrowsAtEnd, (i - d.size) + size, &str, &detached);
-        Q_CHECK_PTR(d.data());
-        d->copyAppend(i - d->size, ' ');
-        d->copyAppend(str, str + size);
-        d.data()[d.size] = '\0';
-        return *this;
-    }
-
-    if (!d->needsDetach() && QtPrivate::q_points_into_range(str, d)) {
-        QVarLengthArray a(str, str + size);
-        return insert(i, a);
-    }
-
-    d->insert(i, str, size);
-    d.data()[d.size] = '\0';
-    return *this;
-}
+//QByteArray &QByteArray::insert(qsizetype i, QByteArrayView data)
+//{
+//    const char *str = data.data();
+//    qsizetype size = data.size();
+//    if (i < 0 || size <= 0)
+//        return *this;
+//
+//    // handle this specially, as QArrayDataOps::insert() doesn't handle out of
+//    // bounds positions
+//    if (i >= d->size) {
+//        // In case when data points into the range or is == *this, we need to
+//        // defer a call to free() so that it comes after we copied the data from
+//        // the old memory:
+//        DataPointer detached{};  // construction is free
+//        d.detachAndGrow(Data::GrowsAtEnd, (i - d.size) + size, &str, &detached);
+//        Q_CHECK_PTR(d.data());
+//        d->copyAppend(i - d->size, ' ');
+//        d->copyAppend(str, str + size);
+//        d.data()[d.size] = '\0';
+//        return *this;
+//    }
+//
+//    if (!d->needsDetach() && QtPrivate::q_points_into_range(str, d)) {
+//        QVarLengthArray a(str, str + size);
+//        return insert(i, a);
+//    }
+//
+//    d->insert(i, str, size);
+//    d.data()[d.size] = '\0';
+//    return *this;
+//}
 
 /*!
     \fn QByteArray &QByteArray::insert(qsizetype i, const QByteArray &data)
@@ -2451,25 +2457,25 @@ QByteArray &QByteArray::remove(qsizetype pos, qsizetype len)
     \sa insert(), remove()
 */
 
-QByteArray &QByteArray::replace(qsizetype pos, qsizetype len, QByteArrayView after)
-{
-    if (QtPrivate::q_points_into_range(after.data(), d)) {
-        QVarLengthArray copy(after.data(), after.data() + after.size());
-        return replace(pos, len, QByteArrayView{copy});
-    }
-    if (len == after.size() && (pos + len <= size())) {
-        // same size: in-place replacement possible
-        if (len > 0) {
-            detach();
-            memcpy(d.data() + pos, after.data(), len*sizeof(char));
-        }
-        return *this;
-    } else {
-        // ### optimize me
-        remove(pos, len);
-        return insert(pos, after);
-    }
-}
+//QByteArray &QByteArray::replace(qsizetype pos, qsizetype len, QByteArrayView after)
+//{
+//    if (QtPrivate::q_points_into_range(after.data(), d)) {
+//        QVarLengthArray copy(after.data(), after.data() + after.size());
+//        return replace(pos, len, QByteArrayView{copy});
+//    }
+//    if (len == after.size() && (pos + len <= size())) {
+//        // same size: in-place replacement possible
+//        if (len > 0) {
+//            detach();
+//            memcpy(d.data() + pos, after.data(), len*sizeof(char));
+//        }
+//        return *this;
+//    } else {
+//        // ### optimize me
+//        remove(pos, len);
+//        return insert(pos, after);
+//    }
+//}
 
 /*! \fn QByteArray &QByteArray::replace(qsizetype pos, qsizetype len, const char *after, qsizetype alen)
 
@@ -2502,112 +2508,112 @@ QByteArray &QByteArray::replace(qsizetype pos, qsizetype len, QByteArrayView aft
     \snippet code/src_corelib_text_qbytearray.cpp 20
 */
 
-QByteArray &QByteArray::replace(QByteArrayView before, QByteArrayView after)
-{
-    const char *b = before.data();
-    qsizetype bsize = before.size();
-    const char *a = after.data();
-    qsizetype asize = after.size();
-
-    if (isNull() || (b == a && bsize == asize))
-        return *this;
-
-    // protect against before or after being part of this
-    if (QtPrivate::q_points_into_range(a, d)) {
-        QVarLengthArray copy(a, a + asize);
-        return replace(before, QByteArrayView{copy});
-    }
-    if (QtPrivate::q_points_into_range(b, d)) {
-        QVarLengthArray copy(b, b + bsize);
-        return replace(QByteArrayView{copy}, after);
-    }
-
-    QByteArrayMatcher matcher(b, bsize);
-    qsizetype index = 0;
-    qsizetype len = size();
-    char *szData = data(); // detaches
-
-    if (bsize == asize) {
-        if (bsize) {
-            while ((index = matcher.indexIn(*this, index)) != -1) {
-                memcpy(szData + index, a, asize);
-                index += bsize;
-            }
-        }
-    } else if (asize < bsize) {
-        size_t to = 0;
-        size_t movestart = 0;
-        size_t num = 0;
-        while ((index = matcher.indexIn(*this, index)) != -1) {
-            if (num) {
-                qsizetype msize = index - movestart;
-                if (msize > 0) {
-                    memmove(szData + to, szData + movestart, msize);
-                    to += msize;
-                }
-            } else {
-                to = index;
-            }
-            if (asize) {
-                memcpy(szData + to, a, asize);
-                to += asize;
-            }
-            index += bsize;
-            movestart = index;
-            num++;
-        }
-        if (num) {
-            qsizetype msize = len - movestart;
-            if (msize > 0)
-                memmove(szData + to, szData + movestart, msize);
-            resize(len - num*(bsize-asize));
-        }
-    } else {
-        // the most complex case. We don't want to lose performance by doing repeated
-        // copies and reallocs of the data.
-        while (index != -1) {
-            size_t indices[4096];
-            size_t pos = 0;
-            while(pos < 4095) {
-                index = matcher.indexIn(*this, index);
-                if (index == -1)
-                    break;
-                indices[pos++] = index;
-                index += bsize;
-                // avoid infinite loop
-                if (!bsize)
-                    index++;
-            }
-            if (!pos)
-                break;
-
-            // we have a table of replacement positions, use them for fast replacing
-            qsizetype adjust = pos*(asize-bsize);
-            // index has to be adjusted in case we get back into the loop above.
-            if (index != -1)
-                index += adjust;
-            qsizetype newlen = len + adjust;
-            qsizetype moveend = len;
-            if (newlen > len) {
-                resize(newlen);
-                len = newlen;
-            }
-            szData = this->d.data(); // data(), without the detach() check
-
-            while(pos) {
-                pos--;
-                qsizetype movestart = indices[pos] + bsize;
-                qsizetype insertstart = indices[pos] + pos*(asize-bsize);
-                qsizetype moveto = insertstart + asize;
-                memmove(szData + moveto, szData + movestart, (moveend - movestart));
-                if (asize)
-                    memcpy(szData + insertstart, a, asize);
-                moveend = movestart - bsize;
-            }
-        }
-    }
-    return *this;
-}
+//QByteArray &QByteArray::replace(QByteArrayView before, QByteArrayView after)
+//{
+//    const char *b = before.data();
+//    qsizetype bsize = before.size();
+//    const char *a = after.data();
+//    qsizetype asize = after.size();
+//
+//    if (isNull() || (b == a && bsize == asize))
+//        return *this;
+//
+//    // protect against before or after being part of this
+//    if (QtPrivate::q_points_into_range(a, d)) {
+//        QVarLengthArray copy(a, a + asize);
+//        return replace(before, QByteArrayView{copy});
+//    }
+//    if (QtPrivate::q_points_into_range(b, d)) {
+//        QVarLengthArray copy(b, b + bsize);
+//        return replace(QByteArrayView{copy}, after);
+//    }
+//
+//    QByteArrayMatcher matcher(b, bsize);
+//    qsizetype index = 0;
+//    qsizetype len = size();
+//    char *szData = data(); // detaches
+//
+//    if (bsize == asize) {
+//        if (bsize) {
+//            while ((index = matcher.indexIn(*this, index)) != -1) {
+//                memcpy(szData + index, a, asize);
+//                index += bsize;
+//            }
+//        }
+//    } else if (asize < bsize) {
+//        size_t to = 0;
+//        size_t movestart = 0;
+//        size_t num = 0;
+//        while ((index = matcher.indexIn(*this, index)) != -1) {
+//            if (num) {
+//                qsizetype msize = index - movestart;
+//                if (msize > 0) {
+//                    memmove(szData + to, szData + movestart, msize);
+//                    to += msize;
+//                }
+//            } else {
+//                to = index;
+//            }
+//            if (asize) {
+//                memcpy(szData + to, a, asize);
+//                to += asize;
+//            }
+//            index += bsize;
+//            movestart = index;
+//            num++;
+//        }
+//        if (num) {
+//            qsizetype msize = len - movestart;
+//            if (msize > 0)
+//                memmove(szData + to, szData + movestart, msize);
+//            resize(len - num*(bsize-asize));
+//        }
+//    } else {
+//        // the most complex case. We don't want to lose performance by doing repeated
+//        // copies and reallocs of the data.
+//        while (index != -1) {
+//            size_t indices[4096];
+//            size_t pos = 0;
+//            while(pos < 4095) {
+//                index = matcher.indexIn(*this, index);
+//                if (index == -1)
+//                    break;
+//                indices[pos++] = index;
+//                index += bsize;
+//                // avoid infinite loop
+//                if (!bsize)
+//                    index++;
+//            }
+//            if (!pos)
+//                break;
+//
+//            // we have a table of replacement positions, use them for fast replacing
+//            qsizetype adjust = pos*(asize-bsize);
+//            // index has to be adjusted in case we get back into the loop above.
+//            if (index != -1)
+//                index += adjust;
+//            qsizetype newlen = len + adjust;
+//            qsizetype moveend = len;
+//            if (newlen > len) {
+//                resize(newlen);
+//                len = newlen;
+//            }
+//            szData = this->d.data(); // data(), without the detach() check
+//
+//            while(pos) {
+//                pos--;
+//                qsizetype movestart = indices[pos] + bsize;
+//                qsizetype insertstart = indices[pos] + pos*(asize-bsize);
+//                qsizetype moveto = insertstart + asize;
+//                memmove(szData + moveto, szData + movestart, (moveend - movestart));
+//                if (asize)
+//                    memcpy(szData + insertstart, a, asize);
+//                moveend = movestart - bsize;
+//            }
+//        }
+//    }
+//    return *this;
+//}
 
 /*!
     \fn QByteArray &QByteArray::replace(char before, QByteArrayView after)
@@ -2762,19 +2768,19 @@ static qsizetype lastIndexOfHelper(const char *haystack, qsizetype l, const char
     return -1;
 }
 
-qsizetype QtPrivate::lastIndexOf(QByteArrayView haystack, qsizetype from, QByteArrayView needle) noexcept
-{
-    if (haystack.isEmpty()) {
-        if (needle.isEmpty() && from == 0)
-            return 0;
-        return -1;
-    }
-    const auto ol = needle.size();
-    if (ol == 1)
-        return QtPrivate::lastIndexOf(haystack, from, needle.front());
-
-    return lastIndexOfHelper(haystack.data(), haystack.size(), needle.data(), ol, from);
-}
+//qsizetype QtPrivate::lastIndexOf(QByteArrayView haystack, qsizetype from, QByteArrayView needle) noexcept
+//{
+//    if (haystack.isEmpty()) {
+//        if (needle.isEmpty() && from == 0)
+//            return 0;
+//        return -1;
+//    }
+//    const auto ol = needle.size();
+//    if (ol == 1)
+//        return QtPrivate::lastIndexOf(haystack, from, needle.front());
+//
+//    return lastIndexOfHelper(haystack.data(), haystack.size(), needle.data(), ol, from);
+//}
 
 /*! \fn qsizetype QByteArray::lastIndexOf(QByteArrayView bv, qsizetype from) const
     \since 6.0
@@ -2829,36 +2835,36 @@ qsizetype QtPrivate::lastIndexOf(QByteArrayView haystack, qsizetype from, QByteA
     \sa indexOf(), contains()
 */
 
-static inline qsizetype countCharHelper(QByteArrayView haystack, char needle) noexcept
-{
-    qsizetype num = 0;
-    for (char ch : haystack) {
-        if (ch == needle)
-            ++num;
-    }
-    return num;
-}
-
-qsizetype QtPrivate::count(QByteArrayView haystack, QByteArrayView needle) noexcept
-{
-    if (needle.size() == 0)
-        return haystack.size() + 1;
-
-    if (needle.size() == 1)
-        return countCharHelper(haystack, needle[0]);
-
-    qsizetype num = 0;
-    qsizetype i = -1;
-    if (haystack.size() > 500 && needle.size() > 5) {
-        QByteArrayMatcher matcher(needle);
-        while ((i = matcher.indexIn(haystack, i + 1)) != -1)
-            ++num;
-    } else {
-        while ((i = haystack.indexOf(needle, i + 1)) != -1)
-            ++num;
-    }
-    return num;
-}
+//static inline qsizetype countCharHelper(QByteArrayView haystack, char needle) noexcept
+//{
+//    qsizetype num = 0;
+//    for (char ch : haystack) {
+//        if (ch == needle)
+//            ++num;
+//    }
+//    return num;
+//}
+//
+//qsizetype QtPrivate::count(QByteArrayView haystack, QByteArrayView needle) noexcept
+//{
+//    if (needle.size() == 0)
+//        return haystack.size() + 1;
+//
+//    if (needle.size() == 1)
+//        return countCharHelper(haystack, needle[0]);
+//
+//    qsizetype num = 0;
+//    qsizetype i = -1;
+//    if (haystack.size() > 500 && needle.size() > 5) {
+//        QByteArrayMatcher matcher(needle);
+//        while ((i = matcher.indexIn(haystack, i + 1)) != -1)
+//            ++num;
+//    } else {
+//        while ((i = haystack.indexOf(needle, i + 1)) != -1)
+//            ++num;
+//    }
+//    return num;
+//}
 
 /*! \fn qsizetype QByteArray::count(QByteArrayView bv) const
     \since 6.0
@@ -2903,14 +2909,14 @@ qsizetype QByteArray::count(char ch) const
     \sa operator==, {Character Case}
 */
 
-bool QtPrivate::startsWith(QByteArrayView haystack, QByteArrayView needle) noexcept
-{
-    if (haystack.size() < needle.size())
-        return false;
-    if (haystack.data() == needle.data() || needle.size() == 0)
-        return true;
-    return memcmp(haystack.data(), needle.data(), needle.size()) == 0;
-}
+//bool QtPrivate::startsWith(QByteArrayView haystack, QByteArrayView needle) noexcept
+//{
+//    if (haystack.size() < needle.size())
+//        return false;
+//    if (haystack.data() == needle.data() || needle.size() == 0)
+//        return true;
+//    return memcmp(haystack.data(), needle.data(), needle.size()) == 0;
+//}
 
 /*! \fn bool QByteArray::startsWith(QByteArrayView bv) const
     \since 6.0
@@ -2932,14 +2938,14 @@ bool QtPrivate::startsWith(QByteArrayView haystack, QByteArrayView needle) noexc
     \c false.
 */
 
-bool QtPrivate::endsWith(QByteArrayView haystack, QByteArrayView needle) noexcept
-{
-    if (haystack.size() < needle.size())
-        return false;
-    if (haystack.end() == needle.end() || needle.size() == 0)
-        return true;
-    return memcmp(haystack.end() - needle.size(), needle.data(), needle.size()) == 0;
-}
+//bool QtPrivate::endsWith(QByteArrayView haystack, QByteArrayView needle) noexcept
+//{
+//    if (haystack.size() < needle.size())
+//        return false;
+//    if (haystack.end() == needle.end() || needle.size() == 0)
+//        return true;
+//    return memcmp(haystack.end() - needle.size(), needle.data(), needle.size()) == 0;
+//}
 
 /*!
     \fn bool QByteArray::endsWith(QByteArrayView bv) const
@@ -3632,12 +3638,12 @@ QByteArray QByteArray::trimmed_helper(QByteArray &/*a*/)
     return 0;
 }
 
-QByteArrayView QtPrivate::trimmed(QByteArrayView /*view*/) noexcept
-{
-    //const auto [start, stop] = QStringAlgorithms<QByteArrayView>::trimmed_helper_positions(view);
-    //return QByteArrayView(start, stop);
-    return QByteArrayView();
-}
+//QByteArrayView QtPrivate::trimmed(QByteArrayView /*view*/) noexcept
+//{
+//    //const auto [start, stop] = QStringAlgorithms<QByteArrayView>::trimmed_helper_positions(view);
+//    //return QByteArrayView(start, stop);
+//    return QByteArrayView();
+//}
 
 /*!
     Returns a byte array of size \a width that contains this byte array padded
@@ -3713,39 +3719,39 @@ QByteArray QByteArray::rightJustified(qsizetype width, char fill, bool truncate)
     return result;
 }
 
-auto QtPrivate::toSignedInteger(QByteArrayView data, int base) -> ParsedNumber<qlonglong>
-{
-#if defined(QT_CHECK_RANGE)
-    if (base != 0 && (base < 2 || base > 36)) {
-        qWarning("QByteArray::toIntegral: Invalid base %d", base);
-        base = 10;
-    }
-#endif
-    if (data.isEmpty())
-        return {};
-
-    const QSimpleParsedNumber r = QLocaleData::bytearrayToLongLong(data, base);
-    if (r.ok())
-        return ParsedNumber(r.result);
-    return {};
-}
-
-auto QtPrivate::toUnsignedInteger(QByteArrayView data, int base) -> ParsedNumber<qulonglong>
-{
-#if defined(QT_CHECK_RANGE)
-    if (base != 0 && (base < 2 || base > 36)) {
-        qWarning("QByteArray::toIntegral: Invalid base %d", base);
-        base = 10;
-    }
-#endif
-    if (data.isEmpty())
-        return {};
-
-    const QSimpleParsedNumber r = QLocaleData::bytearrayToUnsLongLong(data, base);
-    if (r.ok())
-        return ParsedNumber(r.result);
-    return {};
-}
+//auto QtPrivate::toSignedInteger(QByteArrayView data, int base) -> ParsedNumber<qlonglong>
+//{
+//#if defined(QT_CHECK_RANGE)
+//    if (base != 0 && (base < 2 || base > 36)) {
+//        qWarning("QByteArray::toIntegral: Invalid base %d", base);
+//        base = 10;
+//    }
+//#endif
+//    if (data.isEmpty())
+//        return {};
+//
+//    const QSimpleParsedNumber r = QLocaleData::bytearrayToLongLong(data, base);
+//    if (r.ok())
+//        return ParsedNumber(r.result);
+//    return {};
+//}
+//
+//auto QtPrivate::toUnsignedInteger(QByteArrayView data, int base) -> ParsedNumber<qulonglong>
+//{
+//#if defined(QT_CHECK_RANGE)
+//    if (base != 0 && (base < 2 || base > 36)) {
+//        qWarning("QByteArray::toIntegral: Invalid base %d", base);
+//        base = 10;
+//    }
+//#endif
+//    if (data.isEmpty())
+//        return {};
+//
+//    const QSimpleParsedNumber r = QLocaleData::bytearrayToUnsLongLong(data, base);
+//    if (r.ok())
+//        return ParsedNumber(r.result);
+//    return {};
+//}
 
 /*!
     Returns the byte array converted to a \c {long long} using base \a base,
@@ -4020,17 +4026,18 @@ ushort QByteArray::toUShort(bool *ok, int base) const
 
 double QByteArray::toDouble(bool *ok) const
 {
-    return QByteArrayView(*this).toDouble(ok);
+    //return QByteArrayView(*this).toDouble(ok);
+    return 0.0;
 }
 
-auto QtPrivate::toDouble(QByteArrayView a) noexcept -> ParsedNumber<double>
-{
-    auto r = qt_asciiToDouble(a.data(), a.size(), WhitespacesAllowed);
-    if (r.ok())
-        return ParsedNumber{r.result};
-    else
-        return {};
-}
+//auto QtPrivate::toDouble(QByteArrayView a) noexcept -> ParsedNumber<double>
+//{
+//    auto r = qt_asciiToDouble(a.data(), a.size(), WhitespacesAllowed);
+//    if (r.ok())
+//        return ParsedNumber{r.result};
+//    else
+//        return {};
+//}
 
 /*!
     Returns the byte array converted to a \c float value.
@@ -4062,16 +4069,16 @@ float QByteArray::toFloat(bool *ok) const
     return QLocaleData::convertDoubleToFloat(toDouble(ok), ok);
 }
 
-auto QtPrivate::toFloat(QByteArrayView a) noexcept -> ParsedNumber<float>
-{
-    if (const auto r = toDouble(a)) {
-        bool ok = true;
-        const auto f = QLocaleData::convertDoubleToFloat(*r, &ok);
-        if (ok)
-            return ParsedNumber(f);
-    }
-    return {};
-}
+//auto QtPrivate::toFloat(QByteArrayView a) noexcept -> ParsedNumber<float>
+//{
+//    if (const auto r = toDouble(a)) {
+//        bool ok = true;
+//        const auto f = QLocaleData::convertDoubleToFloat(*r, &ok);
+//        if (ok)
+//            return ParsedNumber(f);
+//    }
+//    return {};
+//}
 
 /*!
     \since 5.2
@@ -4214,7 +4221,8 @@ QByteArray &QByteArray::setNum(qlonglong n, int base)
         p = qulltoa2(buff + buffsize, qulonglong(n), base);
     }
 
-    return assign(QByteArrayView{p, buff + buffsize});
+    //return assign(QByteArrayView{p, buff + buffsize});
+    return *this;
 }
 
 /*!
@@ -4229,7 +4237,8 @@ QByteArray &QByteArray::setNum(qulonglong n, int base)
     char buff[buffsize];
     char *p = qulltoa2(buff + buffsize, n, base);
 
-    return assign(QByteArrayView{p, buff + buffsize});
+    //return assign(QByteArrayView{p, buff + buffsize});
+    return *this;
 }
 
 /*!
@@ -5159,15 +5168,15 @@ size_t qHash(const QByteArray::FromBase64Result &key, size_t seed) noexcept
 
 
 // ========== My define ==========
-QByteArray::QByteArray(QByteArrayView v)
-    : QByteArray(v.data(), v.size())
-{
-}
+//QByteArray::QByteArray(QByteArrayView v)
+//    : QByteArray(v.data(), v.size())
+//{
+//}
 
-bool QByteArray::startsWith(QByteArrayView bv) const
-{
-    return QtPrivate::startsWith(qToByteArrayViewIgnoringNull(*this), bv);
-}
+//bool QByteArray::startsWith(QByteArrayView bv) const
+//{
+//    return QtPrivate::startsWith(qToByteArrayViewIgnoringNull(*this), bv);
+//}
 
 bool QByteArray::startsWith(char c) const
 {
@@ -5179,10 +5188,10 @@ bool QByteArray::endsWith(char c) const
     return size() > 0 && back() == c;
 }
 
-bool QByteArray::endsWith(QByteArrayView bv) const
-{
-    return QtPrivate::endsWith(qToByteArrayViewIgnoringNull(*this), bv);
-}
+//bool QByteArray::endsWith(QByteArrayView bv) const
+//{
+//    return QtPrivate::endsWith(qToByteArrayViewIgnoringNull(*this), bv);
+//}
 
 [[nodiscard]] bool QByteArray::isValidUtf8() const noexcept
 {
@@ -5199,36 +5208,203 @@ qsizetype QByteArray::indexOf(char ch, qsizetype from/* = 0*/) const
     return qToByteArrayViewIgnoringNull(*this).indexOf(ch, from);
 }
 
-qsizetype QByteArray::indexOf(QByteArrayView bv, qsizetype from /*= 0*/) const
-{
-    return QtPrivate::findByteArray(qToByteArrayViewIgnoringNull(*this), from, bv);
-}
+//qsizetype QByteArray::indexOf(QByteArrayView bv, qsizetype from /*= 0*/) const
+//{
+//    return QtPrivate::findByteArray(qToByteArrayViewIgnoringNull(*this), from, bv);
+//}
 
 qsizetype QByteArray::lastIndexOf(char ch, qsizetype from/* = -1*/) const
 {
     return qToByteArrayViewIgnoringNull(*this).lastIndexOf(ch, from);
 }
 
-qsizetype QByteArray::lastIndexOf(QByteArrayView bv) const
+//qsizetype QByteArray::lastIndexOf(QByteArrayView bv) const
+//{
+//    return lastIndexOf(bv, size());
+//}
+
+//qsizetype QByteArray::lastIndexOf(QByteArrayView bv, qsizetype from) const
+//{
+//    return QtPrivate::lastIndexOf(qToByteArrayViewIgnoringNull(*this), from, bv);
+//}
+
+//qsizetype QByteArray::count(QByteArrayView bv) const
+//{
+//    return QtPrivate::count(qToByteArrayViewIgnoringNull(*this), bv);
+//}
+
+//int QByteArray::compare(QByteArrayView a, Qt::CaseSensitivity cs) const noexcept
+//{
+//    return cs == Qt::CaseSensitive ? QtPrivate::compareMemory(*this, a) :
+//        qstrnicmp(data(), size(), a.data(), a.size());
+//}
+
+QByteArray &QByteArray::prepend(char c)
 {
-    return lastIndexOf(bv, size());
+    //return insert(0, QByteArrayView(&c, 1));
+    return *this;
 }
 
-qsizetype QByteArray::lastIndexOf(QByteArrayView bv, qsizetype from) const
+QByteArray &QByteArray::prepend(qsizetype count, char ch)
 {
-    return QtPrivate::lastIndexOf(qToByteArrayViewIgnoringNull(*this), from, bv);
+    return insert(0, count, ch);
 }
 
-qsizetype QByteArray::count(QByteArrayView bv) const
+QByteArray &QByteArray::prepend(const char *s)
 {
-    return QtPrivate::count(qToByteArrayViewIgnoringNull(*this), bv);
+    //return insert(0, QByteArrayView(s, qsizetype(qstrlen(s))));
+    return *this;
 }
 
-int QByteArray::compare(QByteArrayView a, Qt::CaseSensitivity cs) const noexcept
+QByteArray &QByteArray::prepend(const char *s, qsizetype len)
 {
-    return cs == Qt::CaseSensitive ? QtPrivate::compareMemory(*this, a) :
-        qstrnicmp(data(), size(), a.data(), a.size());
+    //return insert(0, QByteArrayView(s, len));
+    return *this;
 }
+
+//QByteArray &QByteArray::prepend(QByteArrayView a)
+//{
+//    return insert(0, a);
+//}
+
+QByteArray &QByteArray::append(qsizetype count, char ch)
+{
+    return insert(size(), count, ch);
+}
+
+QByteArray &QByteArray::append(const char *s)
+{
+    return append(s, -1);
+}
+
+QByteArray &QByteArray::append(const char *s, qsizetype len)
+{
+    //return append(QByteArrayView(s, len < 0 ? qsizetype(qstrlen(s)) : len));
+    return *this;
+}
+
+//QByteArray &QByteArray::append(QByteArrayView a)
+//{
+//    return insert(size(), a);
+//}
+
+QByteArray &QByteArray::insert(qsizetype i, const char *s)
+{
+    //return insert(i, QByteArrayView(s));
+    return *this;
+}
+
+QByteArray &QByteArray::insert(qsizetype i, const QByteArray &data)
+{
+    //return insert(i, QByteArrayView(data));
+    return *this;
+}
+
+QByteArray &QByteArray::insert(qsizetype i, char c)
+{
+    //return insert(i, QByteArrayView(&c, 1));
+    return *this;
+}
+
+QByteArray &QByteArray::insert(qsizetype i, const char *s, qsizetype len)
+{
+    //return insert(i, QByteArrayView(s, len));
+    return *this;
+}
+
+QByteArray &QByteArray::replace(qsizetype index, qsizetype len, const char *s, qsizetype alen)
+{
+    //return replace(index, len, QByteArrayView(s, alen));
+    return *this;
+}
+
+//QByteArray &QByteArray::replace(char before, QByteArrayView after)
+//{
+//    //return replace(QByteArrayView(&before, 1), after);
+//    return *this;
+//}
+
+QByteArray &QByteArray::replace(const char *before, qsizetype bsize, const char *after, qsizetype asize)
+{
+    //return replace(QByteArrayView(before, bsize), QByteArrayView(after, asize));
+    return *this;
+}
+
+QByteArray &QByteArray::operator+=(char c)
+{
+    return append(c);
+}
+
+QByteArray &QByteArray::operator+=(const char *s)
+{
+    return append(s);
+}
+
+QByteArray &QByteArray::operator+=(const QByteArray &a)
+{
+    return append(a);
+}
+
+//QByteArray &QByteArray::operator+=(QByteArrayView a)
+//{
+//    return append(a);
+//}
+
+void QByteArray::push_back(char c)
+{
+    append(c);
+}
+
+void QByteArray::push_back(const char *s)
+{
+    append(s);
+}
+
+void QByteArray::push_back(const QByteArray &a)
+{
+    append(a);
+}
+
+//void QByteArray::push_back(QByteArrayView a)
+//{
+//    append(a);
+//}
+
+void QByteArray::push_front(char c)
+{
+    prepend(c);
+}
+
+void QByteArray::push_front(const char *c)
+{
+    prepend(c);
+}
+
+void QByteArray::push_front(const QByteArray &a)
+{
+    prepend(a);
+}
+
+//void QByteArray::push_front(QByteArrayView a)
+//{
+//    prepend(a);
+//}
+
+void QByteArray::shrink_to_fit(void)
+{
+    squeeze();
+}
+
+bool QByteArray::contains(char ch) const
+{
+    return indexOf(ch) != -1;
+}
+
+//bool QByteArray::contains(QByteArrayView bv) const
+//{
+//    return indexOf(bv) != -1;
+//}
+
 // ========== My define ==========
 
 QT_END_NAMESPACE
