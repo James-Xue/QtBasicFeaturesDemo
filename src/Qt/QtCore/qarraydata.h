@@ -91,15 +91,18 @@
         Q_DECL_MALLOCLIKE
         static Q_CORE_EXPORT void *allocate(QArrayData **pdata, qsizetype objectSize, qsizetype alignment,
                 qsizetype capacity, AllocationOption option = QArrayData::KeepSize) noexcept;
+
         Q_DECL_MALLOCLIKE
         static Q_CORE_EXPORT void *allocate1(QArrayData **pdata, qsizetype capacity,
                                              AllocationOption option = QArrayData::KeepSize) noexcept;
+
         Q_DECL_MALLOCLIKE
         static Q_CORE_EXPORT void *allocate2(QArrayData **pdata, qsizetype capacity,
                                              AllocationOption option = QArrayData::KeepSize) noexcept;
 
-        [[nodiscard]] static Q_CORE_EXPORT std::pair<QArrayData *, void *> reallocateUnaligned(QArrayData *data, void *dataPointer,
-                qsizetype objectSize, qsizetype newCapacity, AllocationOption option) noexcept;
+        [[nodiscard]] static Q_CORE_EXPORT std::pair<QArrayData *, void *> reallocateUnaligned(QArrayData *data,
+            void *dataPointer, qsizetype objectSize, qsizetype newCapacity, AllocationOption option) noexcept;
+
         static Q_CORE_EXPORT void deallocate(QArrayData *data, qsizetype objectSize,
                 qsizetype alignment) noexcept;
     };
