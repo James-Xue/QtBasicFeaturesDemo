@@ -17,7 +17,7 @@
 
 #include <QtGui/private/qtguiglobal_p.h>
 #include <stdlib.h>
-#include <private/qtools_p.h>
+#include <qtmiscutils.h>//<private/qtools_p.h>
 
 QT_BEGIN_NAMESPACE
 

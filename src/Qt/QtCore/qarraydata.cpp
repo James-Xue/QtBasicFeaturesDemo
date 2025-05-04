@@ -4,7 +4,7 @@
 
 #include <QtCore/qarraydata.h>
 //#include <QtCore/private/qnumeric_p.h>
-//#include <QtCore/private/qtools_p.h>
+//#include <qtmiscutils.h>//<private/qtools_p.h>
 //#include <QtCore/qmath.h>
 //#include <QtCore/qbytearray.h> // QBA::value_type
 //#include <QtCore/qstring.h>    // QString::value_type

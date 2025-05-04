@@ -8,7 +8,7 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qatomic.h>
 #include <QtCore/qlist.h>
-#include <QtCore/private/qtools_p.h>
+#include <qtmiscutils.h>//<private/qtools_p.h>
 
 #include <iterator>
 #include <vector>

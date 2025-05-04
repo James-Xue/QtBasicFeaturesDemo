@@ -2,7 +2,7 @@
 #include <string.h>
 
 // Qt
-#include <private/qtools_p.h>
+#include <qtmiscutils.h>
 #include <qminmax.h>
 
 // Myself

@@ -23,7 +23,7 @@
 #ifndef QT_NO_QOBJECT
 #include <private/qobject_p.h> // For QObjectPrivate::Connection
 #endif
-#include <private/qtools_p.h>
+#include <qtmiscutils.h>//<private/qtools_p.h>
 #include <QtCore/qvarlengtharray.h>
 
 QT_BEGIN_NAMESPACE
