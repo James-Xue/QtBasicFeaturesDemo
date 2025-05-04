@@ -1,6 +1,3 @@
-// Copyright (C) 2020 The Qt Company Ltd.
-
-
 #ifndef QARRAYDATAPOINTER_H
     #define QARRAYDATAPOINTER_H
 
