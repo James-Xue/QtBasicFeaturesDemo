@@ -1,7 +1,3 @@
-// Copyright (C) 2022 The Qt Company Ltd.
-// Copyright (C) 2022 Intel Corporation.
-
-
 #ifndef QTYPES_H
     #define QTYPES_H
 

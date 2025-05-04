@@ -118,27 +118,27 @@
 
     Q_CORE_EXPORT char *qstrdup(const char *);
 
-    inline size_t qstrlen(const char *str)
-    {
-        QT_WARNING_PUSH
+    //inline size_t qstrlen(const char *str)
+    //{
+    //    QT_WARNING_PUSH
 
-        #if defined(Q_CC_GNU_ONLY) && Q_CC_GNU >= 900 && Q_CC_GNU < 1000
-            // spurious compiler warning (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91490#c6)
-            // when Q_DECLARE_METATYPE_TEMPLATE_1ARG is used
-            QT_WARNING_DISABLE_GCC("-Wstringop-overflow")
-        #endif
+    //    #if defined(Q_CC_GNU_ONLY) && Q_CC_GNU >= 900 && Q_CC_GNU < 1000
+    //        // spurious compiler warning (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91490#c6)
+    //        // when Q_DECLARE_METATYPE_TEMPLATE_1ARG is used
+    //        QT_WARNING_DISABLE_GCC("-Wstringop-overflow")
+    //    #endif
 
-        return str ? strlen(str) : 0;
-        QT_WARNING_POP
-    }
+    //    return str ? strlen(str) : 0;
+    //    QT_WARNING_POP
+    //}
 
-    inline size_t qstrnlen(const char *str, size_t maxlen)
-    {
-        if (!str)
-            return 0;
-        auto end = static_cast<const char *>(memchr(str, '\0', maxlen));
-        return end ? end - str : maxlen;
-    }
+    //inline size_t qstrnlen(const char *str, size_t maxlen)
+    //{
+    //    if (!str)
+    //        return 0;
+    //    auto end = static_cast<const char *>(memchr(str, '\0', maxlen));
+    //    return end ? end - str : maxlen;
+    //}
 
     // implemented in qbytearray.cpp
     Q_CORE_EXPORT char *qstrcpy(char *dst, const char *src);
@@ -147,11 +147,11 @@
 
     Q_CORE_EXPORT int qstrcmp(const char *str1, const char *str2);
 
-    inline int qstrncmp(const char *str1, const char *str2, size_t len)
-    {
-        return (str1 && str2) ? strncmp(str1, str2, len)
-            : (str1 ? 1 : (str2 ? -1 : 0));
-    }
+    //inline int qstrncmp(const char *str1, const char *str2, size_t len)
+    //{
+    //    return (str1 && str2) ? strncmp(str1, str2, len)
+    //        : (str1 ? 1 : (str2 ? -1 : 0));
+    //}
 
     Q_CORE_EXPORT int qstricmp(const char *, const char *);
 

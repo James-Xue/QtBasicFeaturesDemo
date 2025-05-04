@@ -1,6 +1,11 @@
 #ifndef QTOOLS_P_H
     #define QTOOLS_P_H
 
+    // ========== My define ==========
+    #include <qtypes.h>
+    // ========== My define ==========
+
+
     //  W A R N I N G
     //  -------------
     // This file is not part of the Qt API.  It exists for the convenience
@@ -8,11 +13,10 @@
     // version without notice, or even be removed.
     // We mean it.
 
-    #include <private/qglobal_p.h>
-
-    #include <chrono>
-    #include <limits.h>
-    #include <time.h>
+    //#include <private/qglobal_p.h>
+    //#include <chrono>
+    //#include <limits.h>
+    //#include <time.h>
 
     QT_BEGIN_NAMESPACE
 

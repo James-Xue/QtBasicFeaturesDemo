@@ -5,6 +5,7 @@ set(MODULE_NAME QtCore)
 #file(GLOB SOURCES "*.cpp")
 file(GLOB SOURCES
     # Base classes
+    "cstrfuns.cpp"
     "qtprivate.cpp"
     "qarraydata.cpp"
     # "qbytearray.cpp"

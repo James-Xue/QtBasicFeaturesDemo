@@ -358,7 +358,7 @@
         //QByteArray &operator+=(QByteArrayView a);
         //{ return append(a); }
 
-        QList<QByteArray> split(char sep) const;
+        //QList<QByteArray> split(char sep) const;
 
         [[nodiscard]] QByteArray repeated(qsizetype times) const;
 

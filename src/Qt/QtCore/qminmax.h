@@ -1,6 +1,3 @@
-// Copyright (C) 2022 The Qt Company Ltd.
-
-
 #ifndef QMINMAX_H
     #define QMINMAX_H
 

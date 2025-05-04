@@ -29,9 +29,10 @@
 QT_BEGIN_NAMESPACE
 // ### TODO - QTBUG-87869: wrap in a proper Q_NAMESPACE and use scoped enums, to avoid name clashes
 
-using namespace QtMiscUtils;
+//using namespace QtMiscUtils;
 
-enum PropertyFlags {
+enum PropertyFlags
+{
     Invalid = 0x00000000,
     Readable = 0x00000001,
     Writable = 0x00000002,

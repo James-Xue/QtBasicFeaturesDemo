@@ -250,5 +250,6 @@
     CalculateGrowingBlockSizeResult Q_CORE_EXPORT Q_DECL_CONST_FUNCTION qCalculateGrowingBlockSize(
         qsizetype elementCount, qsizetype elementSize, qsizetype headerSize = 0) noexcept;
     // ========== My define ==========
+
     QT_END_NAMESPACE
 #endif // QARRAYDATA_H

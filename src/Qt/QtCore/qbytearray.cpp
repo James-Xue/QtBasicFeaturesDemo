@@ -2,6 +2,8 @@
 
 // ========== My define ==========
 //#include <qtconfigmacros.h>
+//#include <qendian.h>
+#include <cstrfuns.h>
 // ========== My define ==========
 
 #include "qbytearray.h"
@@ -74,19 +76,19 @@ static constexpr inline uchar asciiLower(uchar c)
 
     Used in QByteArrayView::lastIndexOf() overload for a single char.
 */
-const void *qmemrchr(const void *s, int needle, size_t size) noexcept
-{
-#if QT_CONFIG(memrchr)
-    return memrchr(s, needle, size);
-#endif
-    auto b = static_cast<const uchar *>(s);
-    const uchar *n = b + size;
-    while (n-- != b) {
-        if (*n == uchar(needle))
-            return n;
-    }
-    return nullptr;
-}
+//const void *qmemrchr(const void *s, int needle, size_t size) noexcept
+//{
+////#if QT_CONFIG(memrchr)
+////    return memrchr(s, needle, size);
+////#endif
+//    auto b = static_cast<const uchar *>(s);
+//    const uchar *n = b + size;
+//    while (n-- != b) {
+//        if (*n == uchar(needle))
+//            return n;
+//    }
+//    return nullptr;
+//}
 
 
 /*! \relates QByteArray
@@ -101,13 +103,13 @@ const void *qmemrchr(const void *s, int needle, size_t size) noexcept
     deleted using \c delete[].
 */
 
-char *qstrdup(const char *src)
-{
-    if (!src)
-        return nullptr;
-    char *dst = new char[strlen(src) + 1];
-    return qstrcpy(dst, src);
-}
+//char *qstrdup(const char *src)
+//{
+//    if (!src)
+//        return nullptr;
+//    char *dst = new char[strlen(src) + 1];
+//    return qstrcpy(dst, src);
+//}
 
 /*! \relates QByteArray
 
@@ -123,21 +125,21 @@ char *qstrdup(const char *src)
     \sa qstrncpy()
 */
 
-char *qstrcpy(char *dst, const char *src)
-{
-    if (!src)
-        return nullptr;
-#ifdef Q_CC_MSVC
-    const size_t len = strlen(src);
-    // This is actually not secure!!! It will be fixed
-    // properly in a later release!
-    if (len >= 0 && strcpy_s(dst, len+1, src) == 0)
-        return dst;
-    return nullptr;
-#else
-    return strcpy(dst, src);
-#endif
-}
+//char *qstrcpy(char *dst, const char *src)
+//{
+//    if (!src)
+//        return nullptr;
+//#ifdef Q_CC_MSVC
+//    const size_t len = strlen(src);
+//    // This is actually not secure!!! It will be fixed
+//    // properly in a later release!
+//    if (len >= 0 && strcpy_s(dst, len+1, src) == 0)
+//        return dst;
+//    return nullptr;
+//#else
+//    return strcpy(dst, src);
+//#endif
+//}
 
 /*! \relates QByteArray
 
@@ -160,15 +162,15 @@ char *qstrcpy(char *dst, const char *src)
     \sa qstrcpy()
 */
 
-char *qstrncpy(char *dst, const char *src, size_t len)
-{
-    if (dst && len > 0) {
-        *dst = '\0';
-        if (src)
-            std::strncat(dst, src, len - 1);
-    }
-    return src ? dst : nullptr;
-}
+//char *qstrncpy(char *dst, const char *src, size_t len)
+//{
+//    if (dst && len > 0) {
+//        *dst = '\0';
+//        if (src)
+//            std::strncat(dst, src, len - 1);
+//    }
+//    return src ? dst : nullptr;
+//}
 
 /*! \fn size_t qstrlen(const char *str)
     \relates QByteArray
@@ -209,11 +211,11 @@ char *qstrncpy(char *dst, const char *src, size_t len)
     \sa qstrncmp(), qstricmp(), qstrnicmp(), {Character Case},
     QByteArray::compare()
 */
-int qstrcmp(const char *str1, const char *str2)
-{
-    return (str1 && str2) ? strcmp(str1, str2)
-        : (str1 ? 1 : (str2 ? -1 : 0));
-}
+//int qstrcmp(const char *str1, const char *str2)
+//{
+//    return (str1 && str2) ? strcmp(str1, str2)
+//        : (str1 ? 1 : (str2 ? -1 : 0));
+//}
 
 /*! \fn int qstrncmp(const char *str1, const char *str2, size_t len);
 
@@ -254,76 +256,76 @@ int qstrcmp(const char *str1, const char *str2)
     QByteArray::compare()
 */
 
-int qstricmp(const char *str1, const char *str2)
-{
-    const uchar *s1 = reinterpret_cast<const uchar *>(str1);
-    const uchar *s2 = reinterpret_cast<const uchar *>(str2);
-    if (!s1)
-        return s2 ? -1 : 0;
-    if (!s2)
-        return 1;
-
-    enum { Incomplete = 256 };
-    qptrdiff offset = 0;
-    auto innerCompare = [=, &offset](qptrdiff max, bool unlimited) {
-        max += offset;
-        do {
-            uchar c = s1[offset];
-            if (int res = QtMiscUtils::caseCompareAscii(c, s2[offset]))
-                return res;
-            if (!c)
-                return 0;
-            ++offset;
-        } while (unlimited || offset < max);
-        return int(Incomplete);
-    };
-
-#if defined(__SSE4_1__) && !(defined(__SANITIZE_ADDRESS__) || __has_feature(address_sanitizer))
-    enum { PageSize = 4096, PageMask = PageSize - 1 };
-    const __m128i zero = _mm_setzero_si128();
-    forever {
-        // Calculate how many bytes we can load until we cross a page boundary
-        // for either source. This isn't an exact calculation, just something
-        // very quick.
-        quintptr u1 = quintptr(s1 + offset);
-        quintptr u2 = quintptr(s2 + offset);
-        size_t n = PageSize - ((u1 | u2) & PageMask);
-
-        qptrdiff maxoffset = offset + n;
-        for ( ; offset + 16 <= maxoffset; offset += sizeof(__m128i)) {
-            // load 16 bytes from either source
-            __m128i a = _mm_loadu_si128(reinterpret_cast<const __m128i *>(s1 + offset));
-            __m128i b = _mm_loadu_si128(reinterpret_cast<const __m128i *>(s2 + offset));
-
-            // compare the two against each other
-            __m128i cmp = _mm_cmpeq_epi8(a, b);
-
-            // find NUL terminators too
-            cmp = _mm_min_epu8(cmp, a);
-            cmp = _mm_cmpeq_epi8(cmp, zero);
-
-            // was there any difference or a NUL?
-            uint mask = _mm_movemask_epi8(cmp);
-            if (mask) {
-                // yes, find out where
-                uint start = qCountTrailingZeroBits(mask);
-                uint end = sizeof(mask) * 8 - qCountLeadingZeroBits(mask);
-                Q_ASSERT(end >= start);
-                offset += start;
-                n = end - start;
-                break;
-            }
-        }
-
-        // using SIMD could cause a page fault, so iterate byte by byte
-        int res = innerCompare(n, false);
-        if (res != Incomplete)
-            return res;
-    }
-#endif
-
-    return innerCompare(-1, true);
-}
+//int qstricmp(const char *str1, const char *str2)
+//{
+//    const uchar *s1 = reinterpret_cast<const uchar *>(str1);
+//    const uchar *s2 = reinterpret_cast<const uchar *>(str2);
+//    if (!s1)
+//        return s2 ? -1 : 0;
+//    if (!s2)
+//        return 1;
+//
+//    enum { Incomplete = 256 };
+//    qptrdiff offset = 0;
+//    auto innerCompare = [=, &offset](qptrdiff max, bool unlimited) {
+//        max += offset;
+//        do {
+//            uchar c = s1[offset];
+//            if (int res = QtMiscUtils::caseCompareAscii(c, s2[offset]))
+//                return res;
+//            if (!c)
+//                return 0;
+//            ++offset;
+//        } while (unlimited || offset < max);
+//        return int(Incomplete);
+//    };
+//
+//#if defined(__SSE4_1__) && !(defined(__SANITIZE_ADDRESS__) || __has_feature(address_sanitizer))
+//    enum { PageSize = 4096, PageMask = PageSize - 1 };
+//    const __m128i zero = _mm_setzero_si128();
+//    forever {
+//        // Calculate how many bytes we can load until we cross a page boundary
+//        // for either source. This isn't an exact calculation, just something
+//        // very quick.
+//        quintptr u1 = quintptr(s1 + offset);
+//        quintptr u2 = quintptr(s2 + offset);
+//        size_t n = PageSize - ((u1 | u2) & PageMask);
+//
+//        qptrdiff maxoffset = offset + n;
+//        for ( ; offset + 16 <= maxoffset; offset += sizeof(__m128i)) {
+//            // load 16 bytes from either source
+//            __m128i a = _mm_loadu_si128(reinterpret_cast<const __m128i *>(s1 + offset));
+//            __m128i b = _mm_loadu_si128(reinterpret_cast<const __m128i *>(s2 + offset));
+//
+//            // compare the two against each other
+//            __m128i cmp = _mm_cmpeq_epi8(a, b);
+//
+//            // find NUL terminators too
+//            cmp = _mm_min_epu8(cmp, a);
+//            cmp = _mm_cmpeq_epi8(cmp, zero);
+//
+//            // was there any difference or a NUL?
+//            uint mask = _mm_movemask_epi8(cmp);
+//            if (mask) {
+//                // yes, find out where
+//                uint start = qCountTrailingZeroBits(mask);
+//                uint end = sizeof(mask) * 8 - qCountLeadingZeroBits(mask);
+//                Q_ASSERT(end >= start);
+//                offset += start;
+//                n = end - start;
+//                break;
+//            }
+//        }
+//
+//        // using SIMD could cause a page fault, so iterate byte by byte
+//        int res = innerCompare(n, false);
+//        if (res != Incomplete)
+//            return res;
+//    }
+//#endif
+//
+//    return innerCompare(-1, true);
+//}
 
 /*! \relates QByteArray
 
@@ -344,21 +346,21 @@ int qstricmp(const char *str1, const char *str2)
     QByteArray::compare()
 */
 
-int qstrnicmp(const char *str1, const char *str2, size_t len)
-{
-    const uchar *s1 = reinterpret_cast<const uchar *>(str1);
-    const uchar *s2 = reinterpret_cast<const uchar *>(str2);
-    if (!s1 || !s2)
-        return s1 ? 1 : (s2 ? -1 : 0);
-    for (; len--; ++s1, ++s2) {
-        const uchar c = *s1;
-        if (int res = QtMiscUtils::caseCompareAscii(c, *s2))
-            return res;
-        if (!c)                                // strings are equal
-            break;
-    }
-    return 0;
-}
+//int qstrnicmp(const char *str1, const char *str2, size_t len)
+//{
+//    const uchar *s1 = reinterpret_cast<const uchar *>(str1);
+//    const uchar *s2 = reinterpret_cast<const uchar *>(str2);
+//    if (!s1 || !s2)
+//        return s1 ? 1 : (s2 ? -1 : 0);
+//    for (; len--; ++s1, ++s2) {
+//        const uchar c = *s1;
+//        if (int res = QtMiscUtils::caseCompareAscii(c, *s2))
+//            return res;
+//        if (!c)                                // strings are equal
+//            break;
+//    }
+//    return 0;
+//}
 
 /*!
     \internal
@@ -368,47 +370,47 @@ int qstrnicmp(const char *str1, const char *str2, size_t len)
     len2 bytes from \a str2. If \a len2 is -1, then \a str2 is expected to be
     '\\0'-terminated.
  */
-int qstrnicmp(const char *str1, qsizetype len1, const char *str2, qsizetype len2)
-{
-    Q_ASSERT(len1 >= 0);
-    Q_ASSERT(len2 >= -1);
-    const uchar *s1 = reinterpret_cast<const uchar *>(str1);
-    const uchar *s2 = reinterpret_cast<const uchar *>(str2);
-    if (!s1 || !len1) {
-        if (len2 == 0)
-            return 0;
-        if (len2 == -1)
-            return (!s2 || !*s2) ? 0 : -1;
-        Q_ASSERT(s2);
-        return -1;
-    }
-    if (!s2)
-        return len1 == 0 ? 0 : 1;
-
-    if (len2 == -1) {
-        // null-terminated str2
-        qsizetype i;
-        for (i = 0; i < len1; ++i) {
-            const uchar c = s2[i];
-            if (!c)
-                return 1;
-
-            if (int res = QtMiscUtils::caseCompareAscii(s1[i], c))
-                return res;
-        }
-        return s2[i] ? -1 : 0;
-    } else {
-        // not null-terminated
-        const qsizetype len = qMin(len1, len2);
-        for (qsizetype i = 0; i < len; ++i) {
-            if (int res = QtMiscUtils::caseCompareAscii(s1[i], s2[i]))
-                return res;
-        }
-        if (len1 == len2)
-            return 0;
-        return len1 < len2 ? -1 : 1;
-    }
-}
+//int qstrnicmp(const char *str1, qsizetype len1, const char *str2, qsizetype len2)
+//{
+//    Q_ASSERT(len1 >= 0);
+//    Q_ASSERT(len2 >= -1);
+//    const uchar *s1 = reinterpret_cast<const uchar *>(str1);
+//    const uchar *s2 = reinterpret_cast<const uchar *>(str2);
+//    if (!s1 || !len1) {
+//        if (len2 == 0)
+//            return 0;
+//        if (len2 == -1)
+//            return (!s2 || !*s2) ? 0 : -1;
+//        Q_ASSERT(s2);
+//        return -1;
+//    }
+//    if (!s2)
+//        return len1 == 0 ? 0 : 1;
+//
+//    if (len2 == -1) {
+//        // null-terminated str2
+//        qsizetype i;
+//        for (i = 0; i < len1; ++i) {
+//            const uchar c = s2[i];
+//            if (!c)
+//                return 1;
+//
+//            if (int res = QtMiscUtils::caseCompareAscii(s1[i], c))
+//                return res;
+//        }
+//        return s2[i] ? -1 : 0;
+//    } else {
+//        // not null-terminated
+//        const qsizetype len = qMin(len1, len2);
+//        for (qsizetype i = 0; i < len; ++i) {
+//            if (int res = QtMiscUtils::caseCompareAscii(s1[i], s2[i]))
+//                return res;
+//        }
+//        if (len1 == len2)
+//            return 0;
+//        return len1 < len2 ? -1 : 1;
+//    }
+//}
 
 /*!
     \internal
@@ -735,15 +737,16 @@ QByteArray qCompress(const uchar* data, qsizetype nbytes, int compressionLevel)
     if (out.data() == nullptr) // allocation failed
       return tooMuchData(ZLibOp::Compression);
 
-    qToBigEndian(q26::saturate_cast<CompressSizeHint_t>(nbytes), out.data());
-    out.size = HeaderSize;
+    return QByteArray();
+    //qToBigEndian(q26::saturate_cast<CompressSizeHint_t>(nbytes), out.data());
+    //out.size = HeaderSize;
 
-    return xxflate(ZLibOp::Compression, std::move(out), {data, nbytes},
-                   [=] (z_stream *zs) { return deflateInit(zs, compressionLevel); },
-                   [] (z_stream *zs, size_t inputLeft) {
-                       return deflate(zs, inputLeft ? Z_NO_FLUSH : Z_FINISH);
-                   },
-                   [] (z_stream *zs) { deflateEnd(zs); });
+    //return xxflate(ZLibOp::Compression, std::move(out), {data, nbytes},
+    //               [=] (z_stream *zs) { return deflateInit(zs, compressionLevel); },
+    //               [] (z_stream *zs, size_t inputLeft) {
+    //                   return deflate(zs, inputLeft ? Z_NO_FLUSH : Z_FINISH);
+    //               },
+    //               [] (z_stream *zs) { deflateEnd(zs); });
 }
 #endif
 
@@ -799,29 +802,30 @@ QByteArray qUncompress(const uchar* data, qsizetype nbytes)
     if (nbytes < HeaderSize)
         return invalidCompressedData();
 
-    const auto expectedSize = qFromBigEndian<CompressSizeHint_t>(data);
-    if (nbytes == HeaderSize) {
-        if (expectedSize != 0)
-            return invalidCompressedData();
-        return QByteArray();
-    }
+    return QByteArray();
+    //const auto expectedSize = qFromBigEndian<CompressSizeHint_t>(data);
+    //if (nbytes == HeaderSize) {
+    //    if (expectedSize != 0)
+    //        return invalidCompressedData();
+    //    return QByteArray();
+    //}
 
-    constexpr auto MaxDecompressedSize = size_t(QByteArray::maxSize());
-    if constexpr (MaxDecompressedSize < std::numeric_limits<CompressSizeHint_t>::max()) {
-        if (expectedSize > MaxDecompressedSize)
-            return tooMuchData(ZLibOp::Decompression);
-    }
+    //constexpr auto MaxDecompressedSize = size_t(QByteArray::maxSize());
+    //if constexpr (MaxDecompressedSize < std::numeric_limits<CompressSizeHint_t>::max()) {
+    //    if (expectedSize > MaxDecompressedSize)
+    //        return tooMuchData(ZLibOp::Decompression);
+    //}
 
-    // expectedSize may be truncated, so always use at least nbytes
-    // (larger by at most 1%, according to zlib docs)
-    qsizetype capacity = std::max(qsizetype(expectedSize), // cannot overflow!
-                                  nbytes);
+    //// expectedSize may be truncated, so always use at least nbytes
+    //// (larger by at most 1%, according to zlib docs)
+    //qsizetype capacity = std::max(qsizetype(expectedSize), // cannot overflow!
+    //                              nbytes);
 
-    QArrayDataPointer<char> d(capacity);
-    return xxflate(ZLibOp::Decompression, std::move(d), {data + HeaderSize, nbytes - HeaderSize},
-                   [] (z_stream *zs) { return inflateInit(zs); },
-                   [] (z_stream *zs, size_t) { return inflate(zs, Z_NO_FLUSH); },
-                   [] (z_stream *zs) { inflateEnd(zs); });
+    //QArrayDataPointer<char> d(capacity);
+    //return xxflate(ZLibOp::Decompression, std::move(d), {data + HeaderSize, nbytes - HeaderSize},
+    //               [] (z_stream *zs) { return inflateInit(zs); },
+    //               [] (z_stream *zs, size_t) { return inflate(zs, Z_NO_FLUSH); },
+    //               [] (z_stream *zs) { inflateEnd(zs); });
 }
 #endif
 
@@ -1388,7 +1392,7 @@ QByteArray &QByteArray::operator=(const char *str)
     } else if (!*str) {
         d = DataPointer::fromRawData(&_empty, 0);
     } else {
-        assign(str);
+        //assign(str);
     }
     return *this;
 }
@@ -2106,13 +2110,18 @@ QByteArray &QByteArray::prepend(const QByteArray &ba)
 
 QByteArray &QByteArray::append(const QByteArray &ba)
 {
-    if (!ba.isNull()) {
-        if (isNull()) {
+    if (!ba.isNull())
+    {
+        if (isNull())
+        {
             if (Q_UNLIKELY(!ba.d.isMutable()))
-                assign(ba); // fromRawData, so we do a deep copy
+                //assign(ba); // fromRawData, so we do a deep copy
+                [[maybe_unused]] int iTest;
             else
                 operator=(ba);
-        } else if (ba.size()) {
+        }
+        else if (ba.size())
+        {
             //append(QByteArrayView(ba));
         }
     }
@@ -2647,18 +2656,19 @@ QByteArray &QByteArray::replace(char before, char after)
     containing this byte array.
 */
 
-QList<QByteArray> QByteArray::split(char sep) const
-{
-    QList<QByteArray> list;
-    qsizetype start = 0;
-    qsizetype end;
-    while ((end = indexOf(sep, start)) != -1) {
-        list.append(mid(start, end - start));
-        start = end + 1;
-    }
-    list.append(mid(start));
-    return list;
-}
+//QList<QByteArray> QByteArray::split(char sep) const
+//{
+//    QList<QByteArray> list;
+//    qsizetype start = 0;
+//    qsizetype end;
+//    while ((end = indexOf(sep, start)) != -1)
+//    {
+//        list.append(mid(start, end - start));
+//        start = end + 1;
+//    }
+//    list.append(mid(start));
+//    return list;
+//}
 
 /*!
     \since 4.5
