@@ -29,4 +29,9 @@
 
     int qstrncmp(const char *str1, const char *str2, size_t len);
 
+
+    /*****************************************************************************
+      // API note: this function can't process a number with more than 2.1 billion digits
+     *****************************************************************************/
+    [[nodiscard]] char *qulltoa2(char *p, qulonglong n, int base);
 #endif // CSTRFUNS_H

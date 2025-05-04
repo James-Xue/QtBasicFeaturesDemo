@@ -4234,11 +4234,14 @@ QByteArray &QByteArray::setNum(qlonglong n, int base)
     char buff[buffsize];
     char *p;
 
-    if (n < 0) {
+    if (n < 0)
+    {
         // Take care to avoid overflow on negating min value:
         p = qulltoa2(buff + buffsize, qulonglong(-(1 + n)) + 1, base);
         *--p = '-';
-    } else {
+    }
+    else
+    {
         p = qulltoa2(buff + buffsize, qulonglong(n), base);
     }
 

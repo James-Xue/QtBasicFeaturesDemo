@@ -8,6 +8,10 @@
 // Myself
 #include "cstrfuns.h"
 
+/*****************************************************************************
+    Safe and portable C string functions;
+    extensions to standard string.h
+*****************************************************************************/
 const void *qmemrchr(const void *s, int needle, size_t size) noexcept
 {
     //#if QT_CONFIG(memrchr)
@@ -244,4 +248,49 @@ int qstrncmp(const char *str1, const char *str2, size_t len)
 {
     return (str1 && str2) ? strncmp(str1, str2, len)
         : (str1 ? 1 : (str2 ? -1 : 0));
+}
+
+
+/*****************************************************************************
+  // API note: this function can't process a number with more than 2.1 billion digits
+*****************************************************************************/
+template <typename Char>
+static Q_ALWAYS_INLINE void qulltoString_helper(qulonglong number, int base, Char *&p)
+{
+    // Performance-optimized code. Compiler can generate faster code when base is known.
+    switch (base) {
+#define BIG_BASE_LOOP(b)                                  \
+    do {                                                  \
+        const int r = number % b;                         \
+        *--p = Char((r < 10 ? '0' : 'a' - 10) + r); \
+        number /= b;                                      \
+    } while (number)
+#ifndef __OPTIMIZE_SIZE__
+#    define SMALL_BASE_LOOP(b)             \
+        do {                               \
+            *--p = Char('0' + number % b); \
+            number /= b;                   \
+        } while (number)
+
+    case 2: SMALL_BASE_LOOP(2); break;
+    case 8: SMALL_BASE_LOOP(8); break;
+    case 10: SMALL_BASE_LOOP(10); break;
+    case 16: BIG_BASE_LOOP(16); break;
+#undef SMALL_BASE_LOOP
+#endif
+    default: BIG_BASE_LOOP(base); break;
+#undef BIG_BASE_LOOP
+    }
+}
+
+char *qulltoa2(char *p, qulonglong n, int base)
+{
+#if defined(QT_CHECK_RANGE)
+    if (base < 2 || base > 36) {
+        qWarning("QByteArray::setNum: Invalid base %d", base);
+        base = 10;
+    }
+#endif
+    qulltoString_helper(n, base, p);
+    return p;
 }
