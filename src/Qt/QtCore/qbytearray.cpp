@@ -9,7 +9,7 @@
 
 #include "qbytearray.h"
 //#include "qbytearraymatcher.h"
-#include <private/qtools_p.h>
+#include <qtmiscutils.h>//<private/qtools_p.h>
 //#include "qhashfunctions.h"
 //#include "qlist.h"
 //#include <private/qlocale_p.h>
@@ -4084,7 +4084,7 @@ double QByteArray::toDouble(bool */*ok*/) const
     \sa number()
 */
 
-float QByteArray::toFloat(bool *ok) const
+float QByteArray::toFloat(bool */*ok*/) const
 {
     //return QLocaleData::convertDoubleToFloat(toDouble(ok), ok);
     return 1024.0;
@@ -4259,7 +4259,7 @@ QByteArray &QByteArray::setNum(qulonglong n, int base)
 {
     constexpr int buffsize = 66; // big enough for MAX_ULLONG in base 2
     char buff[buffsize];
-    char *p = qulltoa2(buff + buffsize, n, base);
+    [[maybe_unused]] char *p = qulltoa2(buff + buffsize, n, base);
 
     //return assign(QByteArrayView{p, buff + buffsize});
     return *this;
@@ -4390,28 +4390,29 @@ QByteArray QByteArray::number(qulonglong n, int base)
 
     \sa toDouble(), QLocale::FloatingPointPrecisionOption
 */
-QByteArray QByteArray::number(double n, char format, int precision)
+QByteArray QByteArray::number(double /*n*/, char /*format*/, int /*precision*/)
 {
-    QLocaleData::DoubleForm form = QLocaleData::DFDecimal;
-
-    switch (QtMiscUtils::toAsciiLower(format)) {
-        case 'f':
-            form = QLocaleData::DFDecimal;
-            break;
-        case 'e':
-            form = QLocaleData::DFExponent;
-            break;
-        case 'g':
-            form = QLocaleData::DFSignificantDigits;
-            break;
-        default:
-#if defined(QT_CHECK_RANGE)
-            qWarning("QByteArray::setNum: Invalid format char '%c'", format);
-#endif
-            break;
-    }
-
-    return qdtoAscii(n, form, precision, isUpperCaseAscii(format));
+    return QByteArray();
+//    QLocaleData::DoubleForm form = QLocaleData::DFDecimal;
+//
+//    switch (QtMiscUtils::toAsciiLower(format)) {
+//    case 'f':
+//        form = QLocaleData::DFDecimal;
+//        break;
+//    case 'e':
+//        form = QLocaleData::DFExponent;
+//        break;
+//    case 'g':
+//        form = QLocaleData::DFSignificantDigits;
+//        break;
+//    default:
+//#if defined(QT_CHECK_RANGE)
+//        qWarning("QByteArray::setNum: Invalid format char '%c'", format);
+//#endif
+//        break;
+//    }
+//
+//    return qdtoAscii(n, form, precision, isUpperCaseAscii(format));
 }
 
 /*!
@@ -5164,9 +5165,10 @@ emscripten::val QByteArray::toEcmaUint8Array()
 /*!
     \qhashold{QByteArray::FromBase64Result}
 */
-size_t qHash(const QByteArray::FromBase64Result &key, size_t seed) noexcept
+size_t qHash(const QByteArray::FromBase64Result &/*key*/, size_t /*seed*/) noexcept
 {
-    return qHashMulti(seed, key.decoded, static_cast<int>(key.decodingStatus));
+    //return qHashMulti(seed, key.decoded, static_cast<int>(key.decodingStatus));
+    return 1024;
 }
 
 /*! \fn template <typename T> qsizetype erase(QByteArray &ba, const T &t)
@@ -5219,7 +5221,8 @@ bool QByteArray::endsWith(char c) const
 
 [[nodiscard]] bool QByteArray::isValidUtf8() const noexcept
 {
-    return QtPrivate::isValidUtf8(qToByteArrayViewIgnoringNull(*this));
+    //return QtPrivate::isValidUtf8(qToByteArrayViewIgnoringNull(*this));
+    return false;
 }
 
 bool QByteArray::isNull() const noexcept
@@ -5227,9 +5230,10 @@ bool QByteArray::isNull() const noexcept
     return d.isNull();
 }
 
-qsizetype QByteArray::indexOf(char ch, qsizetype from/* = 0*/) const
+qsizetype QByteArray::indexOf(char /*ch*/, qsizetype /*from*//* = 0*/) const
 {
-    return qToByteArrayViewIgnoringNull(*this).indexOf(ch, from);
+    //return qToByteArrayViewIgnoringNull(*this).indexOf(ch, from);
+    return 1024;
 }
 
 //qsizetype QByteArray::indexOf(QByteArrayView bv, qsizetype from /*= 0*/) const
@@ -5237,9 +5241,10 @@ qsizetype QByteArray::indexOf(char ch, qsizetype from/* = 0*/) const
 //    return QtPrivate::findByteArray(qToByteArrayViewIgnoringNull(*this), from, bv);
 //}
 
-qsizetype QByteArray::lastIndexOf(char ch, qsizetype from/* = -1*/) const
+qsizetype QByteArray::lastIndexOf(char /*ch*/, qsizetype /*from*//* = -1*/) const
 {
-    return qToByteArrayViewIgnoringNull(*this).lastIndexOf(ch, from);
+    //return qToByteArrayViewIgnoringNull(*this).lastIndexOf(ch, from);
+    return 1024;
 }
 
 //qsizetype QByteArray::lastIndexOf(QByteArrayView bv) const
@@ -5263,9 +5268,9 @@ qsizetype QByteArray::lastIndexOf(char ch, qsizetype from/* = -1*/) const
 //        qstrnicmp(data(), size(), a.data(), a.size());
 //}
 
-QByteArray &QByteArray::prepend(char c)
+QByteArray &QByteArray::prepend(char /*ch*/)
 {
-    //return insert(0, QByteArrayView(&c, 1));
+    //return insert(0, QByteArrayView(&ch, 1));
     return *this;
 }
 
@@ -5274,13 +5279,13 @@ QByteArray &QByteArray::prepend(qsizetype count, char ch)
     return insert(0, count, ch);
 }
 
-QByteArray &QByteArray::prepend(const char *s)
+QByteArray &QByteArray::prepend(const char */*s*/)
 {
     //return insert(0, QByteArrayView(s, qsizetype(qstrlen(s))));
     return *this;
 }
 
-QByteArray &QByteArray::prepend(const char *s, qsizetype len)
+QByteArray &QByteArray::prepend(const char */*s*/, qsizetype /*len*/)
 {
     //return insert(0, QByteArrayView(s, len));
     return *this;
@@ -5301,7 +5306,7 @@ QByteArray &QByteArray::append(const char *s)
     return append(s, -1);
 }
 
-QByteArray &QByteArray::append(const char *s, qsizetype len)
+QByteArray &QByteArray::append(const char */*s*/, qsizetype /*len*/)
 {
     //return append(QByteArrayView(s, len < 0 ? qsizetype(qstrlen(s)) : len));
     return *this;
@@ -5312,31 +5317,31 @@ QByteArray &QByteArray::append(const char *s, qsizetype len)
 //    return insert(size(), a);
 //}
 
-QByteArray &QByteArray::insert(qsizetype i, const char *s)
+QByteArray &QByteArray::insert(qsizetype /*i*/, const char */*s*/)
 {
     //return insert(i, QByteArrayView(s));
     return *this;
 }
 
-QByteArray &QByteArray::insert(qsizetype i, const QByteArray &data)
+QByteArray &QByteArray::insert(qsizetype /*i*/, const QByteArray &/*data*/)
 {
     //return insert(i, QByteArrayView(data));
     return *this;
 }
 
-QByteArray &QByteArray::insert(qsizetype i, char c)
+QByteArray &QByteArray::insert(qsizetype /*i*/, char /*c*/)
 {
     //return insert(i, QByteArrayView(&c, 1));
     return *this;
 }
 
-QByteArray &QByteArray::insert(qsizetype i, const char *s, qsizetype len)
+QByteArray &QByteArray::insert(qsizetype /*i*/, const char */*s*/, qsizetype /*len*/)
 {
     //return insert(i, QByteArrayView(s, len));
     return *this;
 }
 
-QByteArray &QByteArray::replace(qsizetype index, qsizetype len, const char *s, qsizetype alen)
+QByteArray &QByteArray::replace(qsizetype /*index*/, qsizetype /*len*/, const char */*s*/, qsizetype /*alen*/)
 {
     //return replace(index, len, QByteArrayView(s, alen));
     return *this;
@@ -5348,7 +5353,8 @@ QByteArray &QByteArray::replace(qsizetype index, qsizetype len, const char *s, q
 //    return *this;
 //}
 
-QByteArray &QByteArray::replace(const char *before, qsizetype bsize, const char *after, qsizetype asize)
+QByteArray &QByteArray::replace(const char */*before*/, qsizetype /*bsize*/, const char */*after*/,
+    qsizetype /*asize*/)
 {
     //return replace(QByteArrayView(before, bsize), QByteArrayView(after, asize));
     return *this;

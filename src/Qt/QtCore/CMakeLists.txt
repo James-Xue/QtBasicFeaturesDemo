@@ -9,7 +9,7 @@ file(GLOB SOURCES
     "qtmiscutils.cpp"
     "qtprivate.cpp"
     "qarraydata.cpp"
-    # "qbytearray.cpp"
+    "qbytearray.cpp"
     # "qbytearrayview.cpp"
     # "qbytearraymatcher.cpp"
     "qcompare.cpp"

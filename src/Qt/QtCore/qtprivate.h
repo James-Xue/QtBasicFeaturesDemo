@@ -36,6 +36,8 @@
 
             return T(*val);
         }
+
+        //[[nodiscard]] Q_CORE_EXPORT Q_DECL_PURE_FUNCTION bool isValidUtf8(QByteArrayView s) noexcept;
     } // namespace QtPrivate
 
 #endif // QTPRIVATE_H
