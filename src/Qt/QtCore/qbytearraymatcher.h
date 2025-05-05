@@ -1,9 +1,12 @@
 #ifndef QBYTEARRAYMATCHER_H
     #define QBYTEARRAYMATCHER_H
 
+    // Qt
     #include <QtCore/qbytearray.h>
-
+    #include <QtCore/qbytearrayview.h>
     #include <QtCore/q20algorithm.h>
+
+    // STL
     #include <iterator>
     #include <limits>
 

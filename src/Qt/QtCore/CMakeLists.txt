@@ -11,7 +11,7 @@ file(GLOB SOURCES
     "qarraydata.cpp"
     "qbytearray.cpp"
     "qbytearrayview.cpp"
-    # "qbytearraymatcher.cpp"
+    "qbytearraymatcher.cpp"
     "qcompare.cpp"
     # "qchar.cpp"
     # "qobject.cpp"

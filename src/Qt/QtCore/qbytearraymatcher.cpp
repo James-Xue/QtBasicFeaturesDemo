@@ -1,6 +1,9 @@
 #include "qbytearraymatcher.h"
 
+#include <QtCore/cstrfuns.h>
+
 #include <qtconfiginclude.h>
+
 #ifndef QT_BOOTSTRAPPED
     #include <private/qtcore-config_p.h>
 #endif
@@ -214,94 +217,6 @@ qsizetype QByteArrayMatcher::indexIn(QByteArrayView data, qsizetype from) const
 
     \sa setPattern()
 */
-
-/*!
-    \internal
- */
-Q_NEVER_INLINE
-static qsizetype qFindByteArrayBoyerMoore(
-    const char *haystack, qsizetype haystackLen, qsizetype haystackOffset,
-    const char *needle, qsizetype needleLen)
-{
-    uchar skiptable[256];
-    bm_init_skiptable((const uchar *)needle, needleLen, skiptable);
-    if (haystackOffset < 0)
-        haystackOffset = 0;
-    return bm_find((const uchar *)haystack, haystackLen, haystackOffset,
-                   (const uchar *)needle, needleLen, skiptable);
-}
-
-/*!
-    \internal
- */
-static qsizetype qFindByteArray(const char *haystack0, qsizetype l, qsizetype from,
-                                const char *needle, qsizetype sl);
-qsizetype QtPrivate::findByteArray(QByteArrayView haystack, qsizetype from, QByteArrayView needle) noexcept
-{
-    const auto haystack0 = haystack.data();
-    const auto l = haystack.size();
-    const auto sl = needle.size();
-#if !QT_CONFIG(memmem)
-    if (sl == 1)
-        return findByteArray(haystack, from, needle.front());
-#endif
-
-    if (from < 0)
-        from += l;
-    if (std::size_t(sl + from) > std::size_t(l))
-        return -1;
-    if (!sl)
-        return from;
-    if (!l)
-        return -1;
-
-#if QT_CONFIG(memmem)
-    auto where = memmem(haystack0 + from, l - from, needle.data(), sl);
-    return where ? static_cast<const char *>(where) - haystack0 : -1;
-#endif
-
-    /*
-      We use the Boyer-Moore algorithm in cases where the overhead
-      for the skip table should pay off, otherwise we use a simple
-      hash function.
-    */
-    if (l > 500 && sl > 5)
-        return qFindByteArrayBoyerMoore(haystack0, l, from, needle.data(), sl);
-    return qFindByteArray(haystack0, l, from, needle.data(), sl);
-}
-
-qsizetype qFindByteArray(const char *haystack0, qsizetype l, qsizetype from,
-                         const char *needle, qsizetype sl)
-{
-    /*
-      We use some hashing for efficiency's sake. Instead of
-      comparing strings, we compare the hash value of str with that
-      of a part of this QByteArray. Only if that matches, we call memcmp().
-    */
-    const char *haystack = haystack0 + from;
-    const char *end = haystack0 + (l - sl);
-    const qregisteruint sl_minus_1 = sl - 1;
-    qregisteruint hashNeedle = 0, hashHaystack = 0;
-    qsizetype idx;
-    for (idx = 0; idx < sl; ++idx) {
-        hashNeedle = ((hashNeedle<<1) + needle[idx]);
-        hashHaystack = ((hashHaystack<<1) + haystack[idx]);
-    }
-    hashHaystack -= *(haystack + sl_minus_1);
-
-    while (haystack <= end) {
-        hashHaystack += *(haystack + sl_minus_1);
-        if (hashHaystack == hashNeedle && *needle == *haystack
-             && memcmp(needle, haystack, sl) == 0)
-            return haystack - haystack0;
-
-        if (sl_minus_1 < sizeof(sl_minus_1) * CHAR_BIT)
-            hashHaystack -= qregisteruint(*haystack) << sl_minus_1;
-        hashHaystack <<= 1;
-        ++haystack;
-    }
-    return -1;
-}
 
 /*!
     \class QStaticByteArrayMatcherBase

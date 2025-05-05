@@ -46,7 +46,7 @@
 
     using QByteArrayData = QArrayDataPointer<char>;
 
-    #  define QByteArrayLiteral(str) \
+    #define QByteArrayLiteral(str) \
         (QByteArray(QByteArrayData(nullptr, const_cast<char *>(str), sizeof(str) - 1))) \
         /**/
 
