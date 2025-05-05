@@ -1,7 +1,3 @@
-// Copyright (C) 2017 The Qt Company Ltd.
-// Copyright (C) 2015 Intel Corporation.
-
-
 #ifndef QGLOBAL_P_H
     #define QGLOBAL_P_H
 

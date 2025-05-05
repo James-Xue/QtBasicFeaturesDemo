@@ -1,8 +1,10 @@
 #ifndef QCHAR_H
     #define QCHAR_H
 
-    #include <QtCore/qglobal.h>
+    //#include <QtCore/qglobal.h>
     #include <QtCore/qcompare.h>
+
+    // STL
     #include <functional> // for std::hash
 
     QT_BEGIN_NAMESPACE
@@ -689,4 +691,4 @@
 
 #endif // QCHAR_H
 
-#include <QtCore/qstringview.h> // for QChar::fromUcs4() definition
+//#include <QtCore/qstringview.h> // for QChar::fromUcs4() definition

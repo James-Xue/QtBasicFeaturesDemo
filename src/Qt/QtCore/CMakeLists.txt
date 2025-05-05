@@ -7,18 +7,19 @@ file(GLOB SOURCES
     # Base classes
     "cstrfuns.cpp"
     "qtmiscutils.cpp"
+    "qcompare.cpp"
     "qtprivate.cpp"
     "qarraydata.cpp"
     "qbytearray.cpp"
     "qbytearrayview.cpp"
     "qbytearraymatcher.cpp"
-    "qcompare.cpp"
+    "qunicodetables.cpp"
     # "qchar.cpp"
     # "qobject.cpp"
     # "qmetaobject.cpp"
     # "qproperty.cpp"
     # "qmetatype.cpp"
-
+    
     # Container classes
     # "qstring.cpp"
     # "qstringview.cpp"
