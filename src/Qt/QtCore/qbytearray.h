@@ -1,7 +1,3 @@
-// Copyright (C) 2022 The Qt Company Ltd.
-
-
-
 #ifndef QBYTEARRAY_H
     #define QBYTEARRAY_H
 
