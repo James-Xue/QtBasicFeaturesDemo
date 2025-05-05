@@ -1,5 +1,5 @@
 #ifndef QCHAR_H
-    #define QCHAR_H
+#define QCHAR_H
 
     //#include <QtCore/qglobal.h>
     #include <QtCore/qcompare.h>

@@ -2,7 +2,9 @@
 
 //#include "qdatastream.h"
 //#include <private/qunicodetables_p.h>
-#include "qunicodetables.cpp"
+//#include "qunicodetables.cpp"
+
+#include <QtCore/qunicodetables.h>
 
 // STL
 #include <algorithm>

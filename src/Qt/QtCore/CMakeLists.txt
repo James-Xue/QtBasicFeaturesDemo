@@ -14,7 +14,7 @@ file(GLOB SOURCES
     "qbytearrayview.cpp"
     "qbytearraymatcher.cpp"
     "qunicodetables.cpp"
-    # "qchar.cpp"
+    "qchar.cpp"
     # "qobject.cpp"
     # "qmetaobject.cpp"
     # "qproperty.cpp"
