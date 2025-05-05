@@ -1275,25 +1275,29 @@
             Sunday = 7
         };
 
-        enum ScrollBarPolicy {
+        enum ScrollBarPolicy
+        {
             ScrollBarAsNeeded,
             ScrollBarAlwaysOff,
             ScrollBarAlwaysOn
         };
 
-        enum CaseSensitivity {
+        enum CaseSensitivity
+        {
             CaseInsensitive,
             CaseSensitive
         };
 
-        enum Corner {
+        enum Corner
+        {
             TopLeftCorner = 0x00000,
             TopRightCorner = 0x00001,
             BottomLeftCorner = 0x00002,
             BottomRightCorner = 0x00003
         };
 
-        enum Edge {
+        enum Edge
+        {
             TopEdge = 0x00001,
             LeftEdge = 0x00002,
             RightEdge = 0x00004,
@@ -1303,7 +1307,8 @@
         Q_DECLARE_FLAGS(Edges, Edge)
         Q_DECLARE_OPERATORS_FOR_FLAGS(Edges)
 
-        enum ConnectionType {
+        enum ConnectionType
+        {
             AutoConnection,
             DirectConnection,
             QueuedConnection,
@@ -1312,54 +1317,63 @@
             SingleShotConnection = 0x100,
         };
 
-        enum ShortcutContext {
+        enum ShortcutContext
+        {
             WidgetShortcut,
             WindowShortcut,
             ApplicationShortcut,
             WidgetWithChildrenShortcut
         };
 
-        enum FillRule {
+        enum FillRule
+        {
             OddEvenFill,
             WindingFill
         };
 
-        enum MaskMode {
+        enum MaskMode
+        {
             MaskInColor,
             MaskOutColor
         };
 
-        enum ClipOperation {
+        enum ClipOperation
+        {
             NoClip,
             ReplaceClip,
             IntersectClip
         };
 
         // Shape = 0x1, BoundingRect = 0x2
-        enum ItemSelectionMode {
+        enum ItemSelectionMode
+        {
             ContainsItemShape = 0x0,
             IntersectsItemShape = 0x1,
             ContainsItemBoundingRect = 0x2,
             IntersectsItemBoundingRect = 0x3
         };
 
-        enum ItemSelectionOperation {
+        enum ItemSelectionOperation
+        {
             ReplaceSelection,
             AddToSelection
         };
 
-        enum TransformationMode {
+        enum TransformationMode
+        {
             FastTransformation,
             SmoothTransformation
         };
 
-        enum Axis {
+        enum Axis
+        {
             XAxis,
             YAxis,
             ZAxis
         };
 
-        enum FocusReason {
+        enum FocusReason
+        {
             MouseFocusReason,
             TabFocusReason,
             BacktabFocusReason,
@@ -1371,7 +1385,8 @@
             NoFocusReason
         };
 
-        enum ContextMenuPolicy {
+        enum ContextMenuPolicy
+        {
             NoContextMenu,
             DefaultContextMenu,
             ActionsContextMenu,
@@ -1379,12 +1394,14 @@
             PreventContextMenu
         };
 
-        enum class ContextMenuTrigger {
+        enum class ContextMenuTrigger
+        {
             Press,
             Release,
         };
 
-        enum InputMethodQuery {
+        enum InputMethodQuery
+        {
             ImEnabled = 0x1,
             ImCursorRectangle = 0x2,
             ImFont = 0x4,
@@ -1412,7 +1429,8 @@
         Q_DECLARE_FLAGS(InputMethodQueries, InputMethodQuery)
         Q_DECLARE_OPERATORS_FOR_FLAGS(InputMethodQueries)
 
-        enum InputMethodHint {
+        enum InputMethodHint
+        {
             ImhNone = 0x0,
 
             ImhHiddenText = 0x1,
@@ -1447,7 +1465,8 @@
         Q_DECLARE_FLAGS(InputMethodHints, InputMethodHint)
         Q_DECLARE_OPERATORS_FOR_FLAGS(InputMethodHints)
 
-        enum EnterKeyType {
+        enum EnterKeyType
+        {
             EnterKeyDefault,
             EnterKeyReturn,
             EnterKeyDone,
@@ -1458,7 +1477,8 @@
             EnterKeyPrevious
         };
 
-        enum ToolButtonStyle {
+        enum ToolButtonStyle
+        {
             ToolButtonIconOnly,
             ToolButtonTextOnly,
             ToolButtonTextBesideIcon,
@@ -1466,14 +1486,16 @@
             ToolButtonFollowStyle
         };
 
-        enum LayoutDirection {
+        enum LayoutDirection
+        {
             LeftToRight,
             RightToLeft,
             // ### Qt 7: make auto the first one (with value 0)
             LayoutDirectionAuto
         };
 
-        enum AnchorPoint {
+        enum AnchorPoint
+        {
             AnchorLeft = 0,
             AnchorHorizontalCenter,
             AnchorRight,
@@ -1482,13 +1504,15 @@
             AnchorBottom
         };
 
-        enum FindChildOption {
+        enum FindChildOption
+        {
             FindDirectChildrenOnly = 0x0,
             FindChildrenRecursively = 0x1
         };
         Q_DECLARE_FLAGS(FindChildOptions, FindChildOption)
 
-        enum DropAction {
+        enum DropAction
+        {
             CopyAction = 0x1,
             MoveAction = 0x2,
             LinkAction = 0x4,
@@ -1499,13 +1523,15 @@
         Q_DECLARE_FLAGS(DropActions, DropAction)
         Q_DECLARE_OPERATORS_FOR_FLAGS(DropActions)
 
-        enum CheckState {
+        enum CheckState
+        {
             Unchecked,
             PartiallyChecked,
             Checked
         };
 
-        enum ItemDataRole {
+        enum ItemDataRole
+        {
             DisplayRole = 0,
             DecorationRole = 1,
             EditRole = 2,
@@ -1534,7 +1560,8 @@
             UserRole = 0x0100
         };
 
-        enum ItemFlag {
+        enum ItemFlag
+        {
             NoItemFlags = 0,
             ItemIsSelectable = 1,
             ItemIsEditable = 2,
@@ -1549,7 +1576,8 @@
         Q_DECLARE_FLAGS(ItemFlags, ItemFlag)
         Q_DECLARE_OPERATORS_FOR_FLAGS(ItemFlags)
 
-        enum MatchFlag {
+        enum MatchFlag
+        {
             MatchExactly = 0,
             MatchContains = 1,
             MatchStartsWith = 2,
@@ -1567,13 +1595,15 @@
 
         typedef void * HANDLE;
 
-        enum WindowModality {
+        enum WindowModality
+        {
             NonModal,
             WindowModal,
             ApplicationModal
         };
 
-        enum TextInteractionFlag {
+        enum TextInteractionFlag
+        {
             NoTextInteraction         = 0,
             TextSelectableByMouse     = 1,
             TextSelectableByKeyboard  = 2,
@@ -1587,13 +1617,15 @@
         Q_DECLARE_FLAGS(TextInteractionFlags, TextInteractionFlag)
         Q_DECLARE_OPERATORS_FOR_FLAGS(TextInteractionFlags)
 
-        enum EventPriority {
+        enum EventPriority
+        {
             HighEventPriority = 1,
             NormalEventPriority = 0,
             LowEventPriority = -1
         };
 
-        enum SizeHint {
+        enum SizeHint
+        {
             MinimumSize,
             PreferredSize,
             MaximumSize,
@@ -1601,7 +1633,8 @@
             NSizeHints
         };
 
-        enum WindowFrameSection {
+        enum WindowFrameSection
+        {
             NoSection,
             LeftSection,           // For resize
             TopLeftSection,
@@ -1614,19 +1647,22 @@
             TitleBarArea    // For move
         };
 
-        enum class Initialization {
+        enum class Initialization
+        {
             Uninitialized
         };
         inline constexpr Initialization Uninitialized = Initialization::Uninitialized;
 
         inline QT_DEFINE_TAG(Disambiguated);
 
-        enum CoordinateSystem {
+        enum CoordinateSystem
+        {
             DeviceCoordinates,
             LogicalCoordinates
         };
 
-        enum TouchPointState {
+        enum TouchPointState
+        {
             TouchPointUnknownState = 0x00,
             TouchPointPressed    = 0x01,
             TouchPointMoved      = 0x02,
@@ -1690,22 +1726,26 @@
             NavigationModeCursorForceVisible
         };
 
-        enum CursorMoveStyle {
+        enum CursorMoveStyle
+        {
             LogicalMoveStyle,
             VisualMoveStyle
         };
 
-        enum TimerType {
+        enum TimerType
+        {
             PreciseTimer,
             CoarseTimer,
             VeryCoarseTimer
         };
 
-        enum class TimerId {
+        enum class TimerId
+        {
             Invalid = 0,
         };
 
-        enum ScrollPhase {
+        enum ScrollPhase
+        {
             NoScrollPhase = 0,
             ScrollBegin,
             ScrollUpdate,
@@ -1713,14 +1753,16 @@
             ScrollMomentum
         };
 
-        enum MouseEventSource {
+        enum MouseEventSource
+        {
             MouseEventNotSynthesized,
             MouseEventSynthesizedBySystem,
             MouseEventSynthesizedByQt,
             MouseEventSynthesizedByApplication
         };
 
-        enum MouseEventFlag {
+        enum MouseEventFlag
+        {
             NoMouseEventFlag = 0x00,
             MouseEventCreatedDoubleClick = 0x01,
             MouseEventFlagMask = 0xFF
@@ -1728,12 +1770,14 @@
         Q_DECLARE_FLAGS(MouseEventFlags, MouseEventFlag)
         Q_DECLARE_OPERATORS_FOR_FLAGS(MouseEventFlags)
 
-        enum ChecksumType {
+        enum ChecksumType
+        {
             ChecksumIso3309,
             ChecksumItuV41
         };
 
-        enum class HighDpiScaleFactorRoundingPolicy {
+        enum class HighDpiScaleFactorRoundingPolicy
+        {
             Unset,
             Round,
             Ceil,
@@ -1742,7 +1786,8 @@
             PassThrough
         };
 
-        enum class PermissionStatus {
+        enum class PermissionStatus
+        {
             Undetermined,
             Granted,
             Denied,
@@ -1852,9 +1897,11 @@
 
     typedef bool (*qInternalCallback)(void **);
 
-    class Q_CORE_EXPORT QInternal {
+    class Q_CORE_EXPORT QInternal
+    {
     public:
-        enum PaintDeviceFlags {
+        enum PaintDeviceFlags
+        {
             UnknownDevice = 0x00,
             Widget        = 0x01,
             Pixmap        = 0x02,
@@ -1867,13 +1914,15 @@
             PaintBuffer   = 0x0a,
             OpenGL        = 0x0b
         };
-        enum RelayoutType {
+        enum RelayoutType
+        {
             RelayoutNormal,
             RelayoutDragging,
             RelayoutDropped
         };
 
-        enum DockPosition {
+        enum DockPosition
+        {
             LeftDock,
             RightDock,
             TopDock,
@@ -1881,7 +1930,8 @@
             DockCount
         };
 
-        enum Callback {
+        enum Callback
+        {
             EventNotifyCallback,
             LastCallback
         };
@@ -1948,7 +1998,8 @@
 
     Q_DECLARE_TYPEINFO(QKeyCombination, Q_RELOCATABLE_TYPE);
 
-    namespace Qt {
+    namespace Qt
+    {
     constexpr QKeyCombination operator|(Qt::Modifier modifier, Qt::Key key) noexcept
     {
         return QKeyCombination(modifier, key);
