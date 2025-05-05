@@ -1,65 +1,64 @@
-// Copyright (C) 2021 The Qt Company Ltd.
-// Copyright (C) 2022 Intel Corporation.
-// Copyright (C) 2019 Mail.ru Group.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
+#include "qstring.h"
+//#include "qstringlist.h"
 
-#include "qstringlist.h"
 #if QT_CONFIG(regularexpression)
-#include "qregularexpression.h"
+    #include "qregularexpression.h"
 #endif
-#include "qunicodetables_p.h"
-#include <private/qstringconverter_p.h>
-#include <private/qtools_p.h>
-#include <private/qlocale_tools_p.h>
-#include <private/qsimd_p.h>
-#include <qnumeric.h>
-#include <qdatastream.h>
-#include <qlist.h>
-#include "qlocale.h"
-#include <private/qlocale_p.h>
-#include "qspan.h"
-#include "qstringbuilder.h"
-#include "qstringmatcher.h"
-#include "qvarlengtharray.h"
-#include "qdebug.h"
-#include "qendian.h"
-#include "qcollator.h"
-#include "qttypetraits.h"
+
+//#include <private/qunicodetables_p.h>
+//#include <private/qstringconverter_p.h>
+//#include <private/qtools_p.h>
+//#include <private/qlocale_tools_p.h>
+//#include <private/qsimd_p.h>
+//#include <qnumeric.h>
+//#include <qdatastream.h>
+//#include <qlist.h>
+//#include "qlocale.h"
+//#include <private/qlocale_p.h>
+//#include "qspan.h"
+//#include "qstringbuilder.h"
+//#include "qstringmatcher.h"
+//#include "qvarlengtharray.h"
+//#include "qdebug.h"
+//#include "qendian.h"
+//#include "qcollator.h"
+//#include "qttypetraits.h"
 
 #ifdef Q_OS_DARWIN
-#include <private/qcore_mac_p.h>
+    #include <private/qcore_mac_p.h>
 #endif
 
 #include <private/qfunctions_p.h>
 
+// STL
 #include <limits.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <wchar.h>
-
-#include "qchar.cpp"
-#include "qlatin1stringmatcher.h"
-#include "qstringmatcher.cpp"
-#include <private/qstringiterator_p.h>
-#include "qstringalgorithms_p.h"
-#include "qthreadstorage.h"
-
 #include <algorithm>
 #include <functional>
 
+//#include "qchar.cpp"
+//#include "qlatin1stringmatcher.h"
+//#include "qstringmatcher.cpp"
+//#include <private/qstringiterator_p.h>
+//#include "qstringalgorithms_p.h"
+//#include "qthreadstorage.h"
+
 #ifdef Q_OS_WIN
-#  include <qt_windows.h>
-#  if !defined(QT_BOOTSTRAPPED) && (defined(QT_NO_CAST_FROM_ASCII) || defined(QT_NO_CAST_TO_ASCII))
-// MSVC requires this, but let's apply it to MinGW compilers too, just in case
-#    error "This file cannot be compiled with QT_NO_CAST_{TO,FROM}_ASCII, " \
-           "otherwise some QString functions will not get exported."
-#  endif
+    #include <qt_windows.h>
+
+    #if !defined(QT_BOOTSTRAPPED) && (defined(QT_NO_CAST_FROM_ASCII) || defined(QT_NO_CAST_TO_ASCII))
+        // MSVC requires this, but let's apply it to MinGW compilers too, just in case
+        #error "This file cannot be compiled with QT_NO_CAST_{TO,FROM}_ASCII, " \
+               "otherwise some QString functions will not get exported."
+    #endif
 #endif
 
 #ifdef truncate
-#  undef truncate
+    #undef truncate
 #endif
 
 #define REHASH(a) \
@@ -69,16 +68,18 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace Qt::StringLiterals;
-using namespace QtMiscUtils;
+//using namespace Qt::StringLiterals;
+//using namespace QtMiscUtils;
 
 const char16_t QString::_empty = 0;
 
 // in qstringmatcher.cpp
 qsizetype qFindStringBoyerMoore(QStringView haystack, qsizetype from, QStringView needle, Qt::CaseSensitivity cs);
 
-namespace {
-enum StringComparisonMode {
+namespace
+{
+enum StringComparisonMode
+{
     CompareStringsForEquality,
     CompareStringsForOrdering
 };
@@ -361,9 +362,9 @@ extern "C" void qt_toLatin1_mips_dsp_asm(uchar *dst, const char16_t *src, int le
 #if defined(__SSE2__) && defined(Q_CC_GNU)
 // We may overrun the buffer, but that's a false positive:
 // this won't crash nor produce incorrect results
-#  define ATTRIBUTE_NO_SANITIZE       __attribute__((__no_sanitize_address__, __no_sanitize_thread__))
+#define ATTRIBUTE_NO_SANITIZE       __attribute__((__no_sanitize_address__, __no_sanitize_thread__))
 #else
-#  define ATTRIBUTE_NO_SANITIZE
+#define ATTRIBUTE_NO_SANITIZE
 #endif
 
 #ifdef __SSE2__
@@ -440,7 +441,7 @@ static bool simdTestMask(const char *&ptr, const char *end, quint32 maskval)
     };
 
     if constexpr (UseSse4_1) {
-#  ifndef Q_OS_QNX              // compiler fails in the code below
+#ifndef Q_OS_QNX              // compiler fails in the code below
         __m128i mask;
         auto updatePtrSimd = [&](__m128i data) -> bool {
             __m128i masked = _mm_and_si128(mask, data);
@@ -498,7 +499,7 @@ static bool simdTestMask(const char *&ptr, const char *end, quint32 maskval)
         }
 
         return true;
-#  endif // QNX
+#endif // QNX
     }
 
     // SSE2 implementation: test 16 bytes at a time.
@@ -747,7 +748,7 @@ const char16_t *QtPrivate::qustrchr(QStringView str, char16_t c) noexcept
         }
     }
 
-#  if !defined(__OPTIMIZE_SIZE__)
+#if !defined(__OPTIMIZE_SIZE__)
     // we're going to read n[0..3] (8 bytes)
     if (e - n > 3) {
         __m128i data = _mm_loadl_epi64(reinterpret_cast<const __m128i *>(n));
@@ -760,7 +761,7 @@ const char16_t *QtPrivate::qustrchr(QStringView str, char16_t c) noexcept
     return UnrollTailLoop<3>::exec(e - n, e,
                                    [=](qsizetype i) { return n[i] == c; },
                                    [=](qsizetype i) { return n + i; });
-#  endif
+#endif
 #elif defined(__ARM_NEON__)
     const uint16x8_t vmask = qvsetq_n_u16(1, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7);
     const uint16x8_t ch_vec = vdupq_n_u16(c);
@@ -974,7 +975,7 @@ Q_CORE_EXPORT void qt_from_latin1(char16_t *dst, const char *str, size_t size) n
         return;
     }
 
-#  if !defined(__OPTIMIZE_SIZE__)
+#if !defined(__OPTIMIZE_SIZE__)
     if (size >= 4) {
         // two overlapped loads & stores, of either 64-bit or of 32-bit
         if (size >= 8) {
@@ -995,7 +996,7 @@ Q_CORE_EXPORT void qt_from_latin1(char16_t *dst, const char *str, size_t size) n
         size = size % 4;
         return UnrollTailLoop<3>::exec(qsizetype(size), [=](qsizetype i) { dst[i] = uchar(str[i]); });
     }
-#  endif
+#endif
 #endif
 #if defined(__mips_dsp)
     static_assert(sizeof(qsizetype) == sizeof(int),
@@ -1117,7 +1118,7 @@ static void qt_to_latin1_internal(uchar *dst, const char16_t *src, qsizetype len
         return;
     }
 
-#  if !defined(__OPTIMIZE_SIZE__)
+#if !defined(__OPTIMIZE_SIZE__)
     if (length >= 4) {
         // this code is fine even for in-place conversion because we load both
         // before any store
@@ -1154,9 +1155,9 @@ static void qt_to_latin1_internal(uchar *dst, const char16_t *src, qsizetype len
         else
             dst[i] = src[i];
     });
-#  else
+#else
     length = length % 16;
-#  endif // optimize size
+#endif // optimize size
 #elif defined(__ARM_NEON__)
     // Refer to the documentation of the SSE2 implementation.
     // This uses exactly the same method as for SSE except:
@@ -1298,14 +1299,14 @@ static int ucstrncmp(const char16_t *a, const char16_t *b, size_t l)
     // but the bytes in memory are FF 00 and 00 01.
 
 #ifndef __OPTIMIZE_SIZE__
-#  if defined(__mips_dsp)
+#if defined(__mips_dsp)
     static_assert(sizeof(uint) == sizeof(size_t));
     if (l >= 8) {
         return qt_ucstrncmp_mips_dsp_asm(a, b, l);
     }
-#  elif defined(__SSE2__)
+#elif defined(__SSE2__)
     return ucstrncmp_sse2<Mode>(a, b, l);
-#  elif defined(__ARM_NEON__)
+#elif defined(__ARM_NEON__)
     if (l >= 8) {
         const char16_t *end = a + l;
         const uint16x8_t mask = qvsetq_n_u16( 1, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7 );
@@ -1330,7 +1331,7 @@ static int ucstrncmp(const char16_t *a, const char16_t *b, size_t l)
         return a[i] - b[i];
     };
     return UnrollTailLoop<7>::exec(l, 0, lambda, lambda);
-#  endif // MIPS DSP or __SSE2__ or __ARM_NEON__
+#endif // MIPS DSP or __SSE2__ or __ARM_NEON__
 #endif // __OPTIMIZE_SIZE__
 
     if constexpr (Mode == CompareStringsForEquality || QSysInfo::ByteOrder == QSysInfo::BigEndian)
@@ -6972,7 +6973,7 @@ int QString::localeAwareCompare_helper(const QChar *data1, qsizetype length1,
 #else
     const QString lhs = QString::fromRawData(data1, length1).normalized(QString::NormalizationForm_C);
     const QString rhs = QString::fromRawData(data2, length2).normalized(QString::NormalizationForm_C);
-#  if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
     int res = CompareStringEx(LOCALE_NAME_USER_DEFAULT, 0, (LPWSTR)lhs.constData(), lhs.length(), (LPWSTR)rhs.constData(), rhs.length(), NULL, NULL, 0);
 
     switch (res) {
@@ -6983,7 +6984,7 @@ int QString::localeAwareCompare_helper(const QChar *data1, qsizetype length1,
     default:
         return 0;
     }
-#  elif defined (Q_OS_DARWIN)
+#elif defined (Q_OS_DARWIN)
     // Use CFStringCompare for comparing strings on Mac. This makes Qt order
     // strings the same way as native applications do, and also respects
     // the "Order for sorted lists" setting in the International preferences
@@ -6999,13 +7000,13 @@ int QString::localeAwareCompare_helper(const QChar *data1, qsizetype length1,
     CFRelease(thisString);
     CFRelease(otherString);
     return result;
-#  elif defined(Q_OS_UNIX)
+#elif defined(Q_OS_UNIX)
     // declared in <string.h> (no better than QtPrivate::compareStrings() on Android, sadly)
     return strcoll(lhs.toLocal8Bit().constData(), rhs.toLocal8Bit().constData());
-#  else
-#     error "This case shouldn't happen"
+#else
+# error "This case shouldn't happen"
     return QtPrivate::compareStrings(lhs, rhs, Qt::CaseSensitive);
-#  endif
+#endif
 #endif // !QT_CONFIG(icu)
 }
 

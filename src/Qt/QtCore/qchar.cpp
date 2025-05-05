@@ -1,8 +1,10 @@
 #include "qchar.h"
+
 //#include "qdatastream.h"
 #include <private/qunicodetables_p.h>
 #include "qunicodetables.cpp"
 
+// STL
 #include <algorithm>
 
 QT_BEGIN_NAMESPACE
