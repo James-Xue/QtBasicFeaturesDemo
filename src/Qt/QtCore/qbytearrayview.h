@@ -1,10 +1,15 @@
 #ifndef QBYTEARRAYVIEW_H
     #define QBYTEARRAYVIEW_H
 
-    #include <QtCore/qbytearrayalgorithms.h>
+// ========== My define ==========
+    #include <QtCore/qnamespace.h>
+    #include <QtCore/qtprivate.h>
+// ========== My define ==========
+
+    //#include <QtCore/qbytearrayalgorithms.h>
     #include <QtCore/qcompare.h>
-    #include <QtCore/qcontainerfwd.h>
-    #include <QtCore/qstringfwd.h>
+    //#include <QtCore/qcontainerfwd.h>
+    //#include <QtCore/qstringfwd.h>
     #include <QtCore/qarraydata.h>
 
     // STL
@@ -382,16 +387,16 @@
         Q_DECLARE_STRONGLY_ORDERED(QByteArrayView, const char *)
 
         // defined in qstring.cpp
-        friend Q_CORE_EXPORT bool
-        comparesEqual(const QByteArrayView &lhs, const QChar &rhs) noexcept;
-        friend Q_CORE_EXPORT Qt::strong_ordering
-        compareThreeWay(const QByteArrayView &lhs, const QChar &rhs) noexcept;
+        //friend Q_CORE_EXPORT bool
+        //comparesEqual(const QByteArrayView &lhs, const QChar &rhs) noexcept;
+        //friend Q_CORE_EXPORT Qt::strong_ordering
+        //compareThreeWay(const QByteArrayView &lhs, const QChar &rhs) noexcept;
         friend Q_CORE_EXPORT bool
         comparesEqual(const QByteArrayView &lhs, char16_t rhs) noexcept;
         friend Q_CORE_EXPORT Qt::strong_ordering
         compareThreeWay(const QByteArrayView &lhs, char16_t rhs) noexcept;
     #if !defined(QT_NO_CAST_FROM_ASCII) && !defined(QT_RESTRICTED_CAST_FROM_ASCII)
-        Q_DECLARE_STRONGLY_ORDERED(QByteArrayView, QChar, QT_ASCII_CAST_WARN)
+        //Q_DECLARE_STRONGLY_ORDERED(QByteArrayView, QChar, QT_ASCII_CAST_WARN)
         Q_DECLARE_STRONGLY_ORDERED(QByteArrayView, char16_t, QT_ASCII_CAST_WARN)
     #endif // !defined(QT_NO_CAST_FROM_ASCII) && !defined(QT_RESTRICTED_CAST_FROM_ASCII)
 
@@ -411,38 +416,14 @@
     //                                     qstrnicmp(data(), size(), a.data(), a.size());
     //}
 
+
+    // qChecksum: Internet checksum
+    Q_CORE_EXPORT quint16 qChecksum(QByteArrayView data, Qt::ChecksumType standard = Qt::ChecksumIso3309);
+
     #if QT_DEPRECATED_SINCE(6, 0)
-    QT_DEPRECATED_VERSION_X_6_0("Use the QByteArrayView overload.")
-    inline quint16 qChecksum(const char *s, qsizetype len,
-                             Qt::ChecksumType standard = Qt::ChecksumIso3309)
-    { return qChecksum(QByteArrayView(s, len), standard); }
+        QT_DEPRECATED_VERSION_X_6_0("Use the QByteArrayView overload.")
+        quint16 qChecksum(const char *s, qsizetype len, Qt::ChecksumType standard = Qt::ChecksumIso3309);
     #endif
-
-    qsizetype QtPrivate::findByteArray(QByteArrayView haystack, qsizetype from, char needle) noexcept
-    {
-        if (from < 0)
-            from = qMax(from + haystack.size(), qsizetype(0));
-        if (from < haystack.size()) {
-            const char *const b = haystack.data();
-            if (const auto n = static_cast<const char *>(
-                        memchr(b + from, needle, static_cast<size_t>(haystack.size() - from)))) {
-                return n - b;
-            }
-        }
-        return -1;
-    }
-
-    qsizetype QtPrivate::lastIndexOf(QByteArrayView haystack, qsizetype from, uchar needle) noexcept
-    {
-        if (from < 0)
-            from = qMax(from + haystack.size(), qsizetype(0));
-        else
-            from = qMin(from, haystack.size() - 1);
-
-        const char *const b = haystack.data();
-        const void *n = b ? qmemrchr(b, needle, from + 1) : nullptr;
-        return n ? static_cast<const char *>(n) - b : -1;
-    }
 
     QT_END_NAMESPACE
 #endif // QBYTEARRAYVIEW_H

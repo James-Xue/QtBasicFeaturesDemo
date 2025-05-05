@@ -416,114 +416,10 @@ static constexpr inline uchar asciiLower(uchar c)
 /*!
     \internal
  */
-//int QtPrivate::compareMemory(QByteArrayView lhs, QByteArrayView rhs)
-//{
-//    if (!lhs.isNull() && !rhs.isNull()) {
-//        int ret = memcmp(lhs.data(), rhs.data(), qMin(lhs.size(), rhs.size()));
-//        if (ret != 0)
-//            return ret;
-//    }
-//
-//    // they matched qMin(l1, l2) bytes
-//    // so the longer one is lexically after the shorter one
-//    return lhs.size() == rhs.size() ? 0 : lhs.size() > rhs.size() ? 1 : -1;
-//}
 
 /*!
     \internal
 */
-//bool QtPrivate::isValidUtf8(QByteArrayView s) noexcept
-//{
-//    return QUtf8::isValidUtf8(s).isValidUtf8;
-//}
-
-// the CRC table below is created by the following piece of code
-#if 0
-static void createCRC16Table()                        // build CRC16 lookup table
-{
-    unsigned int i;
-    unsigned int j;
-    unsigned short crc_tbl[16];
-    unsigned int v0, v1, v2, v3;
-    for (i = 0; i < 16; i++) {
-        v0 = i & 1;
-        v1 = (i >> 1) & 1;
-        v2 = (i >> 2) & 1;
-        v3 = (i >> 3) & 1;
-        j = 0;
-#undef SET_BIT
-#define SET_BIT(x, b, v) (x) |= (v) << (b)
-        SET_BIT(j,  0, v0);
-        SET_BIT(j,  7, v0);
-        SET_BIT(j, 12, v0);
-        SET_BIT(j,  1, v1);
-        SET_BIT(j,  8, v1);
-        SET_BIT(j, 13, v1);
-        SET_BIT(j,  2, v2);
-        SET_BIT(j,  9, v2);
-        SET_BIT(j, 14, v2);
-        SET_BIT(j,  3, v3);
-        SET_BIT(j, 10, v3);
-        SET_BIT(j, 15, v3);
-        crc_tbl[i] = j;
-    }
-    printf("static const quint16 crc_tbl[16] = {\n");
-    for (int i = 0; i < 16; i +=4)
-        printf("    0x%04x, 0x%04x, 0x%04x, 0x%04x,\n", crc_tbl[i], crc_tbl[i+1], crc_tbl[i+2], crc_tbl[i+3]);
-    printf("};\n");
-}
-#endif
-
-static const quint16 crc_tbl[16] =
-{
-    0x0000, 0x1081, 0x2102, 0x3183,
-    0x4204, 0x5285, 0x6306, 0x7387,
-    0x8408, 0x9489, 0xa50a, 0xb58b,
-    0xc60c, 0xd68d, 0xe70e, 0xf78f
-};
-
-/*!
-    \relates QByteArray
-    \since 5.9
-
-    Returns the CRC-16 checksum of \a data.
-
-    The checksum is independent of the byte order (endianness) and will
-    be calculated accorded to the algorithm published in \a standard.
-    By default the algorithm published in ISO 3309 (Qt::ChecksumIso3309) is used.
-
-    \note This function is a 16-bit cache conserving (16 entry table)
-    implementation of the CRC-16-CCITT algorithm.
-*/
-//quint16 qChecksum(QByteArrayView data, Qt::ChecksumType standard)
-//{
-//    quint16 crc = 0x0000;
-//    switch (standard) {
-//    case Qt::ChecksumIso3309:
-//        crc = 0xffff;
-//        break;
-//    case Qt::ChecksumItuV41:
-//        crc = 0x6363;
-//        break;
-//    }
-//    uchar c;
-//    const uchar *p = reinterpret_cast<const uchar *>(data.data());
-//    qsizetype len = data.size();
-//    while (len--) {
-//        c = *p++;
-//        crc = ((crc >> 4) & 0x0fff) ^ crc_tbl[((crc ^ c) & 15)];
-//        c >>= 4;
-//        crc = ((crc >> 4) & 0x0fff) ^ crc_tbl[((crc ^ c) & 15)];
-//    }
-//    switch (standard) {
-//    case Qt::ChecksumIso3309:
-//        crc = ~crc;
-//        break;
-//    case Qt::ChecksumItuV41:
-//        break;
-//    }
-//    return crc & 0xffff;
-//}
 
 /*!
     \fn QByteArray qCompress(const QByteArray& data, int compressionLevel)
@@ -2744,55 +2640,6 @@ QByteArray QByteArray::repeated(qsizetype times) const
     \sa lastIndexOf(), contains()
 */
 
-static qsizetype lastIndexOfHelper(const char *haystack, qsizetype l, const char *needle,
-                                   qsizetype ol, qsizetype from)
-{
-    auto delta = l - ol;
-    if (from < 0)
-        from = delta;
-    if (from < 0 || from > l)
-        return -1;
-    if (from > delta)
-        from = delta;
-
-    const char *end = haystack;
-    haystack += from;
-    const qregisteruint ol_minus_1 = ol - 1;
-    const char *n = needle + ol_minus_1;
-    const char *h = haystack + ol_minus_1;
-    qregisteruint hashNeedle = 0, hashHaystack = 0;
-    qsizetype idx;
-    for (idx = 0; idx < ol; ++idx) {
-        hashNeedle = ((hashNeedle<<1) + *(n-idx));
-        hashHaystack = ((hashHaystack<<1) + *(h-idx));
-    }
-    hashHaystack -= *haystack;
-    while (haystack >= end) {
-        hashHaystack += *haystack;
-        if (hashHaystack == hashNeedle && memcmp(needle, haystack, ol) == 0)
-            return haystack - end;
-        --haystack;
-        if (ol_minus_1 < sizeof(ol_minus_1) * CHAR_BIT)
-            hashHaystack -= qregisteruint(*(haystack + ol)) << ol_minus_1;
-        hashHaystack <<= 1;
-    }
-    return -1;
-}
-
-//qsizetype QtPrivate::lastIndexOf(QByteArrayView haystack, qsizetype from, QByteArrayView needle) noexcept
-//{
-//    if (haystack.isEmpty()) {
-//        if (needle.isEmpty() && from == 0)
-//            return 0;
-//        return -1;
-//    }
-//    const auto ol = needle.size();
-//    if (ol == 1)
-//        return QtPrivate::lastIndexOf(haystack, from, needle.front());
-//
-//    return lastIndexOfHelper(haystack.data(), haystack.size(), needle.data(), ol, from);
-//}
-
 /*! \fn qsizetype QByteArray::lastIndexOf(QByteArrayView bv, qsizetype from) const
     \since 6.0
 
@@ -2846,37 +2693,6 @@ static qsizetype lastIndexOfHelper(const char *haystack, qsizetype l, const char
     \sa indexOf(), contains()
 */
 
-//static inline qsizetype countCharHelper(QByteArrayView haystack, char needle) noexcept
-//{
-//    qsizetype num = 0;
-//    for (char ch : haystack) {
-//        if (ch == needle)
-//            ++num;
-//    }
-//    return num;
-//}
-//
-//qsizetype QtPrivate::count(QByteArrayView haystack, QByteArrayView needle) noexcept
-//{
-//    if (needle.size() == 0)
-//        return haystack.size() + 1;
-//
-//    if (needle.size() == 1)
-//        return countCharHelper(haystack, needle[0]);
-//
-//    qsizetype num = 0;
-//    qsizetype i = -1;
-//    if (haystack.size() > 500 && needle.size() > 5) {
-//        QByteArrayMatcher matcher(needle);
-//        while ((i = matcher.indexIn(haystack, i + 1)) != -1)
-//            ++num;
-//    } else {
-//        while ((i = haystack.indexOf(needle, i + 1)) != -1)
-//            ++num;
-//    }
-//    return num;
-//}
-
 /*! \fn qsizetype QByteArray::count(QByteArrayView bv) const
     \since 6.0
 
@@ -2921,15 +2737,6 @@ qsizetype QByteArray::count(char /*ch*/) const
     \sa operator==, {Character Case}
 */
 
-//bool QtPrivate::startsWith(QByteArrayView haystack, QByteArrayView needle) noexcept
-//{
-//    if (haystack.size() < needle.size())
-//        return false;
-//    if (haystack.data() == needle.data() || needle.size() == 0)
-//        return true;
-//    return memcmp(haystack.data(), needle.data(), needle.size()) == 0;
-//}
-
 /*! \fn bool QByteArray::startsWith(QByteArrayView bv) const
     \since 6.0
 
@@ -2949,15 +2756,6 @@ qsizetype QByteArray::count(char /*ch*/) const
     Returns \c true if this byte array starts with byte \a ch; otherwise returns
     \c false.
 */
-
-//bool QtPrivate::endsWith(QByteArrayView haystack, QByteArrayView needle) noexcept
-//{
-//    if (haystack.size() < needle.size())
-//        return false;
-//    if (haystack.end() == needle.end() || needle.size() == 0)
-//        return true;
-//    return memcmp(haystack.end() - needle.size(), needle.data(), needle.size()) == 0;
-//}
 
 /*!
     \fn bool QByteArray::endsWith(QByteArrayView bv) const
@@ -3650,13 +3448,6 @@ QByteArray QByteArray::trimmed_helper(QByteArray &/*a*/)
     return 0;
 }
 
-//QByteArrayView QtPrivate::trimmed(QByteArrayView /*view*/) noexcept
-//{
-//    //const auto [start, stop] = QStringAlgorithms<QByteArrayView>::trimmed_helper_positions(view);
-//    //return QByteArrayView(start, stop);
-//    return QByteArrayView();
-//}
-
 /*!
     Returns a byte array of size \a width that contains this byte array padded
     with the \a fill byte.
@@ -3730,40 +3521,6 @@ QByteArray QByteArray::rightJustified(qsizetype width, char fill, bool truncate)
     }
     return result;
 }
-
-//auto QtPrivate::toSignedInteger(QByteArrayView data, int base) -> ParsedNumber<qlonglong>
-//{
-//#if defined(QT_CHECK_RANGE)
-//    if (base != 0 && (base < 2 || base > 36)) {
-//        qWarning("QByteArray::toIntegral: Invalid base %d", base);
-//        base = 10;
-//    }
-//#endif
-//    if (data.isEmpty())
-//        return {};
-//
-//    const QSimpleParsedNumber r = QLocaleData::bytearrayToLongLong(data, base);
-//    if (r.ok())
-//        return ParsedNumber(r.result);
-//    return {};
-//}
-//
-//auto QtPrivate::toUnsignedInteger(QByteArrayView data, int base) -> ParsedNumber<qulonglong>
-//{
-//#if defined(QT_CHECK_RANGE)
-//    if (base != 0 && (base < 2 || base > 36)) {
-//        qWarning("QByteArray::toIntegral: Invalid base %d", base);
-//        base = 10;
-//    }
-//#endif
-//    if (data.isEmpty())
-//        return {};
-//
-//    const QSimpleParsedNumber r = QLocaleData::bytearrayToUnsLongLong(data, base);
-//    if (r.ok())
-//        return ParsedNumber(r.result);
-//    return {};
-//}
 
 /*!
     Returns the byte array converted to a \c {long long} using base \a base,
@@ -4050,37 +3807,21 @@ double QByteArray::toDouble(bool */*ok*/) const
     return 1024.0;
 }
 
-//auto QtPrivate::toDouble(QByteArrayView a) noexcept -> ParsedNumber<double>
-//{
-//    auto r = qt_asciiToDouble(a.data(), a.size(), WhitespacesAllowed);
-//    if (r.ok())
-//        return ParsedNumber{r.result};
-//    else
-//        return {};
-//}
-
 /*!
     Returns the byte array converted to a \c float value.
-
     Returns an infinity if the conversion overflows or 0.0 if the
     conversion fails for other reasons (e.g. underflow).
-
     If \a ok is not \nullptr, failure is reported by setting *\a{ok}
     to \c false, and success by setting *\a{ok} to \c true.
-
     \snippet code/src_corelib_text_qbytearray.cpp 38float
-
     \warning The QByteArray content may only contain valid numerical characters
     which includes the plus/minus sign, the character e used in scientific
     notation, and the decimal point. Including the unit or additional characters
     leads to a conversion error.
-
     \note The conversion of the number is performed in the default C locale,
     regardless of the user's locale. Use QLocale to perform locale-aware
     conversions between numbers and strings.
-
     This function ignores leading and trailing whitespace.
-
     \sa number()
 */
 
@@ -4089,17 +3830,6 @@ float QByteArray::toFloat(bool */*ok*/) const
     //return QLocaleData::convertDoubleToFloat(toDouble(ok), ok);
     return 1024.0;
 }
-
-//auto QtPrivate::toFloat(QByteArrayView a) noexcept -> ParsedNumber<float>
-//{
-//    if (const auto r = toDouble(a)) {
-//        bool ok = true;
-//        const auto f = QLocaleData::convertDoubleToFloat(*r, &ok);
-//        if (ok)
-//            return ParsedNumber(f);
-//    }
-//    return {};
-//}
 
 /*!
     \since 5.2

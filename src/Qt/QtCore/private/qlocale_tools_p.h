@@ -33,7 +33,8 @@ using qinternalint128 = std::_Signed128;
 using qinternaluint128 = std::_Unsigned128;
 #endif
 
-enum StrayCharacterMode {
+enum StrayCharacterMode
+{
     TrailingJunkProhibited,
     TrailingJunkAllowed,
     WhitespacesAllowed
