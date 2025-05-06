@@ -1,7 +1,3 @@
-// Copyright (C) 2020 The Qt Company Ltd.
-// Copyright (C) 2020 Klaralvdalens Datakonsult AB, a KDAB Group company, info@kdab.com, author Giuseppe D'Angelo <giuseppe.dangelo@kdab.com>
-
-
 #ifndef QNAMESPACE_H
     #define QNAMESPACE_H
 
