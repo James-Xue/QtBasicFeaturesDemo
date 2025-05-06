@@ -7,7 +7,7 @@ QT_BEGIN_NAMESPACE
 
 namespace QUnicodeTables
 {
-    static constexpr unsigned short uc_property_trie[] =
+    /*static*/ constexpr unsigned short uc_property_trie[] =
     {
         // [0x0..0x11000)
 
@@ -7205,7 +7205,7 @@ namespace QUnicodeTables
         3232, 3232, 3232, 3232, 3232, 3232, 3223, 3223
     };
 
-    static constexpr Properties uc_properties[] =
+    /*static*/ constexpr Properties uc_properties[] =
     {
         { 9, 18, 0, 0, -1, 0, 1, 3, 0,  { {0, 0}, {0, 0}, {0, 0}, {0, 0} }, 3, 0, 23, 0, 0, 2 },
         { 9, 8, 0, 0, -1, 0, 1, 3, 0,  { {0, 0}, {0, 0}, {0, 0}, {0, 0} }, 3, 0, 19, 5, 0, 2 },
@@ -10442,7 +10442,7 @@ namespace QUnicodeTables
         { 12, 0, 0, 0, -1, 0, 2, 0, 0,  { {0, 0}, {0, 0}, {0, 0}, {0, 0} }, 0, 0, 14, 0, 0, 0 }
     };
 
-    Q_DECL_CONST_FUNCTION static inline const Properties *qGetProp(char32_t ucs4) noexcept
+    Q_DECL_CONST_FUNCTION /*static*/ /*inline*/ const Properties *qGetProp(char32_t ucs4) noexcept
     {
         //Q_ASSERT(ucs4 <= QChar::LastValidCodePoint);
         if (ucs4 < 0x11000)
@@ -10452,7 +10452,7 @@ namespace QUnicodeTables
             + uc_property_trie[uc_property_trie[((ucs4 - 0x11000) >> 8) + 0x880] + (ucs4 & 0xff)];
     }
 
-    Q_DECL_CONST_FUNCTION static inline const Properties *qGetProp(char16_t ucs2) noexcept
+    Q_DECL_CONST_FUNCTION /*static*/ /*inline*/ const Properties *qGetProp(char16_t ucs2) noexcept
     {
         return uc_properties + uc_property_trie[uc_property_trie[ucs2 >> 5] + (ucs2 & 0x1f)];
     }
@@ -10497,7 +10497,7 @@ namespace QUnicodeTables
         return static_cast<EastAsianWidth>(qGetProp(ucs4)->eastAsianWidth);
     }
 
-    static constexpr unsigned short specialCaseMap[] =
+    /*static constexpr*/ unsigned short specialCaseMap[] =
     {
         0x0, // placeholder
         0x1, 0x2c65,
@@ -10805,9 +10805,9 @@ namespace QUnicodeTables
         0x1, 0xa64b
     };
 
-    constexpr unsigned int MaxSpecialCaseLength = 3;
+    //constexpr unsigned int MaxSpecialCaseLength = 3;
 
-    static constexpr unsigned short uc_decomposition_trie[] =
+    /*static constexpr*/ unsigned short uc_decomposition_trie[] =
     {
         // 0 - 0x3400
 
@@ -12754,14 +12754,14 @@ namespace QUnicodeTables
         0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff
     };
 
-    #define GET_DECOMPOSITION_INDEX(ucs4) \
-           (ucs4 < 0x3400 \
-            ? (QUnicodeTables::uc_decomposition_trie[QUnicodeTables::uc_decomposition_trie[ucs4 >> 4] + (ucs4 & 0xf)]) \
-            : ucs4 < 0x30000 \
-            ? QUnicodeTables::uc_decomposition_trie[QUnicodeTables::uc_decomposition_trie[((ucs4 - 0x3400) >> 8) + 0x340] + (ucs4 & 0xff)] \
-            : 0xffff)
+    //#define GET_DECOMPOSITION_INDEX(ucs4) \
+    //       (ucs4 < 0x3400 \
+    //        ? (QUnicodeTables::uc_decomposition_trie[QUnicodeTables::uc_decomposition_trie[ucs4 >> 4] + (ucs4 & 0xf)]) \
+    //        : ucs4 < 0x30000 \
+    //        ? QUnicodeTables::uc_decomposition_trie[QUnicodeTables::uc_decomposition_trie[((ucs4 - 0x3400) >> 8) + 0x340] + (ucs4 & 0xff)] \
+    //        : 0xffff)
 
-    static constexpr unsigned short uc_decomposition_map[] =
+    /*static constexpr*/ unsigned short uc_decomposition_map[] =
     {
         0x103, 0x20, 0x210, 0x20, 0x308, 0x109, 0x61, 0x210,
         0x20, 0x304, 0x109, 0x32, 0x109, 0x33, 0x210, 0x20,
@@ -14602,7 +14602,7 @@ namespace QUnicodeTables
         0xd869, 0xde00
     };
 
-    static constexpr unsigned short uc_ligature_trie[] =
+    /*static constexpr*/ unsigned short uc_ligature_trie[] =
     {
         // 0 - 0x3100
 
@@ -15026,14 +15026,14 @@ namespace QUnicodeTables
         0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff
     };
 
-    #define GET_LIGATURE_INDEX(ucs4) \
-           (ucs4 < 0x3100 \
-            ? (QUnicodeTables::uc_ligature_trie[QUnicodeTables::uc_ligature_trie[ucs4 >> 5] + (ucs4 & 0x1f)]) \
-            : ucs4 < 0x12000 \
-            ? QUnicodeTables::uc_ligature_trie[QUnicodeTables::uc_ligature_trie[((ucs4 - 0x3100) >> 8) + 0x188] + (ucs4 & 0xff)] \
-            : 0xffff)
+    //#define GET_LIGATURE_INDEX(ucs4) \
+    //       (ucs4 < 0x3100 \
+    //        ? (QUnicodeTables::uc_ligature_trie[QUnicodeTables::uc_ligature_trie[ucs4 >> 5] + (ucs4 & 0x1f)]) \
+    //        : ucs4 < 0x12000 \
+    //        ? QUnicodeTables::uc_ligature_trie[QUnicodeTables::uc_ligature_trie[((ucs4 - 0x3100) >> 8) + 0x188] + (ucs4 & 0xff)] \
+    //        : 0xffff)
 
-    static constexpr unsigned short uc_ligature_map[] =
+    /*static constexpr*/ unsigned short uc_ligature_map[] =
     {
         0x54, 0x41, 0xc0, 0x45, 0xc8, 0x49, 0xcc, 0x4e,
         0x1f8, 0x4f, 0xd2, 0x55, 0xd9, 0x57, 0x1e80, 0x59,
@@ -15304,7 +15304,7 @@ namespace QUnicodeTables
     enum { NumNormalizationCorrections = 6 };
     enum { NormalizationCorrectionsVersionMax = 7 };
 
-    static constexpr char16_t idnaMappingData[] =
+    /*static*/ constexpr char16_t idnaMappingData[] =
     {
         0x31, 0x31, 0x65e5, 0x31, 0x31, 0x6708, 0x31, 0x31, 0x70b9, 0x31, 0x32, 0x65e5,
         0x31, 0x32, 0x6708, 0x31, 0x32, 0x70b9, 0x31, 0x33, 0x65e5, 0x31, 0x33, 0x70b9,
@@ -15393,7 +15393,7 @@ namespace QUnicodeTables
     };
     static_assert(sizeof(IdnaMapEntry) == 8);
 
-    static constexpr IdnaMapEntry idnaMap[] =
+    /*static*/ constexpr IdnaMapEntry idnaMap[] =
     {
         { 0xaa, 1, { 0x61, 0 } },
         { 0xb2, 1, { 0x32, 0 } },

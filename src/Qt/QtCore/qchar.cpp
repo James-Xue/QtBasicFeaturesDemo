@@ -1360,10 +1360,11 @@ static constexpr quint32 Hangul_NCount = Hangul_VCount * Hangul_TCount;
 static constexpr quint32 Hangul_SCount = Hangul_LCount * Hangul_NCount;
 
 // buffer has to have a length of 3. It's needed for Hangul decomposition
-static const QChar * QT_FASTCALL decompositionHelper(
-    char32_t ucs4, qsizetype *length, QChar::Decomposition  *tag, QChar *buffer)
+static const QChar * QT_FASTCALL decompositionHelper(char32_t ucs4, qsizetype *length, QChar::Decomposition  *tag,
+    QChar *buffer)
 {
-    if (ucs4 >= Hangul_SBase && ucs4 < Hangul_SBase + Hangul_SCount) {
+    if (ucs4 >= Hangul_SBase && ucs4 < Hangul_SBase + Hangul_SCount)
+    {
         // compute Hangul syllable decomposition as per UAX #15
         const char32_t SIndex = ucs4 - Hangul_SBase;
         buffer[0] = QChar(Hangul_LBase + SIndex / Hangul_NCount); // L
@@ -1375,13 +1376,14 @@ static const QChar * QT_FASTCALL decompositionHelper(
     }
 
     const unsigned short index = GET_DECOMPOSITION_INDEX(ucs4);
-    if (index == 0xffff) {
+    if (index == 0xffff)
+    {
         *length = 0;
         *tag = QChar::NoDecomposition;
         return nullptr;
     }
 
-    const unsigned short *decomposition = QUnicodeTables::uc_decomposition_map+index;
+    const unsigned short *decomposition = QUnicodeTables::uc_decomposition_map + index;
     *tag = QChar::Decomposition((*decomposition) & 0xff);
     *length = (*decomposition) >> 8;
     return reinterpret_cast<const QChar *>(decomposition + 1);
@@ -1533,15 +1535,18 @@ static auto fullConvertCase(char32_t uc, QUnicodeTables::Case which) noexcept
     const auto fold = QUnicodeTables::qGetProp(uc)->cases[which];
     const auto caseDiff = fold.diff;
 
-    if (Q_UNLIKELY(fold.special)) {
+    if (Q_UNLIKELY(fold.special))
+    {
         const auto *specialCase = QUnicodeTables::specialCaseMap + caseDiff;
         auto length = *specialCase++;
         while (length--)
             *pp++ = *specialCase++;
-    } else {
+    }
+    else
+    {
         // so far, case conversion never changes planes (guaranteed by the qunicodetables generator)
-        for (char16_t c : QChar::fromUcs4(uc + caseDiff))
-            *pp++ = c;
+        //for (char16_t c : QChar::fromUcs4(uc + caseDiff))
+            //*pp++ = c;
     }
     result.sz = pp - result.chars;
     return result;
@@ -1902,7 +1907,7 @@ static char32_t inline ligatureHelper(char32_t u1, char32_t u2)
     const unsigned short index = GET_LIGATURE_INDEX(u2);
     if (index == 0xffff)
         return 0;
-    const unsigned short *ligatures = QUnicodeTables::uc_ligature_map+index;
+    const unsigned short *ligatures = QUnicodeTables::uc_ligature_map + index;
     ushort length = *ligatures++;
     if (QChar::requiresSurrogates(u1)) {
         const UCS2SurrogatePair *data = reinterpret_cast<const UCS2SurrogatePair *>(ligatures);

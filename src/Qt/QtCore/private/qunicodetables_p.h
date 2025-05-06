@@ -28,7 +28,6 @@
             UpperCase,
             TitleCase,
             CaseFold,
-
             NumCases
         };
 
