@@ -21,8 +21,9 @@ file(GLOB SOURCES
     # "qmetatype.cpp"
     
     # Container classes
-    # "qstring.cpp"
+    "qstring.cpp"
     # "qstringview.cpp"
+    # "qstringmatcher.cpp"
     # "qlocale_tools.cpp"
     # "qstringconverter.cpp"
     # "qlist.cpp"

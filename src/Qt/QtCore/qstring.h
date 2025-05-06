@@ -6,13 +6,13 @@
     #endif
 
     // Qt
-    //#include <QtCore/qchar.h>
+    #include <QtCore/qchar.h>
     #include <QtCore/qcompare.h>
     #include <QtCore/qbytearray.h>
     #include <QtCore/qbytearrayview.h>
     #include <QtCore/qarraydata.h>
+    #include <QtCore/qnamespace.h>
     //#include <QtCore/qlatin1stringview.h>
-    //#include <QtCore/qnamespace.h>
     //#include <QtCore/qstringliteral.h>
     //#include <QtCore/qstringalgorithms.h>
     //#include <QtCore/qanystringview.h>
@@ -305,9 +305,9 @@
         [[nodiscard]] qsizetype lastIndexOf(const QString &s, qsizetype from, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
 
         //[[nodiscard]] qsizetype lastIndexOf(QStringView s, Qt::CaseSensitivity cs = Qt::CaseSensitive) const noexcept
-        { return lastIndexOf(s, size(), cs); }
-        [[nodiscard]] qsizetype lastIndexOf(QStringView s, qsizetype from, Qt::CaseSensitivity cs = Qt::CaseSensitive) const noexcept
-        { return QtPrivate::lastIndexOf(*this, from, s, cs); }
+        //{ return lastIndexOf(s, size(), cs); }
+        //[[nodiscard]] qsizetype lastIndexOf(QStringView s, qsizetype from, Qt::CaseSensitivity cs = Qt::CaseSensitive) const noexcept
+        //{ return QtPrivate::lastIndexOf(*this, from, s, cs); }
 
         [[nodiscard]] inline bool contains(QChar c, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
         [[nodiscard]] inline bool contains(const QString &s, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
@@ -464,23 +464,23 @@
         QString &insert(qsizetype i, QChar c);
         QString &insert(qsizetype i, const QChar *uc, qsizetype len);
         inline QString &insert(qsizetype i, const QString &s) { return insert(i, s.constData(), s.size()); }
-        inline QString &insert(qsizetype i, QStringView v) { return insert(i, v.data(), v.size()); }
+        //inline QString &insert(qsizetype i, QStringView v) { return insert(i, v.data(), v.size()); }
         QString &insert(qsizetype i, QLatin1StringView s);
         QString &insert(qsizetype i, QUtf8StringView s);
 
         QString &append(QChar c);
         QString &append(const QChar *uc, qsizetype len);
         QString &append(const QString &s);
-        inline QString &append(QStringView v) { return append(v.data(), v.size()); }
+        //inline QString &append(QStringView v) { return append(v.data(), v.size()); }
         QString &append(QLatin1StringView s);
         QString &append(QUtf8StringView s);
 
         inline QString &prepend(QChar c) { return insert(0, c); }
         inline QString &prepend(const QChar *uc, qsizetype len) { return insert(0, uc, len); }
         inline QString &prepend(const QString &s) { return insert(0, s); }
-        inline QString &prepend(QStringView v) { return prepend(v.data(), v.size()); }
-        inline QString &prepend(QLatin1StringView s) { return insert(0, s); }
-        QString &prepend(QUtf8StringView s) { return insert(0, s); }
+        //inline QString &prepend(QStringView v) { return prepend(v.data(), v.size()); }
+        //inline QString &prepend(QLatin1StringView s) { return insert(0, s); }
+        //QString &prepend(QUtf8StringView s) { return insert(0, s); }
 
         //QString &assign(QAnyStringView s);
         inline QString &assign(qsizetype n, QChar c)
@@ -539,9 +539,9 @@
         inline QString &operator+=(QChar c) { return append(c); }
 
         inline QString &operator+=(const QString &s) { return append(s); }
-        inline QString &operator+=(QStringView v) { return append(v); }
-        inline QString &operator+=(QLatin1StringView s) { return append(s); }
-        QString &operator+=(QUtf8StringView s) { return append(s); }
+        //inline QString &operator+=(QStringView v) { return append(v); }
+        //inline QString &operator+=(QLatin1StringView s) { return append(s); }
+        //QString &operator+=(QUtf8StringView s) { return append(s); }
 
     #if defined(QT_RESTRICTED_CAST_FROM_ASCII)
         template <qsizetype N>
@@ -705,31 +705,31 @@
 
         int compare(const QString &s, Qt::CaseSensitivity cs = Qt::CaseSensitive) const noexcept;
         int compare(QLatin1StringView other, Qt::CaseSensitivity cs = Qt::CaseSensitive) const noexcept;
-        inline int compare(QStringView s, Qt::CaseSensitivity cs = Qt::CaseSensitive) const noexcept;
-        int compare(QChar ch, Qt::CaseSensitivity cs = Qt::CaseSensitive) const noexcept
-        { return compare(QStringView{&ch, 1}, cs); }
+        //inline int compare(QStringView s, Qt::CaseSensitivity cs = Qt::CaseSensitive) const noexcept;
+        //int compare(QChar ch, Qt::CaseSensitivity cs = Qt::CaseSensitive) const noexcept
+        //{ return compare(QStringView{&ch, 1}, cs); }
 
         static inline int compare(const QString &s1, const QString &s2,
                                   Qt::CaseSensitivity cs = Qt::CaseSensitive) noexcept
         { return s1.compare(s2, cs); }
 
-        static inline int compare(const QString &s1, QLatin1StringView s2,
-                                  Qt::CaseSensitivity cs = Qt::CaseSensitive) noexcept
-        { return s1.compare(s2, cs); }
-        static inline int compare(QLatin1StringView s1, const QString &s2,
-                                  Qt::CaseSensitivity cs = Qt::CaseSensitive) noexcept
-        { return -s2.compare(s1, cs); }
-        static int compare(const QString &s1, QStringView s2, Qt::CaseSensitivity cs = Qt::CaseSensitive) noexcept
-        { return s1.compare(s2, cs); }
-        static int compare(QStringView s1, const QString &s2, Qt::CaseSensitivity cs = Qt::CaseSensitive) noexcept
-        { return -s2.compare(s1, cs); }
+        //static inline int compare(const QString &s1, QLatin1StringView s2,
+                                  //Qt::CaseSensitivity cs = Qt::CaseSensitive) noexcept
+        //{ return s1.compare(s2, cs); }
+        //static inline int compare(QLatin1StringView s1, const QString &s2,
+                                  //Qt::CaseSensitivity cs = Qt::CaseSensitive) noexcept
+        //{ return -s2.compare(s1, cs); }
+        //static int compare(const QString &s1, QStringView s2, Qt::CaseSensitivity cs = Qt::CaseSensitive) noexcept
+        //{ return s1.compare(s2, cs); }
+        //static int compare(QStringView s1, const QString &s2, Qt::CaseSensitivity cs = Qt::CaseSensitive) noexcept
+        //{ return -s2.compare(s1, cs); }
 
         int localeAwareCompare(const QString& s) const;
-        inline int localeAwareCompare(QStringView s) const;
+        //inline int localeAwareCompare(QStringView s) const;
         static int localeAwareCompare(const QString& s1, const QString& s2)
         { return s1.localeAwareCompare(s2); }
 
-        static inline int localeAwareCompare(QStringView s1, QStringView s2);
+        //static inline int localeAwareCompare(QStringView s1, QStringView s2);
 
         short toShort(bool *ok=nullptr, int base=10) const
         { return toIntegral_helper<short>(*this, ok, base); }
@@ -770,9 +770,9 @@
         static QString number(double, char format='g', int precision=6);
 
         friend bool comparesEqual(const QString &s1, const QString &s2) noexcept
-        { return comparesEqual(QStringView(s1), QStringView(s2)); }
+        { return false/*comparesEqual(QStringView(s1), QStringView(s2))*/; }
         friend Qt::strong_ordering compareThreeWay(const QString &s1, const QString &s2) noexcept
-        { return compareThreeWay(QStringView(s1), QStringView(s2)); }
+        { return Qt::strong_ordering::less/*compareThreeWay(QStringView(s1), QStringView(s2))*/; }
         Q_DECLARE_STRONGLY_ORDERED(QString)
 
         Q_WEAK_OVERLOAD
@@ -812,9 +812,9 @@
         Q_DECLARE_STRONGLY_ORDERED(QString, std::nullptr_t)
 
         friend bool comparesEqual(const QString &s1, const char16_t *s2) noexcept
-        { return comparesEqual(s1, QStringView(s2)); }
+        { return false/*comparesEqual(s1, QStringView(s2))*/; }
         friend Qt::strong_ordering compareThreeWay(const QString &s1, const char16_t *s2) noexcept
-        { return compareThreeWay(s1, QStringView(s2)); }
+        { return Qt::strong_ordering::less/*compareThreeWay(s1, QStringView(s2))*/; }
         Q_DECLARE_STRONGLY_ORDERED(QString, const char16_t *)
 
         // QChar <> QString
@@ -1001,7 +1001,7 @@
 
         bool isRightToLeft() const;
         [[nodiscard]] bool isValidUtf16() const noexcept
-        { return QStringView(*this).isValidUtf16(); }
+        { return false/*QStringView(*this).isValidUtf16()*/; }
 
         QString(qsizetype size, Qt::Initialization);
         explicit QString(DataPointer &&dd) : d(std::move(dd)) {}
@@ -1053,8 +1053,8 @@
         static qsizetype toUcs4_helper(const ushort *uc, qsizetype length, uint *out);
     #endif
         static qsizetype toUcs4_helper(const char16_t *uc, qsizetype length, char32_t *out);
-        static qlonglong toIntegral_helper(QStringView string, bool *ok, int base);
-        static qulonglong toIntegral_helper(QStringView string, bool *ok, uint base);
+        //static qlonglong toIntegral_helper(QStringView string, bool *ok, int base);
+        //static qulonglong toIntegral_helper(QStringView string, bool *ok, uint base);
         template <typename Predicate>
         qsizetype removeIf_helper(Predicate pred)
         {
@@ -1064,27 +1064,27 @@
             return result;
         }
 
-        friend class QStringView;
+        //friend class QStringView;
         friend class QByteArray;
         friend struct QAbstractConcatenable;
         template <typename T> friend qsizetype erase(QString &s, const T &t);
         template <typename Predicate> friend qsizetype erase_if(QString &s, Predicate pred);
 
-        template <typename T> static
-        T toIntegral_helper(QStringView string, bool *ok, int base)
-        {
-            using Int64 = typename std::conditional<std::is_unsigned<T>::value, qulonglong, qlonglong>::type;
-            using Int32 = typename std::conditional<std::is_unsigned<T>::value, uint, int>::type;
+        //template <typename T> static
+        //T toIntegral_helper(QStringView string, bool *ok, int base)
+        //{
+        //    using Int64 = typename std::conditional<std::is_unsigned<T>::value, qulonglong, qlonglong>::type;
+        //    using Int32 = typename std::conditional<std::is_unsigned<T>::value, uint, int>::type;
 
-            // we select the right overload by casting base to int or uint
-            Int64 val = toIntegral_helper(string, ok, Int32(base));
-            if (T(val) != val) {
-                if (ok)
-                    *ok = false;
-                val = 0;
-            }
-            return T(val);
-        }
+        //    // we select the right overload by casting base to int or uint
+        //    Int64 val = toIntegral_helper(string, ok, Int32(base));
+        //    if (T(val) != val) {
+        //        if (ok)
+        //            *ok = false;
+        //        val = 0;
+        //    }
+        //    return T(val);
+        //}
 
         Q_ALWAYS_INLINE constexpr void verify([[maybe_unused]] qsizetype pos = 0,
                                               [[maybe_unused]] qsizetype n = 1) const
@@ -1117,16 +1117,15 @@
     // QStringView inline members that require QUtf8StringView:
     //
 
-    int QStringView::compare(QUtf8StringView other, Qt::CaseSensitivity cs) const noexcept
-    { return QtPrivate::compareStrings(*this, other, cs); }
+    //int QStringView::compare(QUtf8StringView other, Qt::CaseSensitivity cs) const noexcept
+    //{ return QtPrivate::compareStrings(*this, other, cs); }
 
     //
     // QStringView inline members that require QString:
     //
 
-    QString QStringView::toString() const
+    /*QString QStringView::toString() const
     { return QString(*this); }
-
     qint64 QStringView::toLongLong(bool *ok, int base) const
     { return QString::toIntegral_helper<qint64>(*this, ok, base); }
     quint64 QStringView::toULongLong(bool *ok, int base) const
@@ -1142,7 +1141,7 @@
     short QStringView::toShort(bool *ok, int base) const
     { return QString::toIntegral_helper<short>(*this, ok, base); }
     ushort QStringView::toUShort(bool *ok, int base) const
-    { return QString::toIntegral_helper<ushort>(*this, ok, base); }
+    { return QString::toIntegral_helper<ushort>(*this, ok, base); }*/
 
     //
     // QUtf8StringView inline members that require QStringView:
@@ -1299,16 +1298,16 @@
         return qToStringViewIgnoringNull(*this).toWCharArray(array);
     }
 
-    qsizetype QStringView::toWCharArray(wchar_t *array) const
-    {
-        if (sizeof(wchar_t) == sizeof(QChar)) {
-            if (auto src = data())
-                memcpy(array, src, sizeof(QChar) * size());
-            return size();
-        } else {
-            return QString::toUcs4_helper(utf16(), size(), reinterpret_cast<char32_t *>(array));
-        }
-    }
+    //qsizetype QStringView::toWCharArray(wchar_t *array) const
+    //{
+    //    if (sizeof(wchar_t) == sizeof(QChar)) {
+    //        if (auto src = data())
+    //            memcpy(array, src, sizeof(QChar) * size());
+    //        return size();
+    //    } else {
+    //        return QString::toUcs4_helper(utf16(), size(), reinterpret_cast<char32_t *>(array));
+    //    }
+    //}
 
     QT_WARNING_POP
 
@@ -1370,12 +1369,12 @@
     { return reinterpret_cast<const QChar*>(d.data() + d.size); }
     bool QString::contains(const QString &s, Qt::CaseSensitivity cs) const
     { return indexOf(s, 0, cs) != -1; }
-    bool QString::contains(QLatin1StringView s, Qt::CaseSensitivity cs) const
-    { return indexOf(s, 0, cs) != -1; }
+    //bool QString::contains(QLatin1StringView s, Qt::CaseSensitivity cs) const
+    //{ return indexOf(s, 0, cs) != -1; }
     bool QString::contains(QChar c, Qt::CaseSensitivity cs) const
     { return indexOf(c, 0, cs) != -1; }
-    bool QString::contains(QStringView s, Qt::CaseSensitivity cs) const noexcept
-    { return indexOf(s, 0, cs) != -1; }
+    //bool QString::contains(QStringView s, Qt::CaseSensitivity cs) const noexcept
+    //{ return indexOf(s, 0, cs) != -1; }
 
     #if !defined(QT_NO_CAST_FROM_ASCII) && !defined(QT_RESTRICTED_CAST_FROM_ASCII)
     #if QT_CORE_REMOVED_SINCE(6, 8)
@@ -1495,15 +1494,14 @@
     Q_DECLARE_SHARED(QString)
     Q_DECLARE_OPERATORS_FOR_FLAGS(QString::SectionFlags)
 
-    int QString::compare(QStringView s, Qt::CaseSensitivity cs) const noexcept
-    { return -s.compare(*this, cs); }
-
-    int QString::localeAwareCompare(QStringView s) const
-    { return localeAwareCompare_helper(constData(), size(), s.constData(), s.size()); }
-    int QString::localeAwareCompare(QStringView s1, QStringView s2)
-    { return localeAwareCompare_helper(s1.constData(), s1.size(), s2.constData(), s2.size()); }
-    int QStringView::localeAwareCompare(QStringView other) const
-    { return QString::localeAwareCompare(*this, other); }
+    //int QString::compare(QStringView s, Qt::CaseSensitivity cs) const noexcept
+    //{ return -s.compare(*this, cs); }
+    //int QString::localeAwareCompare(QStringView s) const
+    //{ return localeAwareCompare_helper(constData(), size(), s.constData(), s.size()); }
+    //int QString::localeAwareCompare(QStringView s1, QStringView s2)
+    //{ return localeAwareCompare_helper(s1.constData(), s1.size(), s2.constData(), s2.size()); }
+    //int QStringView::localeAwareCompare(QStringView other) const
+    //{ return QString::localeAwareCompare(*this, other); }
 
     #if QT_CORE_INLINE_IMPL_SINCE(6, 5)
     qint64 QString::toLongLong(bool *ok, int base) const
@@ -1556,24 +1554,27 @@
 
     namespace QtPrivate {
 
-    struct ArgBase {
+    struct ArgBase
+    {
         enum Tag : uchar { L1, U8, U16 } tag;
     };
 
-    struct QStringViewArg : ArgBase {
+    /*struct QStringViewArg : ArgBase
+    {
         QStringView string;
         QStringViewArg() = default;
         constexpr explicit QStringViewArg(QStringView v) noexcept : ArgBase{U16}, string{v} {}
     };
 
-    struct QLatin1StringArg : ArgBase {
+    struct QLatin1StringArg : ArgBase
+    {
         QLatin1StringView string;
         QLatin1StringArg() = default;
         constexpr explicit QLatin1StringArg(QLatin1StringView v) noexcept : ArgBase{L1}, string{v} {}
-    };
+    };*/
 
-    [[nodiscard]] Q_CORE_EXPORT QString argToQString(QStringView pattern, size_t n, const ArgBase **args);
-    [[nodiscard]] Q_CORE_EXPORT QString argToQString(QLatin1StringView pattern, size_t n, const ArgBase **args);
+    //[[nodiscard]] Q_CORE_EXPORT QString argToQString(QStringView pattern, size_t n, const ArgBase **args);
+    //[[nodiscard]] Q_CORE_EXPORT QString argToQString(QLatin1StringView pattern, size_t n, const ArgBase **args);
 
     template <typename StringView, typename...Args>
     [[nodiscard]] Q_ALWAYS_INLINE QString argToQStringDispatch(StringView pattern, const Args &...args)
@@ -1582,26 +1583,26 @@
         return QtPrivate::argToQString(pattern, sizeof...(Args), argBases);
     }
 
-              inline QStringViewArg   qStringLikeToArg(const QString &s) noexcept { return QStringViewArg{qToStringViewIgnoringNull(s)}; }
-    constexpr inline QStringViewArg   qStringLikeToArg(QStringView s) noexcept { return QStringViewArg{s}; }
-              inline QStringViewArg   qStringLikeToArg(const QChar &c) noexcept { return QStringViewArg{QStringView{&c, 1}}; }
-    constexpr inline QLatin1StringArg qStringLikeToArg(QLatin1StringView s) noexcept { return QLatin1StringArg{s}; }
+    //inline QStringViewArg   qStringLikeToArg(const QString &s) noexcept { return QStringViewArg{qToStringViewIgnoringNull(s)}; }
+    //constexpr inline QStringViewArg   qStringLikeToArg(QStringView s) noexcept { return QStringViewArg{s}; }
+    //inline QStringViewArg   qStringLikeToArg(const QChar &c) noexcept { return QStringViewArg{QStringView{&c, 1}}; }
+    //constexpr inline QLatin1StringArg qStringLikeToArg(QLatin1StringView s) noexcept { return QLatin1StringArg{s}; }
 
     } // namespace QtPrivate
 
-    template <typename...Args>
-    Q_ALWAYS_INLINE
-    QString QStringView::arg(Args &&...args) const
-    {
-        return QtPrivate::argToQStringDispatch(*this, QtPrivate::qStringLikeToArg(args)...);
-    }
+    //template <typename...Args>
+    //Q_ALWAYS_INLINE
+    //QString QStringView::arg(Args &&...args) const
+    //{
+    //    return QtPrivate::argToQStringDispatch(*this, QtPrivate::qStringLikeToArg(args)...);
+    //}
 
-    template <typename...Args>
-    Q_ALWAYS_INLINE
-    QString QLatin1StringView::arg(Args &&...args) const
-    {
-        return QtPrivate::argToQStringDispatch(*this, QtPrivate::qStringLikeToArg(args)...);
-    }
+    //template <typename...Args>
+    //Q_ALWAYS_INLINE
+    //QString QLatin1StringView::arg(Args &&...args) const
+    //{
+    //    return QtPrivate::argToQStringDispatch(*this, QtPrivate::qStringLikeToArg(args)...);
+    //}
 
     template <typename T>
     qsizetype erase(QString &s, const T &t)

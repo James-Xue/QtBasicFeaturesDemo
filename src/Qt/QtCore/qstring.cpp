@@ -2,7 +2,7 @@
 //#include "qstringlist.h"
 
 #if QT_CONFIG(regularexpression)
-    #include "qregularexpression.h"
+    //#include "qregularexpression.h"
 #endif
 
 //#include <private/qunicodetables_p.h>
@@ -74,7 +74,7 @@ QT_BEGIN_NAMESPACE
 const char16_t QString::_empty = 0;
 
 // in qstringmatcher.cpp
-qsizetype qFindStringBoyerMoore(QStringView haystack, qsizetype from, QStringView needle, Qt::CaseSensitivity cs);
+//qsizetype qFindStringBoyerMoore(QStringView haystack, qsizetype from, QStringView needle, Qt::CaseSensitivity cs);
 
 namespace
 {
@@ -697,86 +697,86 @@ qsizetype QtPrivate::qustrnlen(const char16_t *str, qsizetype maxlen) noexcept
  * character is not found, this function returns a pointer to the end of the
  * string -- that is, \c{str.end()}.
  */
-Q_NEVER_INLINE
-const char16_t *QtPrivate::qustrchr(QStringView str, char16_t c) noexcept
-{
-    const char16_t *n = str.utf16();
-    const char16_t *e = n + str.size();
-
-#ifdef __SSE2__
-    bool loops = true;
-    // Using the PMOVMSKB instruction, we get two bits for each character
-    // we compare.
-    __m128i mch;
-    if constexpr (UseAvx2) {
-        // we're going to read n[0..15] (32 bytes)
-        __m256i mch256 = _mm256_set1_epi32(c | (c << 16));
-        for (const char16_t *next = n + 16; next <= e; n = next, next += 16) {
-            __m256i data = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(n));
-            __m256i result = _mm256_cmpeq_epi16(data, mch256);
-            uint mask = uint(_mm256_movemask_epi8(result));
-            if (mask) {
-                uint idx = qCountTrailingZeroBits(mask);
-                return n + idx / 2;
-            }
-        }
-        loops = false;
-        mch = _mm256_castsi256_si128(mch256);
-    } else {
-        mch = _mm_set1_epi32(c | (c << 16));
-    }
-
-    auto hasMatch = [mch, &n](__m128i data, ushort validityMask) {
-        __m128i result = _mm_cmpeq_epi16(data, mch);
-        uint mask = uint(_mm_movemask_epi8(result));
-        if ((mask & validityMask) == 0)
-            return false;
-        uint idx = qCountTrailingZeroBits(mask);
-        n += idx / 2;
-        return true;
-    };
-
-    // we're going to read n[0..7] (16 bytes)
-    for (const char16_t *next = n + 8; next <= e; n = next, next += 8) {
-        __m128i data = _mm_loadu_si128(reinterpret_cast<const __m128i *>(n));
-        if (hasMatch(data, 0xffff))
-            return n;
-
-        if (!loops) {
-            n += 8;
-            break;
-        }
-    }
-
-#if !defined(__OPTIMIZE_SIZE__)
-    // we're going to read n[0..3] (8 bytes)
-    if (e - n > 3) {
-        __m128i data = _mm_loadl_epi64(reinterpret_cast<const __m128i *>(n));
-        if (hasMatch(data, 0xff))
-            return n;
-
-        n += 4;
-    }
-
-    return UnrollTailLoop<3>::exec(e - n, e,
-                                   [=](qsizetype i) { return n[i] == c; },
-                                   [=](qsizetype i) { return n + i; });
-#endif
-#elif defined(__ARM_NEON__)
-    const uint16x8_t vmask = qvsetq_n_u16(1, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7);
-    const uint16x8_t ch_vec = vdupq_n_u16(c);
-    for (const char16_t *next = n + 8; next <= e; n = next, next += 8) {
-        uint16x8_t data = vld1q_u16(reinterpret_cast<const uint16_t *>(n));
-        uint mask = vaddvq_u16(vandq_u16(vceqq_u16(data, ch_vec), vmask));
-        if (ushort(mask)) {
-            // found a match
-            return n + qCountTrailingZeroBits(mask);
-        }
-    }
-#endif // aarch64
-
-    return std::find(n, e, c);
-}
+//Q_NEVER_INLINE
+//const char16_t *QtPrivate::qustrchr(QStringView str, char16_t c) noexcept
+//{
+//    const char16_t *n = str.utf16();
+//    const char16_t *e = n + str.size();
+//
+//#ifdef __SSE2__
+//    bool loops = true;
+//    // Using the PMOVMSKB instruction, we get two bits for each character
+//    // we compare.
+//    __m128i mch;
+//    if constexpr (UseAvx2) {
+//        // we're going to read n[0..15] (32 bytes)
+//        __m256i mch256 = _mm256_set1_epi32(c | (c << 16));
+//        for (const char16_t *next = n + 16; next <= e; n = next, next += 16) {
+//            __m256i data = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(n));
+//            __m256i result = _mm256_cmpeq_epi16(data, mch256);
+//            uint mask = uint(_mm256_movemask_epi8(result));
+//            if (mask) {
+//                uint idx = qCountTrailingZeroBits(mask);
+//                return n + idx / 2;
+//            }
+//        }
+//        loops = false;
+//        mch = _mm256_castsi256_si128(mch256);
+//    } else {
+//        mch = _mm_set1_epi32(c | (c << 16));
+//    }
+//
+//    auto hasMatch = [mch, &n](__m128i data, ushort validityMask) {
+//        __m128i result = _mm_cmpeq_epi16(data, mch);
+//        uint mask = uint(_mm_movemask_epi8(result));
+//        if ((mask & validityMask) == 0)
+//            return false;
+//        uint idx = qCountTrailingZeroBits(mask);
+//        n += idx / 2;
+//        return true;
+//    };
+//
+//    // we're going to read n[0..7] (16 bytes)
+//    for (const char16_t *next = n + 8; next <= e; n = next, next += 8) {
+//        __m128i data = _mm_loadu_si128(reinterpret_cast<const __m128i *>(n));
+//        if (hasMatch(data, 0xffff))
+//            return n;
+//
+//        if (!loops) {
+//            n += 8;
+//            break;
+//        }
+//    }
+//
+//#if !defined(__OPTIMIZE_SIZE__)
+//    // we're going to read n[0..3] (8 bytes)
+//    if (e - n > 3) {
+//        __m128i data = _mm_loadl_epi64(reinterpret_cast<const __m128i *>(n));
+//        if (hasMatch(data, 0xff))
+//            return n;
+//
+//        n += 4;
+//    }
+//
+//    return UnrollTailLoop<3>::exec(e - n, e,
+//                                   [=](qsizetype i) { return n[i] == c; },
+//                                   [=](qsizetype i) { return n + i; });
+//#endif
+//#elif defined(__ARM_NEON__)
+//    const uint16x8_t vmask = qvsetq_n_u16(1, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7);
+//    const uint16x8_t ch_vec = vdupq_n_u16(c);
+//    for (const char16_t *next = n + 8; next <= e; n = next, next += 8) {
+//        uint16x8_t data = vld1q_u16(reinterpret_cast<const uint16_t *>(n));
+//        uint mask = vaddvq_u16(vandq_u16(vceqq_u16(data, ch_vec), vmask));
+//        if (ushort(mask)) {
+//            // found a match
+//            return n + qCountTrailingZeroBits(mask);
+//        }
+//    }
+//#endif // aarch64
+//
+//    return std::find(n, e, c);
+//}
 
 /*!
  * \internal
@@ -785,15 +785,15 @@ const char16_t *QtPrivate::qustrchr(QStringView str, char16_t c) noexcept
  * returns a pointer to it. Iif the character is not found, this function
  * returns a pointer to the end of the string -- that is, \c{str.end()}.
  */
-Q_NEVER_INLINE
-const char16_t *QtPrivate::qustrcasechr(QStringView str, char16_t c) noexcept
-{
-    const QChar *n = str.begin();
-    const QChar *e = str.end();
-    c = foldCase(c);
-    auto it = std::find_if(n, e, [c](auto ch) { return foldAndCompare(ch, QChar(c)); });
-    return reinterpret_cast<const char16_t *>(it);
-}
+//Q_NEVER_INLINE
+//const char16_t *QtPrivate::qustrcasechr(QStringView str, char16_t c) noexcept
+//{
+//    const QChar *n = str.begin();
+//    const QChar *e = str.end();
+//    c = foldCase(c);
+//    auto it = std::find_if(n, e, [c](auto ch) { return foldAndCompare(ch, QChar(c)); });
+//    return reinterpret_cast<const char16_t *>(it);
+//}
 
 // Note: ptr on output may be off by one and point to a preceding US-ASCII
 // character. Usually harmless.
@@ -888,47 +888,47 @@ static bool isAscii_helper(const char16_t *&ptr, const char16_t *end)
     return true;
 }
 
-bool QtPrivate::isAscii(QStringView s) noexcept
-{
-    const char16_t *ptr = s.utf16();
-    const char16_t *end = ptr + s.size();
-
-    return isAscii_helper(ptr, end);
-}
-
-bool QtPrivate::isLatin1(QStringView s) noexcept
-{
-    const char16_t *ptr = s.utf16();
-    const char16_t *end = ptr + s.size();
-
-#ifdef __SSE2__
-    const char *ptr8 = reinterpret_cast<const char *>(ptr);
-    const char *end8 = reinterpret_cast<const char *>(end);
-    if (!simdTestMask(ptr8, end8, 0xff00ff00))
-        return false;
-    ptr = reinterpret_cast<const char16_t *>(ptr8);
-#endif
-
-    while (ptr != end) {
-        if (*ptr++ > 0xff)
-            return false;
-    }
-    return true;
-}
-
-bool QtPrivate::isValidUtf16(QStringView s) noexcept
-{
-    constexpr char32_t InvalidCodePoint = UINT_MAX;
-
-    QStringIterator i(s);
-    while (i.hasNext()) {
-        const char32_t c = i.next(InvalidCodePoint);
-        if (c == InvalidCodePoint)
-            return false;
-    }
-
-    return true;
-}
+//bool QtPrivate::isAscii(QStringView s) noexcept
+//{
+//    const char16_t *ptr = s.utf16();
+//    const char16_t *end = ptr + s.size();
+//
+//    return isAscii_helper(ptr, end);
+//}
+//
+//bool QtPrivate::isLatin1(QStringView s) noexcept
+//{
+//    const char16_t *ptr = s.utf16();
+//    const char16_t *end = ptr + s.size();
+//
+//#ifdef __SSE2__
+//    const char *ptr8 = reinterpret_cast<const char *>(ptr);
+//    const char *end8 = reinterpret_cast<const char *>(end);
+//    if (!simdTestMask(ptr8, end8, 0xff00ff00))
+//        return false;
+//    ptr = reinterpret_cast<const char16_t *>(ptr8);
+//#endif
+//
+//    while (ptr != end) {
+//        if (*ptr++ > 0xff)
+//            return false;
+//    }
+//    return true;
+//}
+//
+//bool QtPrivate::isValidUtf16(QStringView s) noexcept
+//{
+//    constexpr char32_t InvalidCodePoint = UINT_MAX;
+//
+//    QStringIterator i(s);
+//    while (i.hasNext()) {
+//        const char32_t c = i.next(InvalidCodePoint);
+//        if (c == InvalidCodePoint)
+//            return false;
+//    }
+//
+//    return true;
+//}
 
 // conversion between Latin 1 and UTF-16
 Q_CORE_EXPORT void qt_from_latin1(char16_t *dst, const char *str, size_t size) noexcept
