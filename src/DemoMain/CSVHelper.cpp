@@ -2,7 +2,6 @@
 #define QT_NO_VERSION_TAGGING
 #include <QtCore/qchar.h>
 #include <QtCore/qstring.h>
-//#include <QtCore/qfile.h>
 
 // Self
 #include "CSVHelper.h"
@@ -13,7 +12,7 @@ namespace Demo
     CSVHelper::CSVHelper()
     {
         QChar chTest;
-        //QString sTest;
+        QString sTest;
     }
 
     CSVHelper::~CSVHelper()
