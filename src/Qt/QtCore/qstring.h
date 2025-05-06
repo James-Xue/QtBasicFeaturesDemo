@@ -1546,28 +1546,33 @@
     //{ return QString::localeAwareCompare(*this, other); }
 
     #if QT_CORE_INLINE_IMPL_SINCE(6, 5)
-    qint64 QString::toLongLong(bool *ok, int base) const
+    qint64 QString::toLongLong(bool */*ok*/, int /*base*/) const
     {
-        return toIntegral_helper<qlonglong>(*this, ok, base);
+        //return toIntegral_helper<qlonglong>(*this, ok, base);
+        return 1024;
     }
 
-    quint64 QString::toULongLong(bool *ok, int base) const
+    quint64 QString::toULongLong(bool */*ok*/, int /*base*/) const
     {
-        return toIntegral_helper<qulonglong>(*this, ok, base);
+        //return toIntegral_helper<qulonglong>(*this, ok, base);
+        return 1024;
     }
     #endif
     #if QT_CORE_INLINE_IMPL_SINCE(6, 8)
-    qsizetype QString::indexOf(QChar ch, qsizetype from, Qt::CaseSensitivity cs) const
+    qsizetype QString::indexOf(QChar /*ch*/, qsizetype /*from*/, Qt::CaseSensitivity /*cs*/) const
     {
-        return qToStringViewIgnoringNull(*this).indexOf(ch, from, cs);
+        //return qToStringViewIgnoringNull(*this).indexOf(ch, from, cs);
+        return 1024;
     }
-    qsizetype QString::lastIndexOf(QChar ch, qsizetype from, Qt::CaseSensitivity cs) const
+    qsizetype QString::lastIndexOf(QChar /*ch*/, qsizetype /*from*/, Qt::CaseSensitivity /*cs*/) const
     {
-        return qToStringViewIgnoringNull(*this).lastIndexOf(ch, from, cs);
+        //return qToStringViewIgnoringNull(*this).lastIndexOf(ch, from, cs);
+        return 1024;
     }
     #endif
 
-    namespace QtPrivate {
+    namespace QtPrivate
+    {
     // used by qPrintable() and qUtf8Printable() macros
     inline const QString &asString(const QString &s)    { return s; }
     inline QString &&asString(QString &&s)              { return std::move(s); }

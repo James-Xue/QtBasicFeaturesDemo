@@ -713,14 +713,14 @@
     }
     #endif
     #if QT_CORE_INLINE_IMPL_SINCE(6, 8)
-    qsizetype QByteArray::indexOf(char ch, qsizetype from) const
-    {
-        return qToByteArrayViewIgnoringNull(*this).indexOf(ch, from);
-    }
-    qsizetype QByteArray::lastIndexOf(char ch, qsizetype from) const
-    {
-        return qToByteArrayViewIgnoringNull(*this).lastIndexOf(ch, from);
-    }
+    //qsizetype QByteArray::indexOf(char ch, qsizetype from) const
+    //{
+    //    return qToByteArrayViewIgnoringNull(*this).indexOf(ch, from);
+    //}
+    //qsizetype QByteArray::lastIndexOf(char ch, qsizetype from) const
+    //{
+    //    return qToByteArrayViewIgnoringNull(*this).lastIndexOf(ch, from);
+    //}
     #endif
 
     #if !defined(QT_NO_DATASTREAM) || defined(QT_BOOTSTRAPPED)
