@@ -65,15 +65,15 @@
     #error This macro has been removed in Qt 6.8.
     #endif
 
-        constexpr Q_IMPLICIT QChar() noexcept : ucs(0) {}
-        constexpr Q_IMPLICIT QChar(ushort rc) noexcept : ucs(rc) {}
+        constexpr explicit /*Q_IMPLICIT*/ QChar() noexcept : ucs(0) {}
+        constexpr explicit /*Q_IMPLICIT*/ QChar(ushort rc) noexcept : ucs(rc) {}
         constexpr explicit QChar(uchar c, uchar r) noexcept : ucs(char16_t((r << 8) | c)) {}
-        constexpr Q_IMPLICIT QChar(short rc) noexcept : ucs(char16_t(rc)) {}
+        constexpr explicit /*Q_IMPLICIT*/ QChar(short rc) noexcept : ucs(char16_t(rc)) {}
         constexpr explicit QChar(uint rc) noexcept : ucs((Q_ASSERT(rc <= 0xffff), char16_t(rc))) {}
         constexpr explicit QChar(int rc) noexcept : QChar(uint(rc)) {}
-        constexpr Q_IMPLICIT QChar(SpecialCharacter s) noexcept : ucs(char16_t(s)) {}
-        constexpr Q_IMPLICIT QChar(QLatin1Char ch) noexcept : ucs(ch.unicode()) {}
-        constexpr Q_IMPLICIT QChar(char16_t ch) noexcept : ucs(ch) {}
+        constexpr explicit /*Q_IMPLICIT*/ QChar(SpecialCharacter s) noexcept : ucs(char16_t(s)) {}
+        constexpr explicit /*Q_IMPLICIT*/ QChar(QLatin1Char ch) noexcept : ucs(ch.unicode()) {}
+        constexpr explicit /*Q_IMPLICIT*/ QChar(char16_t ch) noexcept : ucs(ch) {}
     #if defined(Q_OS_WIN) || defined(Q_QDOC)
         constexpr Q_IMPLICIT QChar(wchar_t ch) noexcept : ucs(char16_t(ch)) {}
     #endif
@@ -448,7 +448,7 @@
         constexpr inline char16_t unicode() const noexcept { return ucs; }
         constexpr inline char16_t &unicode() noexcept { return ucs; }
 
-        static constexpr QChar fromLatin1(char c) noexcept { return QLatin1Char(c); }
+        static constexpr QChar fromLatin1(char c) noexcept { return QChar(QLatin1Char(c)); }
 
         constexpr inline bool isNull() const noexcept { return ucs == 0; }
 
@@ -648,6 +648,18 @@
         QChar(uchar c) = delete;
     #endif
 
+    public:
+        // ========== My define ==========
+        static char32_t foldCase(const char16_t *ch, const char16_t *start);
+
+        static char32_t foldCase(char32_t ch, char32_t &last) noexcept;
+
+        static char16_t foldCase(char16_t ch) noexcept;
+
+        static QChar foldCase(QChar ch) noexcept;
+        // ========== My define ==========
+
+    private:
         char16_t ucs;
     };
     #undef QT_CHAR_FASTCALL

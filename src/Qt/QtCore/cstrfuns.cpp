@@ -219,6 +219,12 @@ int qstrnicmp(const char *str1, qsizetype len1, const char *str2, qsizetype len2
     }
 }
 
+int qstrncmp(const char *str1, const char *str2, size_t len)
+{
+    return (str1 && str2) ? strncmp(str1, str2, len)
+        : (str1 ? 1 : (str2 ? -1 : 0));
+}
+
 size_t qstrlen(const char *str)
 {
     QT_WARNING_PUSH
@@ -244,12 +250,121 @@ size_t qstrnlen(const char *str, size_t maxlen)
     return end ? end - str : maxlen;
 }
 
-int qstrncmp(const char *str1, const char *str2, size_t len)
+qsizetype qustrlen(const char16_t *str) noexcept
 {
-    return (str1 && str2) ? strncmp(str1, str2, len)
-        : (str1 ? 1 : (str2 ? -1 : 0));
+    //#if defined(__SSE2__) && !(defined(__SANITIZE_ADDRESS__) || __has_feature(address_sanitizer)) && !(defined(__SANITIZE_THREAD__) || __has_feature(thread_sanitizer))
+    //        return qustrlen_sse2(str);
+    //#endif
+
+    if constexpr (sizeof(wchar_t) == sizeof(char16_t))
+    {
+        return wcslen(reinterpret_cast<const wchar_t *>(str));
+    }
+    else
+    {
+        qsizetype result = 0;
+        while (*str++)
+        {
+            ++result;
+        }
+        return result;
+    }
 }
 
+qsizetype qustrnlen(const char16_t */*str*/, qsizetype /*maxlen*/) noexcept
+{
+    //return qustrchr({ str, maxlen }, u'\0') - str;
+    return 1024;
+}
+
+/*!
+ * \internal
+ *
+ * Searches for character \a c in the string \a str and returns a pointer to
+ * it. Unlike strchr() and wcschr() (but like glibc's strchrnul()), if the
+ * character is not found, this function returns a pointer to the end of the
+ * string -- that is, \c{str.end()}.
+ */
+ //Q_NEVER_INLINE
+ //const char16_t *QtPrivate::qustrchr(QStringView str, char16_t c) noexcept
+ //{
+ //    const char16_t *n = str.utf16();
+ //    const char16_t *e = n + str.size();
+ //
+ //#ifdef __SSE2__
+ //    bool loops = true;
+ //    // Using the PMOVMSKB instruction, we get two bits for each character
+ //    // we compare.
+ //    __m128i mch;
+ //    if constexpr (UseAvx2) {
+ //        // we're going to read n[0..15] (32 bytes)
+ //        __m256i mch256 = _mm256_set1_epi32(c | (c << 16));
+ //        for (const char16_t *next = n + 16; next <= e; n = next, next += 16) {
+ //            __m256i data = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(n));
+ //            __m256i result = _mm256_cmpeq_epi16(data, mch256);
+ //            uint mask = uint(_mm256_movemask_epi8(result));
+ //            if (mask) {
+ //                uint idx = qCountTrailingZeroBits(mask);
+ //                return n + idx / 2;
+ //            }
+ //        }
+ //        loops = false;
+ //        mch = _mm256_castsi256_si128(mch256);
+ //    } else {
+ //        mch = _mm_set1_epi32(c | (c << 16));
+ //    }
+ //
+ //    auto hasMatch = [mch, &n](__m128i data, ushort validityMask) {
+ //        __m128i result = _mm_cmpeq_epi16(data, mch);
+ //        uint mask = uint(_mm_movemask_epi8(result));
+ //        if ((mask & validityMask) == 0)
+ //            return false;
+ //        uint idx = qCountTrailingZeroBits(mask);
+ //        n += idx / 2;
+ //        return true;
+ //    };
+ //
+ //    // we're going to read n[0..7] (16 bytes)
+ //    for (const char16_t *next = n + 8; next <= e; n = next, next += 8) {
+ //        __m128i data = _mm_loadu_si128(reinterpret_cast<const __m128i *>(n));
+ //        if (hasMatch(data, 0xffff))
+ //            return n;
+ //
+ //        if (!loops) {
+ //            n += 8;
+ //            break;
+ //        }
+ //    }
+ //
+ //#if !defined(__OPTIMIZE_SIZE__)
+ //    // we're going to read n[0..3] (8 bytes)
+ //    if (e - n > 3) {
+ //        __m128i data = _mm_loadl_epi64(reinterpret_cast<const __m128i *>(n));
+ //        if (hasMatch(data, 0xff))
+ //            return n;
+ //
+ //        n += 4;
+ //    }
+ //
+ //    return UnrollTailLoop<3>::exec(e - n, e,
+ //                                   [=](qsizetype i) { return n[i] == c; },
+ //                                   [=](qsizetype i) { return n + i; });
+ //#endif
+ //#elif defined(__ARM_NEON__)
+ //    const uint16x8_t vmask = qvsetq_n_u16(1, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7);
+ //    const uint16x8_t ch_vec = vdupq_n_u16(c);
+ //    for (const char16_t *next = n + 8; next <= e; n = next, next += 8) {
+ //        uint16x8_t data = vld1q_u16(reinterpret_cast<const uint16_t *>(n));
+ //        uint mask = vaddvq_u16(vandq_u16(vceqq_u16(data, ch_vec), vmask));
+ //        if (ushort(mask)) {
+ //            // found a match
+ //            return n + qCountTrailingZeroBits(mask);
+ //        }
+ //    }
+ //#endif // aarch64
+ //
+ //    return std::find(n, e, c);
+ //}
 
 /*****************************************************************************
   // API note: this function can't process a number with more than 2.1 billion digits

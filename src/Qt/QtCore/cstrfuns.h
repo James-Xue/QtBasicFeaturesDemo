@@ -23,12 +23,15 @@
 
     int qstrnicmp(const char *str1, qsizetype len1, const char *str2, qsizetype len2);
 
+    int qstrncmp(const char *str1, const char *str2, size_t len);
+
     size_t qstrlen(const char *str);
 
     size_t qstrnlen(const char *str, size_t maxlen);
 
-    int qstrncmp(const char *str1, const char *str2, size_t len);
+    qsizetype qustrlen(const char16_t *str) noexcept;
 
+    qsizetype qustrnlen(const char16_t *str, qsizetype maxlen) noexcept;
 
     /*****************************************************************************
       // API note: this function can't process a number with more than 2.1 billion digits

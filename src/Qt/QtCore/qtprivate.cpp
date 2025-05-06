@@ -450,5 +450,4 @@ namespace QtPrivate
         //}
         return {};
     }
-
 } // namespace QtPrivate

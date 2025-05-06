@@ -19,10 +19,6 @@
 
     namespace QtPrivate
     {
-        [[nodiscard]] Q_CORE_EXPORT Q_DECL_PURE_FUNCTION qsizetype qustrlen(const char16_t *str) noexcept;
-
-        [[nodiscard]] Q_CORE_EXPORT Q_DECL_PURE_FUNCTION qsizetype qustrnlen(const char16_t *str, qsizetype maxlen) noexcept;
-
         [[nodiscard]] Q_CORE_EXPORT Q_DECL_PURE_FUNCTION const char16_t *qustrchr(QStringView str, char16_t ch) noexcept;
 
         [[nodiscard]] Q_CORE_EXPORT Q_DECL_PURE_FUNCTION const char16_t *qustrcasechr(QStringView str, char16_t ch) noexcept;
