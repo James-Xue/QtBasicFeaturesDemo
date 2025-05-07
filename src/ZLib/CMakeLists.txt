@@ -29,6 +29,29 @@ target_include_directories(${MODULE_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../Qt/QtCore
 )
 
+
+# Set the output directory for the executable
+set(RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/bin")
+set(RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin")
+
+# get_target_property(ZLIB_BINARY_DIR ${MODULE_NAME} RUNTIME_OUTPUT_DIRECTORY)
+message(STATUS "ZLib binary directory (CMAKE_BINARY_DIR): ${CMAKE_BINARY_DIR}")
+message(STATUS "ZLib binary directory (RUNTIME_OUTPUT_DIRECTORY): ${RUNTIME_OUTPUT_DIRECTORY}")
+message(STATUS "ZLib binary directory (Debug): ${RUNTIME_OUTPUT_DIRECTORY_DEBUG}")
+message(STATUS "ZLib binary directory (Release): ${RUNTIME_OUTPUT_DIRECTORY_RELEASE}")
+
+# Copy the .dll and .pdb files to the output directory
+add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:${MODULE_NAME}> # Copy the .dll file
+        ${RUNTIME_OUTPUT_DIRECTORY}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_PDB_FILE:${MODULE_NAME}> # Copy the .pdb file (if it exists)
+        ${RUNTIME_OUTPUT_DIRECTORY}
+    COMMENT "Copying ${MODULE_NAME}'s .dll and .pdb files to ${RUNTIME_OUTPUT_DIRECTORY}"
+)
+
 #qt_internal_add_3rdparty_library(BundledZLIB
 #    STATIC
 #    SKIP_AUTOMOC

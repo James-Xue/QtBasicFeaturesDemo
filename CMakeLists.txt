@@ -37,10 +37,10 @@ else()
 endif()
 
 if(MSVC)
-add_compile_options(
-    -MP # Enable multi-threaded precompiled headers
-    -INCREMENTAL # Enable incremental linking    
-)
+    add_compile_options(
+        -MP # Enable multi-threaded precompiled headers
+        -INCREMENTAL # Enable incremental linking    
+    )
 endif()
 
 # Define UNICODE and _UNICODE for all targets
