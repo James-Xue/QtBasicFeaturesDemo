@@ -1,16 +1,16 @@
-// Copyright (C) 2020 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com, author Marc Mutz <marc.mutz@kdab.com>
-// Copyright (C) 2019 Mail.ru Group.
-
 #ifndef QSTRINGVIEW_H
     #define QSTRINGVIEW_H
 
+    // Qt
     #include <QtCore/qchar.h>
     #include <QtCore/qcompare.h>
     #include <QtCore/qcontainerfwd.h>
     #include <QtCore/qbytearray.h>
     #include <QtCore/qstringfwd.h>
-    #include <QtCore/qstringliteral.h>
-    #include <QtCore/qstringalgorithms.h>
+    //#include <QtCore/qstringliteral.h>
+    //#include <QtCore/qstringalgorithms.h>
+
+    // STL
     #include <string>
     #include <string_view>
     #include <QtCore/q20type_traits.h>
