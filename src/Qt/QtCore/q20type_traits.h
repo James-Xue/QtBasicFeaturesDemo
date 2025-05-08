@@ -1,5 +1,3 @@
-// Copyright (C) 2021 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com, author Marc Mutz <marc.mutz@kdab.com>
-
 #ifndef Q20TYPE_TRAITS_H
     #define Q20TYPE_TRAITS_H
 
@@ -55,7 +53,7 @@
                 return false;
             #elif __has_builtin(__builtin_is_constant_evaluated) || \
                 (defined(Q_CC_MSVC_ONLY) /* >= 1925, but we require 1927 in qglobal.h */)
-            #  define QT_SUPPORTS_IS_CONSTANT_EVALUATED
+                #define QT_SUPPORTS_IS_CONSTANT_EVALUATED
                 return __builtin_is_constant_evaluated();
             #else
                 return false;
