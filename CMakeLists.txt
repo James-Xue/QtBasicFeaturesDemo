@@ -10,11 +10,11 @@ project(BioSense)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 # Add compile options for all targets
 # This will ensure that all targets in the project
 # will use the same compile options, making it easier
 # to maintain consistency across the project
-
 if (MSVC)
     # Enable additional warnings for MSVC
     add_compile_options(

@@ -1,0 +1,14 @@
+{
+    "name": "Network",
+    "repository": "qtbase",
+    "version": "6.8.2",
+    "plugin_types": ["networkaccess", "networkinformation", "tls"],
+    "built_with": {
+        "compiler_id": "MSVC",
+        "compiler_target": "",
+        "compiler_version": "19.42.34435.0",
+        "cross_compiled": false,
+        "target_system": "Windows",
+        "architecture": "x86_64"
+    }
+}

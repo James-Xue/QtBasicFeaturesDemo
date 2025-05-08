@@ -12,6 +12,16 @@ source_group("Source Files" FILES ${SOURCES})
 # Set the output directory for the executable
 add_executable(${MODULE_NAME} ${SOURCES} ${HEADERS})
 
+# Find the Qt6 package
+# This will find the Qt6 package and all its components
+# that are required for the project. The components are specified
+# in the find_package command, and can be modified as needed.
+set(Qt6_DIR "../../lib//Qt_6_8_2/lib/cmake/Qt6")
+find_package(Qt6 COMPONENTS Widgets REQUIRED)
+
+# Link against the Qt6Widgets library
+target_link_libraries(${MODULE_NAME} PRIVATE Qt6::Widgets)
+
 # Link against the QtCore dynamic library
 # target_link_libraries(${MODULE_NAME} PRIVATE QtCore)
 
@@ -20,17 +30,16 @@ target_include_directories(${MODULE_NAME} PRIVATE
     # ${CMAKE_SOURCE_DIR}/src/Qt
 )
 
+# Set the output directory for the executable
+set(RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(RUNTIME_OUTPUT_DIRECTORY_DEBUG "${RUNTIME_OUTPUT_DIRECTORY}/debug")
+set(RUNTIME_OUTPUT_DIRECTORY_RELEASE "${RUNTIME_OUTPUT_DIRECTORY}/release")
+
 # Debug postfix for debug builds
 set_target_properties(${MODULE_NAME} PROPERTIES
     DEBUG_POSTFIX "_d"
 )
 
-# Set the output directory for the executable
-set(RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-set(RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/bin")
-set(RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin")
-
-# get_target_property(DEMO_BINARY_DIR ${MODULE_NAME} RUNTIME_OUTPUT_DIRECTORY)
 # message(STATUS "Demo binary directory (CMAKE_BINARY_DIR): ${CMAKE_BINARY_DIR}")
 # message(STATUS "Demo binary directory (RUNTIME_OUTPUT_DIRECTORY): ${RUNTIME_OUTPUT_DIRECTORY}")
 # message(STATUS "Demo binary directory (Debug): ${RUNTIME_OUTPUT_DIRECTORY_DEBUG}")
@@ -42,17 +51,17 @@ set(RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin")
 add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:${MODULE_NAME}> # Copy the .exe file
-        ${RUNTIME_OUTPUT_DIRECTORY}
+        ${RUNTIME_OUTPUT_DIRECTORY_DEBUG}
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_PDB_FILE:${MODULE_NAME}> # Copy the .pdb file (if it exists)
-        ${RUNTIME_OUTPUT_DIRECTORY}
+        ${RUNTIME_OUTPUT_DIRECTORY_DEBUG}
     COMMENT "Copying ${MODULE_NAME}'s .exe and .pdb files to ${RUNTIME_OUTPUT_DIRECTORY}"
 )
 
 # Set the working directory and command for debugging in Visual Studio
 set_target_properties(${MODULE_NAME} PROPERTIES
-    VS_DEBUGGER_WORKING_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY}"
-    VS_DEBUGGER_COMMAND "${RUNTIME_OUTPUT_DIRECTORY}/${MODULE_NAME}_d.exe"
+    VS_DEBUGGER_WORKING_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY_DEBUG}"
+    VS_DEBUGGER_COMMAND "${RUNTIME_OUTPUT_DIRECTORY_DEBUG}/${MODULE_NAME}${DEBUG_POSTFIX}.exe"
 )
 
 # This is necessary for the executable to run correctly
