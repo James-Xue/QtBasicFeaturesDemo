@@ -21,8 +21,8 @@ namespace Demo
         bool ReadCSVFromFloder(const QString& sDirFullPath);
 
         // Reads a CSV file and returns a vector of strings.
-        bool ReadCSV(const std::string &sFileFullPath);
-        bool ReadCSV(const QString& sFileFullPath);
+        bool ReadCSV(const std::string& sFileFullPath, std::vector<std::string> &vctString);
+        bool ReadCSV(const QString& sFileFullPath, std::vector<std::string>& vctString);
 
         // Writes a vector of strings to a CSV file.
         //void WriteCSV(const std::string &sFileFullPath, const std::vector<std::string> &data);
@@ -30,6 +30,6 @@ namespace Demo
 
     // Member variables that are not exposed to subclasses
     private:
-        std::vector<std::string> m_vctString;
+        //std::vector<std::string> m_vctString;
     };
 }

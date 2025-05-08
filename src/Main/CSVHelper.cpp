@@ -4,6 +4,9 @@
 #include <QString>
 #include <QMessageBox>
 
+//#include <QtCharts/QChartView>
+//#include <QtCharts/QLineSeries>
+
 // Self
 #include "CSVHelper.h"
 
@@ -65,12 +68,13 @@ namespace Demo
         return true;
     }
 
-    bool CSVHelper::ReadCSV(const std::string &sFileFullPath)
+    bool CSVHelper::ReadCSV(const std::string& sFileFullPath, std::vector<std::string>& vctString)
     {
-        return ReadCSV(QString::fromStdString(sFileFullPath));
+        const QString qstrFileFullPath = QString::fromStdString(sFileFullPath);
+        return ReadCSV(qstrFileFullPath, vctString);
     }
 
-    bool CSVHelper::ReadCSV(const QString &sFileFullPath)
+    bool CSVHelper::ReadCSV(const QString& sFileFullPath, std::vector<std::string>& vctString)
     {
         // 1. Check if the file exists
         QFile oneQFile(sFileFullPath);
@@ -90,7 +94,7 @@ namespace Demo
         while (false == oneQFile.atEnd())
         {
             const QByteArray line = oneQFile.readLine();
-            m_vctString.push_back(line.toStdString());
+            vctString.push_back(line.toStdString());
             const QString str = line;
             if (true == str.trimmed().isEmpty())
             {
