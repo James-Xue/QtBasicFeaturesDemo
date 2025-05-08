@@ -4,7 +4,7 @@
 cmake_minimum_required(VERSION 3.10...4.0)
 
 # Set the project name
-project(Demo)
+project(BioSense)
 
 # Set the C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
@@ -15,24 +15,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # will use the same compile options, making it easier
 # to maintain consistency across the project
 
-
 if (MSVC)
     # Enable additional warnings for MSVC
     add_compile_options(
         /W4 # Enable level 4 warnings
         /Zc:__cplusplus # Enable C++ standard version
         /permissive- # Enable strict standard compliance
-    )
-else()
-    # Enable additional warnings for GCC/Clang
-    add_compile_options(
-        # Enable warnings
-        # GCC/Clang: Enable common warnings
-        -Wall
-        # GCC/Clang: Enable extra warnings
-        -Wextra
-        # GCC/Clang: Enable strict standard compliance warnings
-        -Wpedantic
     )
 endif()
 
