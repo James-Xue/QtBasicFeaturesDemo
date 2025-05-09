@@ -34,5 +34,6 @@
 # The folders below are created by the build system
 /.vscode
 
-# No ignore the following files
-!Lib/**
+# Ignore the following folders
+build/
+lib/
