@@ -20,7 +20,11 @@ set(Qt6_DIR "../../lib//Qt-6.9.0/lib/cmake/Qt6")
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 
 # Link against the Qt6Widgets library
-target_link_libraries(${MODULE_NAME} PRIVATE Qt6::Widgets)
+target_link_libraries(${MODULE_NAME} PRIVATE
+    Qt6::Core 
+    Qt6::Widgets
+    Qt6::Gui
+)
 
 # Link against the QtCore dynamic library
 # target_link_libraries(${MODULE_NAME} PRIVATE QtCore)
