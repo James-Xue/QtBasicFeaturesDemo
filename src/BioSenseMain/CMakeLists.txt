@@ -16,7 +16,7 @@ add_executable(${MODULE_NAME} ${SOURCES} ${HEADERS})
 # This will find the Qt6 package and all its components
 # that are required for the project. The components are specified
 # in the find_package command, and can be modified as needed.
-set(Qt6_DIR "../../lib//Qt_6_8_2/lib/cmake/Qt6")
+set(Qt6_DIR "../../lib//Qt-6.9.0/lib/cmake/Qt6")
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 
 # Link against the Qt6Widgets library
