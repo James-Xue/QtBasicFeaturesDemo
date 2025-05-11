@@ -17,12 +17,13 @@ namespace Demo
         // Core functionality
     public:
         // Reads a batch CSV files.
-        bool ReadCSVFromFloder(const std::string &sDirFullPath);
-        bool ReadCSVFromFloder(const QString &sDirFullPath);
+        bool ReadCSVFromFloder(const std::string &sDirFullPath) const;
+        bool ReadCSVFromFloder(const QString &sDirFullPath) const;
 
         // Reads a CSV file and returns a vector of strings.
-        bool ReadCSV(const std::string &sFileFullPath, std::vector<std::string> &vctString);
-        bool ReadCSV(const QString &sFileFullPath, std::vector<std::string> &vctString);
+        bool ReadCSV(const std::string &sFileFullPath, std::vector<int> &vctInt)  const;
+        bool ReadCSV(const std::string &sFileFullPath, std::vector<std::string> &vctString)  const;
+        bool ReadCSV(const QString &sFileFullPath, std::vector<std::string> &vctString)  const;
 
         // Writes a vector of strings to a CSV file.
         //void WriteCSV(const std::string &sFileFullPath, const std::vector<std::string> &data);

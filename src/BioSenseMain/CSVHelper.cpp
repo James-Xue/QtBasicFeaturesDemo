@@ -21,12 +21,12 @@ namespace Demo
     {
     }
 
-    bool CSVHelper::ReadCSVFromFloder(const std::string &sDirFullPath)
+    bool CSVHelper::ReadCSVFromFloder(const std::string &sDirFullPath) const
     {
         return ReadCSVFromFloder(QString::fromStdString(sDirFullPath));
     }
 
-    bool CSVHelper::ReadCSVFromFloder(const QString &sDirFullPath)
+    bool CSVHelper::ReadCSVFromFloder(const QString &sDirFullPath) const
     {
         // 1. Check if the folder exists
         QDir oneDir(sDirFullPath);
@@ -69,13 +69,53 @@ namespace Demo
         return true;
     }
 
-    bool CSVHelper::ReadCSV(const std::string &sFileFullPath, std::vector<std::string> &vctString)
+    bool ConvertStringsToInts(const std::vector<std::string> &vctString, std::vector<int> &vctInt)
+    {
+        vctInt.clear();
+        vctInt.reserve(vctString.size());
+
+        for (const auto &str : vctString)
+        {
+            try
+            {
+                vctInt.push_back(std::stoi(str));
+            }
+            catch ([[maybe_unused]] const std::invalid_argument &e) 
+            {
+                // 处理无法转换的字符串
+                //throw std::invalid_argument("Non-integer value found: " + str);
+                return false;
+            }
+            catch ([[maybe_unused]] const std::out_of_range &e)
+            {
+                // 处理超出 int 范围的值
+                //throw std::out_of_range("Value out of int range: " + str);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool CSVHelper::ReadCSV(const std::string &sFileFullPath, std::vector<int> &vctInt) const
+    {
+        std::vector<std::string> vctString;
+        const bool bRet = ReadCSV(sFileFullPath, vctString);
+        if (false == bRet)
+        {
+            return false;
+        }
+
+        return ConvertStringsToInts(vctString, vctInt);
+    }
+
+    bool CSVHelper::ReadCSV(const std::string &sFileFullPath, std::vector<std::string> &vctString) const
     {
         const QString qstrFileFullPath = QString::fromStdString(sFileFullPath);
         return ReadCSV(qstrFileFullPath, vctString);
     }
 
-    bool CSVHelper::ReadCSV(const QString &sFileFullPath, std::vector<std::string> &vctString)
+    bool CSVHelper::ReadCSV(const QString &sFileFullPath, std::vector<std::string> &vctString) const
     {
         // 1. Check if the file exists
         QFile oneQFile(sFileFullPath);
@@ -114,4 +154,5 @@ namespace Demo
         }
         return true;
     }
+
 } // namespace Demo

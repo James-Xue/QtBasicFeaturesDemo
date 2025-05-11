@@ -15,9 +15,11 @@
 int main(int argc, char *argv[])
 {
     // 1. read CSV file
-    //Demo::CSVHelper csvHelper;
-    //csvHelper.ReadCSV(
-    //    u8"C:/Users/52738/Documents/9_Tmp/20250116/20250116rcd84d7677220250116095027_p1.csv");
+    std::vector<int> vctInt;
+    Demo::CSVHelper csvHelper;
+    csvHelper.ReadCSV(
+        u8"C:/Users/52738/Documents/9_Tmp/20250116/20250116rcd84d7677220250116095027_p1.csv",
+        vctInt);
 
     QApplication app(argc, argv);
 
@@ -25,11 +27,11 @@ int main(int argc, char *argv[])
     QLineSeries *series = new QLineSeries();
 
     // 添加数据点
-    series->append(0, 6);
-    series->append(2, 4);
-    series->append(3, 8);
-    series->append(7, 4);
-    series->append(10, 5);
+    const int iSize = vctInt.size();
+    for (int iIdx = 0; iIdx < iSize; ++iIdx)
+    {
+        series->append(iIdx, vctInt[iIdx]);
+    }
 
     // 创建一个图表并添加系列
     QChart *chart = new QChart();
