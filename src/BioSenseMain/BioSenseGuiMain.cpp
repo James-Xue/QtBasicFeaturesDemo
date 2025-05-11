@@ -1,14 +1,12 @@
 // STL
-//#include <iostream>
+#include <iostream>
 
-//#include <QtCore/qchar.h>
+// Qt
+#include <QtWidgets/QApplication>
 
 // Self
 #include "BioSenseGuiMain.h"
 #include "CSVHelper.h"
-
-// Qt
-#include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[])
 {
@@ -51,4 +49,91 @@ int main(int argc, char *argv[])
 
     // 进入 Qt 的事件循环中
     return app.exec();
+}
+
+void CallPythonFunction(void)
+{
+    //// 1. Initialize the Python interpreter
+    //Py_Initialize();
+
+    //// 2. Import the Python module
+    //PyObject *const pName = PyUnicode_DecodeFSDefault("myModule");
+    //PyObject *const pModule = PyImport_Import(pName);
+    //Py_DECREF(pName);
+
+    //// 3. Check if the module was loaded
+    //if (nullptr == pModule)
+    //{
+    //    PyErr_Print();
+    //    std::cerr << "Failed to load 'myModule'" << std::endl;
+    //    // Finalize the Python interpreter
+    //    Py_Finalize();
+    //    return;
+    //}
+
+    //// 4. Get the function from the module
+    //PyObject *const pFunc = PyObject_GetAttrString(pModule, "myFunction");
+
+    //// 5. Check if the function was found
+    //if ((nullptr != pFunc) &&
+    //    (0 != PyCallable_Check(pFunc)))
+    //{
+    //    // 1. Call the function
+    //    PyObject *pValue = PyObject_CallObject(pFunc, nullptr);
+    //    if (nullptr != pValue)
+    //    {
+    //        std::cout << "Python function returned: " << PyLong_AsLong(pValue) << std::endl;
+    //        Py_DECREF(pValue);
+    //    }
+    //    else
+    //    {
+    //        PyErr_Print();
+    //    }
+    //    Py_XDECREF(pFunc);
+    //}
+    //else
+    //{
+    //    if (PyErr_Occurred())
+    //    {
+    //        PyErr_Print();
+    //    }
+    //    std::cerr << "Cannot find function 'my_function'" << std::endl;
+    //}
+    //Py_DECREF(pModule);
+
+    //// 6. Finalize the Python interpreter
+    //Py_Finalize();
+}
+
+void ReadCSV(void)
+{
+    Demo::CSVHelper csv;
+    //csv.ReadCSV(u8"C:/Users/52738/Documents/9_Tmp/20250116/20250116rcd84d7677220250116095027_p1.csv");
+    csv.ReadCSVFromFloder(QString::fromUtf8(u8"C:/Users/52738/Documents/9_Tmp/20250116"));
+    return;
+}
+
+int main2(int /*argc*/, char */*argv*/[])
+{
+    //// 1. Initialize the Qt application
+    //QApplication app(argc, argv);
+
+    //// 2. Create a window
+    //QWidget window;
+    //window.setFixedSize(200, 100);
+
+    //// 3. Create a button
+    //QPushButton *const pButton = new QPushButton(QString::fromUtf8(u8"Click me"), &window);
+    //pButton->setGeometry(50, 30, 100, 40);
+
+    //// 4. Connect the button's clicked signal to a custom slot
+    ////QObject::connect(pButton, &QPushButton::clicked, callPythonFunction);
+    //QObject::connect(pButton, &QPushButton::clicked, ReadCSV);
+
+    //// 5. Show the window
+    //window.show();
+
+    //// 6. Return the application to the event loop
+    //return app.exec();
+    return 0;
 }
