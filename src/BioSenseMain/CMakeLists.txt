@@ -17,17 +17,21 @@ add_executable(${MODULE_NAME} ${SOURCES} ${HEADERS})
 # that are required for the project. The components are specified
 # in the find_package command, and can be modified as needed.
 set(Qt6_DIR "../../lib//Qt-6.9.0/lib/cmake/Qt6")
-find_package(Qt6 COMPONENTS Widgets REQUIRED)
+find_package(Qt6 COMPONENTS
+    Core
+    Gui
+    Widgets
+    Charts
+    REQUIRED)
 
 # Link against the Qt6Widgets library
 target_link_libraries(${MODULE_NAME} PRIVATE
-    Qt6::Core 
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Charts
     Qt6::Widgets
     Qt6::Gui
 )
-
-# Link against the QtCore dynamic library
-# target_link_libraries(${MODULE_NAME} PRIVATE QtCore)
 
 # Specify include directories for the dependent library
 target_include_directories(${MODULE_NAME} PRIVATE
@@ -36,10 +40,10 @@ target_include_directories(${MODULE_NAME} PRIVATE
 
 # Set the output directory for the executable
 set(RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-set(CREATE_OUTPUT_DIR ON)
-if(CREATE_OUTPUT_DIR)
-    file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY})
-endif()
+# set(CREATE_OUTPUT_DIR ON)
+# if(CREATE_OUTPUT_DIR)
+#     file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY})
+# endif()
 
 # Debug postfix for debug builds
 set_target_properties(${MODULE_NAME} PROPERTIES

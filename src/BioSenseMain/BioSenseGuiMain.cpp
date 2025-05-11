@@ -2,7 +2,11 @@
 #include <iostream>
 
 // Qt
-#include <QtWidgets/QApplication>
+#include <QApplication>
+#include <QLineSeries>
+#include <QChart>
+#include <QChartView>
+#include <QMainWindow>
 
 // Self
 #include "BioSenseGuiMain.h"
@@ -17,35 +21,35 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    //// 创建一个折线系列
-    //QLineSeries *series = new QLineSeries();
+    // 创建一个折线系列
+    QLineSeries *series = new QLineSeries();
 
-    //// 添加数据点
-    //series->append(0, 6);
-    //series->append(2, 4);
-    //series->append(3, 8);
-    //series->append(7, 4);
-    //series->append(10, 5);
+    // 添加数据点
+    series->append(0, 6);
+    series->append(2, 4);
+    series->append(3, 8);
+    series->append(7, 4);
+    series->append(10, 5);
 
-    //// 创建一个图表并添加系列
-    //QChart *chart = new QChart();
-    //chart->addSeries(series);
+    // 创建一个图表并添加系列
+    QChart *chart = new QChart();
+    chart->addSeries(series);
 
-    //// 设置图表标题
-    //chart->setTitle("Simple line chart example");
+    // 设置图表标题
+    chart->setTitle("Simple line chart example");
 
-    //// 创建坐标轴
-    //chart->createDefaultAxes();
+    // 创建坐标轴
+    chart->createDefaultAxes();
 
-    //// 创建一个图表视图并设置图表
-    //QChartView *chartView = new QChartView(chart);
-    //chartView->setRenderHint(QPainter::Antialiasing);
+    // 创建一个图表视图并设置图表
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
 
-    //// 创建一个窗口并设置图表视图
-    //QMainWindow window;
-    //window.setCentralWidget(chartView);
-    //window.resize(800, 600);
-    //window.show();
+    // 创建一个窗口并设置图表视图
+    QMainWindow window;
+    window.setCentralWidget(chartView);
+    window.resize(800, 600);
+    window.show();
 
     // 进入 Qt 的事件循环中
     return app.exec();

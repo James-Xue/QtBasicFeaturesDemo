@@ -39,3 +39,15 @@ add_compile_definitions(UNICODE _UNICODE)
 # This will allow us to build the main application separately
 # from the other components of the project
 add_subdirectory(src)
+
+# Define the source and destination directories
+set(QT_BIN_DIR "${CMAKE_SOURCE_DIR}/lib/Qt-6.9.0/bin")
+set(QT_PLATFORMS_BIN_DIR "${CMAKE_SOURCE_DIR}/lib/Qt-6.9.0/plugins/platforms")
+set(OUTPUT_BIN_DIR "${CMAKE_BINARY_DIR}/bin")
+
+# Ensure the output directory exists
+file(MAKE_DIRECTORY "${OUTPUT_BIN_DIR}")
+
+# Copy all files from QT_BIN_DIR to OUTPUT_BIN_DIR during the configure phase
+file(COPY "${QT_BIN_DIR}" DESTINATION "${CMAKE_BINARY_DIR}")
+file(COPY "${QT_PLATFORMS_BIN_DIR}" DESTINATION "${OUTPUT_BIN_DIR}")
