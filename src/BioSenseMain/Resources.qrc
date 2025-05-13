@@ -1,0 +1,7 @@
+<!-- resources.qrc -->
+<RCC>
+    <qresource prefix="/">
+        <file>UI.qml</file>
+        <!-- 其他QML文件 -->
+    </qresource>
+</RCC>

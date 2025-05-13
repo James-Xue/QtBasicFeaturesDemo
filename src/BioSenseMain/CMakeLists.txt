@@ -5,12 +5,24 @@ set(MODULE_NAME BioSenseGui)
 file(GLOB SOURCES "*.cpp")
 file(GLOB HEADERS "*.h")
 
+# Define the .qrc resource files
+set(RESOURCES
+    "Resources.qrc"
+)
+
 # Organize files into filters for Visual Studio
 source_group("Header Files" FILES ${HEADERS})
 source_group("Source Files" FILES ${SOURCES})
+source_group("Resource Files" FILES ${RESOURCES})
 
 # Set the output directory for the executable
-add_executable(${MODULE_NAME} ${SOURCES} ${HEADERS})
+add_executable(${MODULE_NAME} ${SOURCES} ${HEADERS} ${RESOURCES})
+
+# Add the .qrc file to the build
+# qt_add_resources(RESOURCE_SOURCES ${RESOURCES})
+
+# Include the generated resource files in the target
+target_sources(${MODULE_NAME} PRIVATE ${RESOURCE_SOURCES})
 
 # Find the Qt6 package
 # This will find the Qt6 package and all its components
@@ -22,6 +34,8 @@ find_package(Qt6 COMPONENTS
     Gui
     Widgets
     Charts
+    Quick
+    Qml
     REQUIRED)
 
 # Link against the Qt6Widgets library
@@ -31,6 +45,8 @@ target_link_libraries(${MODULE_NAME} PRIVATE
     Qt6::Charts
     Qt6::Widgets
     Qt6::Gui
+    Qt6::Quick
+    Qt6::Qml
 )
 
 # Specify include directories for the dependent library
@@ -81,3 +97,8 @@ set_target_properties(${MODULE_NAME} PROPERTIES
 #         ${DEMO_BINARY_DIR}
 #     COMMENT "Copying QtCore DLL to Demo output directory"
 # )
+
+if(QT_VERSION_MAJOR EQUAL 6)
+    qt_import_qml_plugins(${PROJECT_NAME})
+    qt_finalize_executable(${PROJECT_NAME})
+endif()

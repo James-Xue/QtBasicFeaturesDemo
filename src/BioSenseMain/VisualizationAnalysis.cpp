@@ -2,7 +2,6 @@
 
 namespace Bio
 {
-
     VisualizationAnalysisModule::VisualizationAnalysisModule(QObject* /*parent*/ /*= nullptr*/)
     {
     }
@@ -10,5 +9,4 @@ namespace Bio
     VisualizationAnalysisModule::~VisualizationAnalysisModule()
     {
     }
-
 } // namespace Bio

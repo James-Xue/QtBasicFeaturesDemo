@@ -9,5 +9,4 @@ namespace Bio
     StateEvaluationModule::~StateEvaluationModule()
     {
     }
-
 } // namespace Bio

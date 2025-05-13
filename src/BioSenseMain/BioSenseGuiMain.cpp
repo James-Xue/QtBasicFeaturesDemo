@@ -3,16 +3,34 @@
 
 // Qt
 #include <QApplication>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
 #include <QLineSeries>
 #include <QChart>
 #include <QChartView>
 #include <QMainWindow>
+#include <QString>
 
 // Self
 #include "BioSenseGuiMain.h"
 #include "CSVHelper.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
+{
+    // 1. Initialize app
+    QGuiApplication app(argc, argv);
+
+    // 2. Create Qml engine and load qml
+    QQmlApplicationEngine engine;
+    //const QString sPath = QString::fromUtf8(u8":/UI.qml");
+    //const QUrl url(sPath);
+    const QUrl url = QUrl::fromLocalFile(
+        u8"C:/Users/52738/Documents/1_Code/Github/02_BioSense/src/BioSenseMain/UI.qml");
+    engine.load(url);
+    return app.exec();
+}
+
+int main1(int argc, char *argv[])
 {
     // 1. read CSV file
     std::vector<int> vctInt;
@@ -27,8 +45,8 @@ int main(int argc, char *argv[])
     QLineSeries *series = new QLineSeries();
 
     // 添加数据点
-    const int iSize = vctInt.size();
-    for (int iIdx = 0; iIdx < iSize; ++iIdx)
+    const size_t iSize = vctInt.size();
+    for (size_t iIdx = 0; iIdx < iSize; ++iIdx)
     {
         series->append(iIdx, vctInt[iIdx]);
     }
