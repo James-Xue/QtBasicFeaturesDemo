@@ -34,12 +34,12 @@ endif()
 add_compile_definitions(UNICODE _UNICODE)
 
 # Add a custom target to run clang-format on all source files
-find_program(CLANG_FORMAT "clang-format")
-if (CLANG_FORMAT)
-    message(STATUS "clang-format found: ${CLANG_FORMAT}")
-else()
-    message(WARNING "clang-format not found. Formatting will be skipped.")
-endif()
+# find_program(CLANG_FORMAT "clang-format")
+# if (CLANG_FORMAT)
+#     message(STATUS "clang-format found: ${CLANG_FORMAT}")
+# else()
+#     message(WARNING "clang-format not found. Formatting will be skipped.")
+# endif()
 
 # Add the subdirectory for the main demo application
 # This is where the main application code will be located
