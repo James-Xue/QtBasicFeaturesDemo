@@ -1,8 +1,10 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
-Item
+Rectangle
 {
+    color: "transparent" // 或用浅色便于调试
     anchors.fill: parent
 
     Label
@@ -10,5 +12,6 @@ Item
         text: "信号预处理页面"
         font.pixelSize: 28
         anchors.centerIn: parent
+        color: "#006064"
     }
 }

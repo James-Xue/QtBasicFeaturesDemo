@@ -34,8 +34,8 @@ Window
                 text: "生理评估软件"
                 font.pixelSize: 32
                 font.bold: true
-                verticalAlignment: Text.AlignVCenter
                 color: "#006064"
+                anchors.verticalCenter: parent.verticalCenter
             }
 
             Rectangle
@@ -52,16 +52,23 @@ Window
                 {
                     anchors.fill: parent
                     spacing: 5
-                    TextField
+
+                    Image
                     {
-                        id: searchField
-                        placeholderText: "搜索..."
+                        source: "qrc:/UI/search_icon.png"
+                        width: 20
+                        height: 20
                         anchors.verticalCenter: parent.verticalCenter
-                        Layout.fillWidth: true
+                        fillMode: Image.PreserveAspectFit
+                    }
+
+                    Text
+                    {
+                        text: "搜索..."
+                        color: "#999999"
                         font.pixelSize: 18
-                        padding: 6
-                        color: "#006064"
-                        background: Rectangle { color: "transparent"; border.width: 0 }
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.verticalCenter: parent.verticalCenter
                     }
                 }
             }

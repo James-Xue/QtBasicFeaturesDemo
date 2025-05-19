@@ -53,6 +53,7 @@ int main1(int argc, char *argv[])
         u8"C:/Users/52738/Documents/9_Tmp/20250116/20250116rcd84d7677220250116095027_p1.csv",
         vctInt);
 
+    // 2.
     QApplication app(argc, argv);
 
     // 创建一个折线系列
