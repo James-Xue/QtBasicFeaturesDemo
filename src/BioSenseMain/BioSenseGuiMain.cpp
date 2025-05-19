@@ -2,9 +2,11 @@
 #include <iostream>
 
 // Qt
-#include <QApplication>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+
+#include <QApplication>
 #include <QLineSeries>
 #include <QChart>
 #include <QChartView>
@@ -22,10 +24,12 @@ int main(int argc, char* argv[])
 
     // 2. Create Qml engine and load qml
     QQmlApplicationEngine engine;
-    //const QString sPath = QString::fromUtf8(u8":/UI.qml");
-    //const QUrl url(sPath);
-    const QUrl url = QUrl::fromLocalFile(
-        u8"C:/Users/52738/Documents/1_Code/Github/02_BioSense/src/BioSenseMain/UI.qml");
+    engine.rootContext()->setContextProperty("radius", 50);
+
+    const QString sPath = QString::fromUtf8(u8":/UI/main.qml");
+    const QUrl url(sPath);
+    //const QUrl url(QString::fromUtf8(
+    //    u8"C:/Users/52738/Documents/1_Code/Github/02_BioSense/src/BioSenseMain/UI.qml"));
     engine.load(url);
     return app.exec();
 }
