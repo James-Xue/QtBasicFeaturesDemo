@@ -12,6 +12,7 @@ find_package(Qt6 COMPONENTS
     Widgets
     Charts
     Quick
+    QuickControls2
     Qml
     REQUIRED
 )
@@ -51,6 +52,7 @@ target_link_libraries(${MODULE_NAME} PRIVATE
     Qt6::Widgets
     Qt6::Gui
     Qt6::Quick
+    Qt6::QuickControls2
     Qt6::Qml
 )
 

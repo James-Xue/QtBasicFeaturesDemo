@@ -5,6 +5,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQuickStyle>
 
 #include <QApplication>
 #include <QLineSeries>
@@ -24,6 +25,7 @@ int main(int argc, char* argv[])
     QGuiApplication app(argc, argv);
 
     // 2. Create Qml engine and load qml
+    QQuickStyle::setStyle("Fusion");  // 或 "Material"、"Basic"
     QQmlApplicationEngine engine;
 
 

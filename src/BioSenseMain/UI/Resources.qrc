@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/UI">
         <file>Main.qml</file>
+        <file>DataImportPage.qml</file>
+        <file>SignalPreprocessPage.qml</file>
+        <file>FeatureExtractPage.qml</file>
+        <file>VisualizationPage.qml</file>
+        <file>StatusAssessmentPage.qml</file>
+        <file>DataSavePage.qml</file>
     </qresource>
 </RCC>
