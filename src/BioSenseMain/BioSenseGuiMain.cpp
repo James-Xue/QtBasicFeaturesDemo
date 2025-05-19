@@ -12,6 +12,7 @@
 #include <QChartView>
 #include <QMainWindow>
 #include <QString>
+#include <QFile>
 
 // Self
 #include "BioSenseGuiMain.h"
@@ -24,13 +25,20 @@ int main(int argc, char* argv[])
 
     // 2. Create Qml engine and load qml
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("radius", 50);
 
-    const QString sPath = QString::fromUtf8(u8":/UI/main.qml");
-    const QUrl url(sPath);
-    //const QUrl url(QString::fromUtf8(
-    //    u8"C:/Users/52738/Documents/1_Code/Github/02_BioSense/src/BioSenseMain/UI.qml"));
-    engine.load(url);
+
+    // 3. Check if the file exists
+    const QString sPath = QString::fromUtf8(u8":/UI/Main.qml");
+    QFile file(sPath);
+    if (false == file.exists())
+    {
+        qDebug() << "Error: QML file not found in resources!";
+        qDebug() << "Current resources:";
+        return -1;
+    }
+
+    // 4. Load QML file
+    engine.load(sPath);
     return app.exec();
 }
 

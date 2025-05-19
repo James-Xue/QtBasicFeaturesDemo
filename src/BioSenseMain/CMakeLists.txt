@@ -13,14 +13,13 @@ find_package(Qt6 COMPONENTS
     Charts
     Quick
     Qml
-    REQUIRED)
-
-# Define the .qrc resource files
-set(Gui_RESOURCES
-    "UI/Resources.qrc"
+    REQUIRED
 )
 
-# Collect resource files from the UI directory
+# Define the .qrc resource files
+set(Gui_RESOURCES "UI/Resources.qrc")
+
+# Add the .qrc file to the build
 qt_add_resources(Gui_QRC_SRCS ${Gui_RESOURCES})
 
 # Collect source and header files
@@ -30,7 +29,6 @@ file(GLOB HEADERS "*.h")
 # Organize files into filters for Visual Studio
 source_group("Header Files" FILES ${HEADERS})
 source_group("Source Files" FILES ${SOURCES})
-# source_group("Resource Files" FILES "UI/${Gui_RESOURCES}")
 
 # Collect all resource files
 SET(BioSenseGui_SRCS
@@ -40,16 +38,10 @@ SET(BioSenseGui_SRCS
 )
 
 # Set the output directory for the executable
-# add_executable(${MODULE_NAME} ${SOURCES} ${HEADERS} ${Gui_RESOURCES})
 add_executable(${MODULE_NAME} ${BioSenseGui_SRCS})
 
-# Add the .qrc file to the build
-# qt_add_resources(RESOURCE_SOURCES ${RESOURCES})
-
 # Include the generated resource files in the target
-target_sources(${MODULE_NAME} PRIVATE ${RESOURCE_SOURCES})
-
-
+# target_sources(${MODULE_NAME} PRIVATE ${RESOURCE_SOURCES})
 
 # Link against the Qt6Widgets library
 target_link_libraries(${MODULE_NAME} PRIVATE
@@ -69,20 +61,16 @@ target_include_directories(${MODULE_NAME} PRIVATE
 
 # Set the output directory for the executable
 set(RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-# set(CREATE_OUTPUT_DIR ON)
-# if(CREATE_OUTPUT_DIR)
-#     file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY})
-# endif()
 
 # Debug postfix for debug builds
-set_target_properties(${MODULE_NAME} PROPERTIES
-    DEBUG_POSTFIX "_d"
-)
+set_target_properties(${MODULE_NAME} PROPERTIES DEBUG_POSTFIX "_d")
 
-message(STATUS "Demo binary directory (CMAKE_BINARY_DIR): ${CMAKE_BINARY_DIR}")
-message(STATUS "Demo binary directory (RUNTIME_OUTPUT_DIRECTORY): ${RUNTIME_OUTPUT_DIRECTORY}")
+# set(CMAKE_AUTOMOC TRUE)
+# set(CMAKE_AUTOUIC TRUE)
+# set(CMAKE_AUTORCC TRUE)
 
-# set(QTCORE_DLL $<TARGET_FILE:${MODULE_NAME}>)
+# message(STATUS "Demo binary directory (CMAKE_BINARY_DIR): ${CMAKE_BINARY_DIR}")
+# message(STATUS "Demo binary directory (RUNTIME_OUTPUT_DIRECTORY): ${RUNTIME_OUTPUT_DIRECTORY}")
 
 # Copy the .exe and .pdb files to the output directory
 add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
@@ -100,18 +88,3 @@ set_target_properties(${MODULE_NAME} PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY}"
     VS_DEBUGGER_COMMAND "${RUNTIME_OUTPUT_DIRECTORY}/${MODULE_NAME}_d.exe"
 )
-
-# This is necessary for the executable to run correctly
-# as it depends on the QtCore library.
-# The copy command is executed after the build process
-# add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-#         $<TARGET_FILE:QtCore>
-#         ${DEMO_BINARY_DIR}
-#     COMMENT "Copying QtCore DLL to Demo output directory"
-# )
-
-# if(QT_VERSION_MAJOR EQUAL 6)
-#     qt_import_qml_plugins(${PROJECT_NAME})
-#     qt_finalize_executable(${PROJECT_NAME})
-# endif()
