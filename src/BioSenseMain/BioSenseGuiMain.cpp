@@ -18,6 +18,7 @@
 // Self
 #include "BioSenseGuiMain.h"
 #include "CSVHelper.h"
+#include "DataInput.h"
 
 int main(int argc, char* argv[])
 {
@@ -28,6 +29,9 @@ int main(int argc, char* argv[])
     QQuickStyle::setStyle("Fusion");  // 或 "Material"、"Basic"
     QQmlApplicationEngine engine;
 
+    // 3.
+    Bio::DataInput dataInput;
+    engine.rootContext()->setContextProperty("dataInput", &dataInput);
 
     // 3. Check if the file exists
     const QString sPath = QString::fromUtf8(u8":/UI/Main.qml");

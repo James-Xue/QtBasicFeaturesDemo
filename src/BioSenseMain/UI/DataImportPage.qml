@@ -77,6 +77,7 @@ Rectangle
                 {
                     // 这里可以添加导入文件的逻辑
                     console.log("导入文件路径:", filePathInput.text)
+                    dataInput.ImportFile(filePathInput.text)
                 }
             }
         }

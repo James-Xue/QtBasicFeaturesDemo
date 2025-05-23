@@ -1,8 +1,13 @@
+// QT
+#include <QDebug>
+
+// Myself
 #include "DataInput.h"
 
 namespace Bio
 {
-    DataInput::DataInput(QObject */*parent*/ /*= nullptr*/)
+    DataInput::DataInput(QObject* const pParent /* = nullptr*/)
+        : QObject(pParent)
     {
     }
 
@@ -10,7 +15,13 @@ namespace Bio
     {
     }
 
-    bool DataInput::loadData(const QString &/*filePath*/)
+    void DataInput::ImportFile(const QString& sPath) const
+    {
+        // 这里写你的导入逻辑
+        qDebug() << u8"导入文件路径:" << sPath;
+    }
+
+    bool DataInput::loadData(const QString& /*filePath*/)
     {
         return false;
     }

@@ -6,7 +6,7 @@ set(MODULE_NAME BioSenseGui)
 # that are required for the project. The components are specified
 # in the find_package command, and can be modified as needed.
 set(Qt6_DIR "../../lib/Qt-6.9.0/lib/cmake/Qt6")
-find_package(Qt6 COMPONENTS
+find_package(Qt6 REQUIRED COMPONENTS
     Core
     Gui
     Widgets
@@ -67,7 +67,7 @@ set(RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 # Debug postfix for debug builds
 set_target_properties(${MODULE_NAME} PROPERTIES DEBUG_POSTFIX "_d")
 
-# set(CMAKE_AUTOMOC TRUE)
+set(CMAKE_AUTOMOC ON)
 # set(CMAKE_AUTOUIC TRUE)
 # set(CMAKE_AUTORCC TRUE)
 

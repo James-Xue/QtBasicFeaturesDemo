@@ -12,10 +12,14 @@ namespace Bio
 {
     class DataInput : public QObject
     {
-        //Q_OBJECT
+        Q_OBJECT
+
     public:
-        explicit DataInput(QObject *parent = nullptr);
+        explicit DataInput(QObject *const pParent = nullptr);
         virtual ~DataInput();
+
+    public:
+        Q_INVOKABLE void ImportFile(const QString& sPath) const;
 
         bool loadData(const QString &filePath);
         QVector<double> getSignalData(void) const;
