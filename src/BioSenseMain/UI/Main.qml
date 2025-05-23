@@ -10,13 +10,13 @@ Window
     height: 600
     visible: true
     title: "BioSense Main Window"
-    color: "#e6f7f9" // 主背景色
+    color: "#dae8f9" // 主背景色 RGB(218,232,249)
 
     // 顶部区域：大字标题 + 搜索框
     Rectangle
     {
         id: topBarBg
-        color: "#b2e0e6" // 顶部栏背景色
+        color: "#daeefd" // 顶部栏背景色 RGB(218,238,253)
         height: 60
         anchors.left: parent.left
         anchors.right: parent.right
@@ -116,13 +116,13 @@ Window
                     font.pixelSize: 22
                     background: Rectangle
                     {
-                        color: checked ? "#4db6ac" : "#d0e6ef"
+                        color: checked ? "#c0def9" : "#d0e9fd" // 选中/未选中颜色已交换
                         radius: 8
                     }
                     contentItem: Text
                     {
                         text: modelData
-                        color: checked ? "white" : "#006064"
+                        color: checked ? "#006064" : "#006064"
                         font.pixelSize: 22
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
@@ -137,7 +137,7 @@ Window
         {
             color: "#ffffff"
             radius: 12
-            border.color: "#b2e0e6"
+            border.color: "#d0e9fd" // 内容区边框
             border.width: 1
             Layout.fillWidth: true
             Layout.fillHeight: true
