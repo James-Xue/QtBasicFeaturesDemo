@@ -27,6 +27,9 @@ qt_add_resources(Gui_QRC_SRCS ${Gui_RESOURCES})
 file(GLOB SOURCES "*.cpp")
 file(GLOB HEADERS "*.h")
 
+# Wrap the C++ files
+# qt_wrap_cpp(MOC_FILES ${HEADERS})
+
 # Organize files into filters for Visual Studio
 source_group("Header Files" FILES ${HEADERS})
 source_group("Source Files" FILES ${SOURCES})
@@ -38,11 +41,12 @@ SET(BioSenseGui_SRCS
     ${HEADERS}
 )
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
 # Set the output directory for the executable
 add_executable(${MODULE_NAME} ${BioSenseGui_SRCS})
-
-# Include the generated resource files in the target
-# target_sources(${MODULE_NAME} PRIVATE ${RESOURCE_SOURCES})
 
 # Link against the Qt6Widgets library
 target_link_libraries(${MODULE_NAME} PRIVATE
@@ -63,16 +67,7 @@ target_include_directories(${MODULE_NAME} PRIVATE
 
 # Set the output directory for the executable
 set(RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-
-# Debug postfix for debug builds
-set_target_properties(${MODULE_NAME} PROPERTIES DEBUG_POSTFIX "_d")
-
-set(CMAKE_AUTOMOC ON)
-# set(CMAKE_AUTOUIC TRUE)
-# set(CMAKE_AUTORCC TRUE)
-
-# message(STATUS "Demo binary directory (CMAKE_BINARY_DIR): ${CMAKE_BINARY_DIR}")
-# message(STATUS "Demo binary directory (RUNTIME_OUTPUT_DIRECTORY): ${RUNTIME_OUTPUT_DIRECTORY}")
+message(STATUS "Demo binary directory (RUNTIME_OUTPUT_DIRECTORY): ${RUNTIME_OUTPUT_DIRECTORY}")
 
 # Copy the .exe and .pdb files to the output directory
 add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
@@ -87,6 +82,10 @@ add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
 
 # Set the working directory and command for debugging in Visual Studio
 set_target_properties(${MODULE_NAME} PROPERTIES
-    VS_DEBUGGER_WORKING_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY}"
-    VS_DEBUGGER_COMMAND "${RUNTIME_OUTPUT_DIRECTORY}/${MODULE_NAME}_d.exe"
+    # VS_DEBUGGER_WORKING_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY}"
+    # VS_DEBUGGER_COMMAND "${RUNTIME_OUTPUT_DIRECTORY}/${MODULE_NAME}_d.exe"
+    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    VS_DEBUGGER_COMMAND "${CMAKE_BINARY_DIR}/bin/${MODULE_NAME}_d.exe"
 )
+
+# message(STATUS "Demo binary directory (CMAKE_BINARY_DIR): ${CMAKE_BINARY_DIR}")
