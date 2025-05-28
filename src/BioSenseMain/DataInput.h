@@ -6,6 +6,7 @@
 #include <QVector>
 #include <QFile>
 #include <QTextStream>
+#include <QVariantList>
 
 // 数据输入助手类
 namespace Bio
@@ -19,19 +20,18 @@ namespace Bio
         virtual ~DataInput();
 
     public:
-        Q_INVOKABLE void ImportFile(const QString& sPath) const;
+        Q_INVOKABLE void ImportFile(const QString& sPath);
 
         bool loadData(const QString &filePath);
-        QVector<double> getSignalData(void) const;
-        QString getLastError(void) const;
-
-    //signals:
-        //void dataLoaded(const QVector<double> &data);
-        //void loadingFailed(const QString &errorMsg);
+        QVector<double> getSignalData() const;
+        QString getLastError() const;
+    signals:
+        void chartDataChanged();
 
     private:
         QVector<double> m_signalData;
         QString m_lastError;
+        QVariantList m_chartData;
     };
 } // namespace Bio
 

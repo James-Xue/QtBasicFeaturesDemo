@@ -23,6 +23,7 @@ namespace Bio
         // Reads a CSV file and returns a vector of strings.
         bool ReadCSV(const std::string &sFileFullPath, std::vector<int> &vctInt)  const;
         bool ReadCSV(const std::string &sFileFullPath, std::vector<std::string> &vctString)  const;
+        bool ReadCSV(const QString& sFileFullPath, std::vector<int>& vctInt) const;
         bool ReadCSV(const QString &sFileFullPath, std::vector<std::string> &vctString)  const;
 
         // Writes a vector of strings to a CSV file.

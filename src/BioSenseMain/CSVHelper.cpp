@@ -115,7 +115,8 @@ namespace Bio
         return ReadCSV(qstrFileFullPath, vctString);
     }
 
-    bool CSVHelper::ReadCSV(const QString &sFileFullPath, std::vector<std::string> &vctString) const
+    bool CSVHelper::ReadCSV(const QString &sFileFullPath,
+        std::vector<std::string> &vctString) const
     {
         // 1. Check if the file exists
         QFile oneQFile(sFileFullPath);
@@ -153,6 +154,17 @@ namespace Bio
             return false;
         }
         return true;
+    }
+
+    bool CSVHelper::ReadCSV(const QString& sFileFullPath, std::vector<int>& vctInt) const
+    {
+        std::vector<std::string> vctString;
+        const bool bRet = ReadCSV(sFileFullPath, vctString);
+        if (!bRet)
+        {
+            return false;
+        }
+        return ConvertStringsToInts(vctString, vctInt);
     }
 
 } // namespace Demo

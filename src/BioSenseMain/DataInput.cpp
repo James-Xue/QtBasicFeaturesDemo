@@ -1,6 +1,7 @@
 // QT
 #include <QDebug>
 #include <QUrl>
+#include <QPointF> // 添加此行，确保 QPointF 可用
 
 // Myself
 #include "DataInput.h"
@@ -28,14 +29,14 @@ namespace Bio
         return path;
     }
 
-    void DataInput::ImportFile(const QString& sPath) const
+    void DataInput::ImportFile(const QString& sPath)
     {
         QString localPath = toLocalFilePath(sPath);
         qDebug() << u8"导入文件路径:" << localPath;
 
-        // 调用 CSVHelper 读取数据到 std::vector<std::string>
+        // 调用 CSVHelper 读取数据到 std::vector<int>
         CSVHelper csvHelper;
-        std::vector<std::string> csvData;
+        std::vector<int> csvData;
         bool ok = csvHelper.ReadCSV(localPath, csvData);
 
         if (ok)
@@ -47,6 +48,14 @@ namespace Bio
         {
             qDebug() << u8"CSV 文件读取失败";
         }
+
+        // ...读取CSV到std::vector<double> csvData...
+        m_chartData.clear();
+        for (int iIdx = 0; iIdx < csvData.size(); ++iIdx)
+        {
+            m_chartData.append(QVariant::fromValue(QPointF(iIdx, csvData[iIdx])));
+        }
+        emit chartDataChanged();
     }
 
     bool DataInput::loadData(const QString& /*filePath*/)
