@@ -4,8 +4,8 @@
 // Myself
 #include "DataInput.h"
 
-//namespace Bio
-//{
+namespace Bio
+{
     DataInput::DataInput(QObject* const pParent /* = nullptr*/)
         : QObject(pParent)
     {
@@ -35,4 +35,4 @@
     {
         return {};
     }
-//} // namespace Bio
+} // namespace Bio

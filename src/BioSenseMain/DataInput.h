@@ -8,8 +8,8 @@
 #include <QTextStream>
 
 // 数据输入助手类
-//namespace Bio
-//{
+namespace Bio
+{
     class DataInput : public QObject
     {
         Q_OBJECT
@@ -33,6 +33,6 @@
         QVector<double> m_signalData;
         QString m_lastError;
     };
-//} // namespace Bio
+} // namespace Bio
 
 #endif // DATAINPUTMODULE_H

@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
     QQmlApplicationEngine engine;
 
     // 3.
-    /*Bio::*/DataInput dataInput;
+    Bio::DataInput dataInput;
     engine.rootContext()->setContextProperty("dataInput", &dataInput);
 
     // 3. Check if the file exists

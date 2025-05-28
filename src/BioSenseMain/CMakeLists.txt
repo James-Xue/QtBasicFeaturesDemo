@@ -48,6 +48,9 @@ set(CMAKE_AUTORCC ON)
 # Set the output directory for the executable
 add_executable(${MODULE_NAME} ${BioSenseGui_SRCS})
 
+# Debug postfix for debug builds
+set_target_properties(${MODULE_NAME} PROPERTIES DEBUG_POSTFIX "_d")
+
 # Link against the Qt6Widgets library
 target_link_libraries(${MODULE_NAME} PRIVATE
     Qt6::Core
@@ -67,7 +70,6 @@ target_include_directories(${MODULE_NAME} PRIVATE
 
 # Set the output directory for the executable
 set(RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-message(STATUS "Demo binary directory (RUNTIME_OUTPUT_DIRECTORY): ${RUNTIME_OUTPUT_DIRECTORY}")
 
 # Copy the .exe and .pdb files to the output directory
 add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
@@ -82,10 +84,8 @@ add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
 
 # Set the working directory and command for debugging in Visual Studio
 set_target_properties(${MODULE_NAME} PROPERTIES
-    # VS_DEBUGGER_WORKING_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY}"
-    # VS_DEBUGGER_COMMAND "${RUNTIME_OUTPUT_DIRECTORY}/${MODULE_NAME}_d.exe"
-    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-    VS_DEBUGGER_COMMAND "${CMAKE_BINARY_DIR}/bin/${MODULE_NAME}_d.exe"
+    VS_DEBUGGER_WORKING_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY}"
+    VS_DEBUGGER_COMMAND "${RUNTIME_OUTPUT_DIRECTORY}/${MODULE_NAME}_d.exe"
 )
 
 # message(STATUS "Demo binary directory (CMAKE_BINARY_DIR): ${CMAKE_BINARY_DIR}")
