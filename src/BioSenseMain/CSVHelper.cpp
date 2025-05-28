@@ -11,7 +11,7 @@
 #include "CSVHelper.h"
 
 
-namespace Demo
+namespace Bio
 {
     CSVHelper::CSVHelper()
     {

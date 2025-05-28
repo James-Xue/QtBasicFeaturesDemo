@@ -15,9 +15,10 @@ Rectangle
         nameFilters: ["CSV 文件 (*.csv)"]
         onAccepted:
         {
-            console.log("QML选择文件:", fileDialog.currentFile)
-            filePathInput.text = fileDialog.currentFile
-            dataInput.ImportFile(fileDialog.currentFile)
+            var url = fileDialog.currentFile;
+            var localPath = url.toLocalFile ? url.toLocalFile() : url.toString().replace("file:///", "");
+            filePathInput.text = localPath;
+            dataInput.ImportFile(fileDialog.currentFile); // 仍然传递原始路径给C++
         }
     }
 

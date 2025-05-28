@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-namespace Demo
+namespace Bio
 {
     // This class is responsible for reading and writing CSV files.
     class CSVHelper
