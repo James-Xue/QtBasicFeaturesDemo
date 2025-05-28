@@ -1,11 +1,25 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 Rectangle
 {
     color: "transparent"
     anchors.fill: parent
+
+    FileDialog
+    {
+        id: fileDialog
+        title: "请选择要导入的CSV文件"
+        nameFilters: ["CSV 文件 (*.csv)"]
+        onAccepted:
+        {
+            console.log("QML选择文件:", fileDialog.currentFile)
+            filePathInput.text = fileDialog.currentFile
+            dataInput.ImportFile(fileDialog.currentFile)
+        }
+    }
 
     Column
     {
@@ -31,19 +45,19 @@ Rectangle
                 text: "请选择要导入的文件："
                 font.pixelSize: 18
                 color: "#006064"
-                height: 36 // 设置高度与按钮一致
-                verticalAlignment: Text.AlignVCenter // 垂直居中内容
+                height: 36
+                verticalAlignment: Text.AlignVCenter
             }
 
             TextField
             {
                 id: filePathInput
                 width: 260
-                height: 36 // 设置高度与按钮一致
+                height: 36
                 placeholderText: "文件路径"
-                color: "#006064" // 输入内容字体颜色
-                placeholderTextColor: "#6699bb" // 占位符字体颜色
-                verticalAlignment: TextInput.AlignVCenter // 垂直居中内容
+                color: "#006064"
+                placeholderTextColor: "#6699bb"
+                verticalAlignment: TextInput.AlignVCenter
                 background: Rectangle
                 {
                     color: "#daeefd"
@@ -56,7 +70,7 @@ Rectangle
             Button
             {
                 text: "导入文件"
-                height: 36 // 与输入框高度一致
+                height: 36
                 background: Rectangle
                 {
                     color: "#c0def9"
@@ -75,9 +89,7 @@ Rectangle
                 }
                 onClicked:
                 {
-                    // 这里可以添加导入文件的逻辑
-                    console.log("导入文件路径:", filePathInput.text)
-                    dataInput.ImportFile(filePathInput.text)
+                    fileDialog.open()
                 }
             }
         }
