@@ -7,6 +7,7 @@
         <file>VisualizationPage.qml</file>
         <file>StatusAssessmentPage.qml</file>
         <file>DataSavePage.qml</file>
+        <file>LineChartView.qml</file>
         <file>search_icon.png</file>
     </qresource>
 </RCC>

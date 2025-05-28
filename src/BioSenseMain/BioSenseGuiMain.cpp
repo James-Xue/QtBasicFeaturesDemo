@@ -23,7 +23,7 @@
 int main(int argc, char* argv[])
 {
     // 1. Initialize app
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv); // 注意这里
 
     // 2. Create Qml engine and load qml
     QQuickStyle::setStyle("Fusion");  // 或 "Material"、"Basic"

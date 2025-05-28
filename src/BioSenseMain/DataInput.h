@@ -14,6 +14,7 @@ namespace Bio
     class DataInput : public QObject
     {
         Q_OBJECT
+        Q_PROPERTY(QVariantList chartData READ chartData NOTIFY chartDataChanged) // ★★★ 这一行很关键
 
     public:
         explicit DataInput(QObject *const pParent = nullptr);
@@ -25,6 +26,8 @@ namespace Bio
         bool loadData(const QString &filePath);
         QVector<double> getSignalData() const;
         QString getLastError() const;
+        QVariantList chartData() const { return m_chartData; } // ★★★ getter
+
     signals:
         void chartDataChanged();
 
