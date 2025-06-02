@@ -34,7 +34,7 @@ ChartView
     {
         id: lineSeries
         name: "CSV数据"
-        useOpenGL: true
+        useOpenGL: false
         axisX: x
         axisY: y
         visible: true
