@@ -6,7 +6,7 @@
 
 namespace Bio
 {
-    class SignalPreprocessorModule : public QObject
+    class SignalPreprocessModule : public QObject
     {
         //Q_OBJECT
     public:
@@ -18,8 +18,8 @@ namespace Bio
             BaselineCorrection
         };
 
-        explicit SignalPreprocessorModule(QObject *parent = nullptr);
-        virtual ~SignalPreprocessorModule();
+        explicit SignalPreprocessModule(QObject *parent = nullptr);
+        virtual ~SignalPreprocessModule();
 
     //    void setProcessingType(ProcessingType type);
     //    QVector<double> preprocessSignal(const QVector<double> &signal);
