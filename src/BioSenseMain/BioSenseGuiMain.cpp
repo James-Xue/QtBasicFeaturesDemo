@@ -18,7 +18,7 @@
 // Self
 #include "BioSenseGuiMain.h"
 #include "CSVHelper.h"
-#include "DataInput.h"
+#include "DataInputModule.h"
 
 int main(int argc, char* argv[])
 {
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
     QQmlApplicationEngine engine;
 
     // 3.
-    Bio::DataInput dataInput;
+    Bio::DataInputModule dataInput;
     engine.rootContext()->setContextProperty("dataInput", &dataInput);
 
     // 3. Check if the file exists

@@ -4,18 +4,18 @@
 #include <QPointF> // 添加此行，确保 QPointF 可用
 
 // Myself
-#include "DataInput.h"
+#include "DataInputModule.h"
 #include "CSVHelper.h"
-#include "FeatureExtraction.h"
+#include "FeatureExtractionModule.h"
 
 namespace Bio
 {
-    DataInput::DataInput(QObject* const pParent /* = nullptr*/)
+    DataInputModule::DataInputModule(QObject* const pParent /* = nullptr*/)
         : QObject(pParent)
     {
     }
 
-    DataInput::~DataInput()
+    DataInputModule::~DataInputModule()
     {
     }
 
@@ -30,7 +30,7 @@ namespace Bio
         return path;
     }
 
-    void DataInput::ImportFile(const QString& sPath)
+    void DataInputModule::ImportFile(const QString& sPath)
     {
         QString localPath = toLocalFilePath(sPath);
         qDebug() << u8"导入文件路径:" << localPath;
@@ -68,8 +68,8 @@ namespace Bio
                 ecgSignal.append(static_cast<double>(v));
             }
 
-            Bio::FeatureExtraction fe;
-            fe.setFeatureType(Bio::FeatureExtraction::HeartRate);  // 例如提取心率分析，可根据需要切换
+            Bio::FeatureExtractionModule fe;
+            fe.setFeatureType(Bio::FeatureExtractionModule::HeartRate);  // 例如提取心率分析，可根据需要切换
             QMap<QString, double> features = fe.extractFeatures(ecgSignal);
 
             // 输出特征结果
@@ -83,17 +83,17 @@ namespace Bio
         emit chartDataChanged();
     }
 
-    bool DataInput::loadData(const QString& /*filePath*/)
+    bool DataInputModule::loadData(const QString& /*filePath*/)
     {
         return false;
     }
 
-    QVector<double> DataInput::getSignalData(void) const
+    QVector<double> DataInputModule::getSignalData(void) const
     {
         return {};
     }
 
-    QString DataInput::getLastError(void) const
+    QString DataInputModule::getLastError(void) const
     {
         return {};
     }

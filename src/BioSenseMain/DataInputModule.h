@@ -11,14 +11,14 @@
 // 数据输入助手类
 namespace Bio
 {
-    class DataInput : public QObject
+    class DataInputModule : public QObject
     {
         Q_OBJECT
         Q_PROPERTY(QVariantList chartData READ chartData NOTIFY chartDataChanged) // ★★★ 这一行很关键
 
     public:
-        explicit DataInput(QObject *const pParent = nullptr);
-        virtual ~DataInput();
+        explicit DataInputModule(QObject *const pParent = nullptr);
+        virtual ~DataInputModule();
 
     public:
         Q_INVOKABLE void ImportFile(const QString& sPath);

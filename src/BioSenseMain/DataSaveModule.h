@@ -11,7 +11,7 @@
 namespace Bio
 {
     // 数据存储助手类
-    class DataSave : public QObject
+    class DataSaveModule : public QObject
     {
         //Q_OBJECT
     public:
@@ -23,8 +23,8 @@ namespace Bio
             Binary
         };
 
-        explicit DataSave(QObject *parent = nullptr);
-        virtual ~DataSave();
+        explicit DataSaveModule(QObject *parent = nullptr);
+        virtual ~DataSaveModule();
 
         bool saveSignalData(const QString &filePath, const QVector<double> &data, SaveFormat format = CSV);
         bool saveFeatures(const QString &filePath, const QMap<QString, double> &features, SaveFormat format = CSV);

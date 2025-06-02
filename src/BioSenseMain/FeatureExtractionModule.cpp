@@ -1,4 +1,4 @@
-#include "FeatureExtraction.h"
+#include "FeatureExtractionModule.h"
 #include <QtMath>
 #include <algorithm>
 #include <numeric>
@@ -7,20 +7,20 @@ namespace Bio
 {
     static constexpr double SAMPLE_RATE = 250.0; // Hz
 
-    FeatureExtraction::FeatureExtraction(QObject* /*parent*/)
+    FeatureExtractionModule::FeatureExtractionModule(QObject* /*parent*/)
     {
     }
 
-    FeatureExtraction::~FeatureExtraction()
+    FeatureExtractionModule::~FeatureExtractionModule()
     {
     }
 
-    void FeatureExtraction::setFeatureType(FeatureType type)
+    void FeatureExtractionModule::setFeatureType(FeatureType type)
     {
         m_featureType = type;
     }
 
-    QMap<QString, double> FeatureExtraction::extractFeatures(const QVector<double>& signal)
+    QMap<QString, double> FeatureExtractionModule::extractFeatures(const QVector<double>& signal)
     {
         QMap<QString, double> features;
 

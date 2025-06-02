@@ -1,4 +1,4 @@
-#include "VisualizationAnalysis.h"
+#include "VisualizationAnalysisModule.h"
 
 namespace Bio
 {

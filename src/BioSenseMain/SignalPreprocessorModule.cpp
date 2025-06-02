@@ -1,4 +1,4 @@
-#include "SignalPreprocessor.h"
+#include "SignalPreprocessorModule.h"
 
 namespace Bio
 {

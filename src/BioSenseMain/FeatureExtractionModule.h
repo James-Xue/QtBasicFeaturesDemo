@@ -9,7 +9,7 @@
 namespace Bio
 {
     // 特征提取助手类
-    class FeatureExtraction : public QObject
+    class FeatureExtractionModule : public QObject
     {
         //Q_OBJECT
     public:
@@ -24,8 +24,8 @@ namespace Bio
             HeartRate       // 心率分析
         };
 
-        explicit FeatureExtraction(QObject *parent = nullptr);
-        virtual ~FeatureExtraction();
+        explicit FeatureExtractionModule(QObject *parent = nullptr);
+        virtual ~FeatureExtractionModule();
 
         void setFeatureType(FeatureType type);
         QMap<QString, double> extractFeatures(const QVector<double> &signal);
