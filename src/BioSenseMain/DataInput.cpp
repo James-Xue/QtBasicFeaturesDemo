@@ -6,6 +6,7 @@
 // Myself
 #include "DataInput.h"
 #include "CSVHelper.h"
+#include "FeatureExtraction.h"
 
 namespace Bio
 {
@@ -55,6 +56,30 @@ namespace Bio
         {
             m_chartData.append(QVariant::fromValue(QPointF(iIdx, csvData[iIdx])));
         }
+
+#if _DEBUG
+        // 调用特征提取助手类，对心电图数据进行分析
+        {
+            // 将 std::vector<int> 转为 QVector<double>
+            QVector<double> ecgSignal;
+            ecgSignal.reserve(static_cast<int>(csvData.size()));
+            for (int v : csvData)
+            {
+                ecgSignal.append(static_cast<double>(v));
+            }
+
+            Bio::FeatureExtraction fe;
+            fe.setFeatureType(Bio::FeatureExtraction::HeartRate);  // 例如提取心率分析，可根据需要切换
+            QMap<QString, double> features = fe.extractFeatures(ecgSignal);
+
+            // 输出特征结果
+            for (auto it = features.begin(); it != features.end(); ++it)
+            {
+                qDebug() << it.key() << ":" << it.value();
+            }
+        }
+#endif
+
         emit chartDataChanged();
     }
 

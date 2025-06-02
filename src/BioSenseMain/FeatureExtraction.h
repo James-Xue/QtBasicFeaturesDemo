@@ -1,5 +1,5 @@
-#ifndef FEATUREEXTRACTIONMODULE_H
-#define FEATUREEXTRACTIONMODULE_H
+#ifndef FEATUREEXTRACTION_H
+#define FEATUREEXTRACTION_H
 
 #include <QObject>
 #include <QVector>
@@ -9,34 +9,33 @@
 namespace Bio
 {
     // 特征提取助手类
-    class FeatureExtractionModule : public QObject
+    class FeatureExtraction : public QObject
     {
         //Q_OBJECT
     public:
+        // 特征类型枚举，表示不同的特征提取方式
         enum FeatureType
         {
-            Amplitude,
-            Frequency,
-            TimeDomain,
-            Statistical,
-            Entropy
+            Amplitude,      // 幅值特征
+            Frequency,      // 频域特征
+            TimeDomain,     // 时域特征
+            Statistical,    // 统计特征
+            Entropy,        // 熵特征
+            HeartRate       // 心率分析
         };
 
-        explicit FeatureExtractionModule(QObject *parent = nullptr);
-        virtual ~FeatureExtractionModule();
+        explicit FeatureExtraction(QObject *parent = nullptr);
+        virtual ~FeatureExtraction();
 
         void setFeatureType(FeatureType type);
         QMap<QString, double> extractFeatures(const QVector<double> &signal);
 
-    //signals:
-    //    void featuresExtracted(const QMap<QString, double> &features);
-    //    void featureExtractionFailed(const QString &errorMsg);
-
     private:
         FeatureType m_featureType;
-        //QMap<QString, double> calculateTimeDomainFeatures(const QVector<double> &signal);
-        //QMap<QString, double> calculateFrequencyDomainFeatures(const QVector<double> &signal);
+
+        // 新增：心率分析相关静态参数和方法声明
+        static constexpr double SAMPLE_RATE = 250.0;
     };
 } // namespace Bio
 
-#endif // FEATUREEXTRACTIONMODULE_H    
+#endif // FEATUREEXTRACTION_H
