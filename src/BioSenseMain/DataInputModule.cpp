@@ -83,6 +83,45 @@ namespace Bio
         emit chartDataChanged();
     }
 
+    void DataInputModule::setSeriesData(QLineSeries* lineSeries,
+                                        QValueAxis*  valueAxisX,
+                                        QValueAxis*  valueAxisY)
+    {
+        if (!lineSeries || !valueAxisX || !valueAxisY|| m_chartData.empty())
+            return;
+
+        QList<QPointF> data;
+        data.reserve(m_chartData.size());
+
+        QPointF firstPt = m_chartData[0].toPointF();
+        double  minX = firstPt.x(), maxX = firstPt.x();
+        double  minY = firstPt.y(), maxY = firstPt.y();
+
+        for (const QVariant& var : m_chartData)
+        {
+            QPointF pt = var.toPointF();
+            data.append(pt);
+
+            if (pt.x() < minX)
+                minX = pt.x();
+            if (pt.x() > maxX)
+                maxX = pt.x();
+            if (pt.y() < minY)
+                minY = pt.y();
+            if (pt.y() > maxY)
+                maxY = pt.y();
+        }
+
+        lineSeries->replace(data);
+
+        double xMargin = (maxX - minX) * 0.05;
+        double yMargin = (maxY - minY) * 0.05;
+
+        valueAxisX->setRange(std::max(minX - xMargin,0.0), maxX + xMargin);
+        valueAxisY->setRange(std::max(minY - yMargin,0.0), maxY + yMargin);
+    }
+
+
     bool DataInputModule::loadData(const QString& /*filePath*/)
     {
         return false;

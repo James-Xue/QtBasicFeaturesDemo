@@ -42,27 +42,7 @@ ChartView
 
     function updateSeries()
     {
-        lineSeries.clear();
-        var maxXValue = initialXAxisMax;
-        var maxYValue = initialYAxisMax;
-        for (var i = 0; i < dataInput.chartData.length; ++i)
-        {
-            var pt = dataInput.chartData[i];
-            var currentX = Number(pt.x);
-            var currentY = Number(pt.y);         
-            lineSeries.append(pt.x, pt.y);
-
-            if (currentX > maxXValue) 
-            {
-                maxXValue = currentX;
-            }
-            if (currentY > maxYValue) 
-            {
-                maxYValue = currentY;
-            }
-        }
-        x.max = maxXValue * 1.05;
-        y.max = maxYValue * 1.05;
+        dataInput.setSeriesData(lineSeries,x,y);
     }
 
     Component.onCompleted: updateSeries()

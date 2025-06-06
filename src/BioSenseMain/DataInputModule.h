@@ -7,6 +7,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QVariantList>
+#include <QtCharts/QLineSeries>  
+#include <QtCharts/QValueAxis>
 
 // 数据输入助手类
 namespace Bio
@@ -22,7 +24,7 @@ namespace Bio
 
     public:
         Q_INVOKABLE void ImportFile(const QString& sPath);
-
+        Q_INVOKABLE void setSeriesData(QLineSeries* series, QValueAxis* axisX, QValueAxis* axisY);
         bool loadData(const QString &filePath);
         QVector<double> getSignalData() const;
         QString getLastError() const;
