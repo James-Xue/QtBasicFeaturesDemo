@@ -1,17 +1,18 @@
 // QT
 #include <QDebug>
+#include <QPointF>
 #include <QUrl>
-#include <QPointF> // 添加此行，确保 QPointF 可用
 
 // Myself
-#include "DataInputModule.h"
 #include "CSVHelper.h"
+#include "DataInputModule.h"
 #include "FeatureExtractionModule.h"
 
 namespace Bio
 {
-    DataInputModule::DataInputModule(QObject* const pParent /* = nullptr*/)
+    DataInputModule::DataInputModule(QObject *const pParent /* = nullptr*/)
         : QObject(pParent)
+        , m_lastError(QString())
     {
     }
 
@@ -20,7 +21,7 @@ namespace Bio
     }
 
     // 辅助函数：去除 file:/// 前缀，返回本地文件路径
-    static QString toLocalFilePath(const QString& path)
+    static QString toLocalFilePath(const QString &path)
     {
         QUrl url(path);
         if (url.isLocalFile())
@@ -30,7 +31,7 @@ namespace Bio
         return path;
     }
 
-    void DataInputModule::ImportFile(const QString& sPath)
+    void DataInputModule::ImportFile(const QString &sPath)
     {
         QString localPath = toLocalFilePath(sPath);
         qDebug() << u8"导入文件路径:" << localPath;
@@ -69,7 +70,8 @@ namespace Bio
             }
 
             Bio::FeatureExtractionModule fe;
-            fe.setFeatureType(Bio::FeatureExtractionModule::HeartRate);  // 例如提取心率分析，可根据需要切换
+            fe.setFeatureType(
+                Bio::FeatureExtractionModule::HeartRate);  // 例如提取心率分析，可根据需要切换
             QMap<QString, double> features = fe.extractFeatures(ecgSignal);
 
             // 输出特征结果
@@ -83,21 +85,21 @@ namespace Bio
         emit chartDataChanged();
     }
 
-    void DataInputModule::setSeriesData(QLineSeries* lineSeries,
-                                        QValueAxis*  valueAxisX,
-                                        QValueAxis*  valueAxisY)
+    void DataInputModule::setSeriesData(QLineSeries *lineSeries,
+                                        QValueAxis *valueAxisX,
+                                        QValueAxis *valueAxisY)
     {
-        if (!lineSeries || !valueAxisX || !valueAxisY|| m_chartData.empty())
+        if (!lineSeries || !valueAxisX || !valueAxisY || m_chartData.empty())
             return;
 
         QList<QPointF> data;
         data.reserve(m_chartData.size());
 
         QPointF firstPt = m_chartData[0].toPointF();
-        double  minX = firstPt.x(), maxX = firstPt.x();
-        double  minY = firstPt.y(), maxY = firstPt.y();
+        double minX = firstPt.x(), maxX = firstPt.x();
+        double minY = firstPt.y(), maxY = firstPt.y();
 
-        for (const QVariant& var : m_chartData)
+        for (const QVariant &var : m_chartData)
         {
             QPointF pt = var.toPointF();
             data.append(pt);
@@ -117,12 +119,11 @@ namespace Bio
         double xMargin = (maxX - minX) * 0.05;
         double yMargin = (maxY - minY) * 0.05;
 
-        valueAxisX->setRange(std::max(minX - xMargin,0.0), maxX + xMargin);
-        valueAxisY->setRange(std::max(minY - yMargin,0.0), maxY + yMargin);
+        valueAxisX->setRange(std::max(minX - xMargin, 0.0), maxX + xMargin);
+        valueAxisY->setRange(std::max(minY - yMargin, 0.0), maxY + yMargin);
     }
 
-
-    bool DataInputModule::loadData(const QString& /*filePath*/)
+    bool DataInputModule::loadData(const QString & /*filePath*/)
     {
         return false;
     }
@@ -136,4 +137,4 @@ namespace Bio
     {
         return {};
     }
-} // namespace Bio
+}  // namespace Bio

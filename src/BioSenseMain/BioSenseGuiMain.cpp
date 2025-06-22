@@ -11,7 +11,7 @@
 #include "BioSenseGuiMain.h"
 #include "DataInputModule.h"
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     // 1. Initialize app
     QApplication app(argc, argv);
@@ -20,11 +20,11 @@ int main(int argc, char* argv[])
     QQuickStyle::setStyle("Fusion");  // or "Material"、"Basic"
     QQmlApplicationEngine engine;
 
-    // 3.
+    // 3. Registered Property
     Bio::DataInputModule dataInput;
     engine.rootContext()->setContextProperty("dataInput", &dataInput);
 
-    // 3. Check if the file exists
+    // 4. Check if the file exists
     const QString sPath = QString::fromUtf8(u8":/UI/Main.qml");
     QFile         file(sPath);
     if (false == file.exists())
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    // 4. Load QML file
+    // 5. Load QML file
     engine.load(sPath);
     return app.exec();
 }
