@@ -1,7 +1,7 @@
 // QT
-#include <QDebug>
-#include <QPointF>
 #include <QUrl>
+#include <QFile>
+#include <QTextStream>
 
 // Myself
 #include "CSVHelper.h"
@@ -12,7 +12,6 @@ namespace Bio
 {
     DataInputModule::DataInputModule(QObject *const pParent /* = nullptr*/)
         : QObject(pParent)
-        , m_lastError(QString())
     {
     }
 
@@ -137,4 +136,10 @@ namespace Bio
     {
         return {};
     }
+
+    QVariantList DataInputModule::chartData() const
+    {
+        return m_chartData;
+    }
+
 }  // namespace Bio

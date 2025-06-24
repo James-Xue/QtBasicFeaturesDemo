@@ -3,6 +3,7 @@
 
 // Qt
 #include <QApplication>
+#include <QFile>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickStyle>
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
 
     // 4. Check if the file exists
     const QString sPath = QString::fromUtf8(u8":/UI/Main.qml");
-    QFile         file(sPath);
+    QFile file(sPath);
     if (false == file.exists())
     {
         qDebug() << "Error: QML file not found in resources!";
