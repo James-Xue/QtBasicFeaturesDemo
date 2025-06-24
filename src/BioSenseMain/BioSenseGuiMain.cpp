@@ -1,12 +1,9 @@
-// STL
-#include <iostream>
-
 // Qt
-#include <QApplication>
 #include <QFile>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QQuickStyle>
+//#include <QQuickStyle>
 
 // Self
 #include "BioSenseGuiMain.h"
@@ -15,7 +12,7 @@
 int main(int argc, char *argv[])
 {
     // 1. Check if the Main.qml exists
-    const QString sPath = QString::fromUtf8(u8":/UI/Main.qml");
+    const QString sPath = QString::fromUtf8(u8":/QML/Main.qml");
     if (false == QFile::exists(sPath))
     {
         qDebug() << "Error: QML file not found in resources!";

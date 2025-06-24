@@ -1,13 +1,15 @@
 <RCC>
-    <qresource prefix="/UI">
-        <file>Main.qml</file>
-        <file>DataImportPage.qml</file>
-        <file>SignalPreprocessPage.qml</file>
-        <file>FeatureExtractPage.qml</file>
-        <file>VisualizationPage.qml</file>
-        <file>StatusAssessmentPage.qml</file>
-        <file>DataSavePage.qml</file>
-        <file>LineChartView.qml</file>
-        <file>search_icon.png</file>
+    <qresource prefix="">
+        <file>QML/Main.qml</file>
+        <file>QML/DataImportPage.qml</file>
+        <file>QML/SignalPreprocessPage.qml</file>
+        <file>QML/FeatureExtractPage.qml</file>
+        <file>QML/VisualizationPage.qml</file>
+        <file>QML/StatusAssessmentPage.qml</file>
+        <file>QML/DataSavePage.qml</file>
+        <file>QML/LineChartView.qml</file>
+    </qresource>
+    <qresource prefix="">
+        <file>Icon/search_icon.png</file>
     </qresource>
 </RCC>
