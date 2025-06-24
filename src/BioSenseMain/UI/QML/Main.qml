@@ -10,7 +10,7 @@ Window
     width: 800
     height: 600
     visible: true
-    title: "BioSense Main Window"
+    title: qsTr("BioSense Main Window")
     color: "#dae8f9" // 主背景色 RGB(218,232,249)
 
     // 顶部区域：大字标题 + 搜索框
