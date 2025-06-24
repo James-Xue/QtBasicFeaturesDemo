@@ -3,20 +3,25 @@ import QtQuick.Controls
 
 Button
 {
-    }
     id: tabButton
-    // 声明一个可写的字符串属性 label
     property string label: ""
-
-    // 将 button 的 text 绑定到 label
     text: label
-
     checkable: true
-    width: parent.width
+    width: 160
     height: 56
+    font.pixelSize: 22
     background: Rectangle
     {
         color: checked ? "#c0def9" : "#d0e9fd"
         radius: 8
+    }
+    contentItem: Text
+    {
+        text: tabButton.text
+        color: "#006064"
+        font.pixelSize: 22
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        anchors.fill: parent
     }
 }

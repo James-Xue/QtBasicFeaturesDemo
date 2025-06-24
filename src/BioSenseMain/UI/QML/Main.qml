@@ -2,6 +2,7 @@ import QtQml
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
+import "qrc:/QML"
 
 Window
 {
@@ -28,6 +29,14 @@ Window
             spacing: 20
             anchors.fill: parent
             anchors.margins: 20
+
+            Image
+            {
+                source: "qrc:/Icon/AppIcon.png"
+                width: 40
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+            }
 
             Text
             {
@@ -78,25 +87,10 @@ Window
                 ]
                 delegate: TabButton
                 {
-                    //label: modelData
+                    label: modelData
+                    checked: (verticalTabs.currentIndex === index)
                     onClicked: verticalTabs.currentIndex = index
                     width: parent.width
-                    height: 56
-                    font.pixelSize: 22
-                    background: Rectangle
-                    {
-                        color: checked ? "#c0def9" : "#d0e9fd" // 选中/未选中颜色已交换
-                        radius: 8
-                    }
-                    contentItem: Text
-                    {
-                        text: modelData
-                        color: checked ? "#006064" : "#006064"
-                        font.pixelSize: 22
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        anchors.fill: parent
-                    }
                 }
             }
         }

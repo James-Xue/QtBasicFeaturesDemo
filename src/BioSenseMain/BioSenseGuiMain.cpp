@@ -1,9 +1,9 @@
 // Qt
 #include <QFile>
 #include <QApplication>
+#include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-//#include <QQuickStyle>
 
 // Self
 #include "BioSenseGuiMain.h"
@@ -21,8 +21,9 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // 2. Initialize app
+    // 2. Initialize app and set application icon
     const QApplication app(argc, argv);
+    app.setWindowIcon(QIcon(QString::fromUtf8(u8":/Icon/AppIcon.png")));
 
     // 3. Create Qml engine and load qml, set Style "Fusion" or "Material"、"Basic"
     //QQuickStyle::setStyle("Fusion");
