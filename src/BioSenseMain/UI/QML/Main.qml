@@ -38,39 +38,10 @@ Window
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            Rectangle
+            // 改为使用 SearchBar 组件
+            SearchBar
             {
-                width: 300
-                height: 36
-                radius: 6
-                color: "#ffffff"
-                border.color: "transparent"
-                border.width: 0
                 anchors.verticalCenter: parent.verticalCenter
-
-                Row
-                {
-                    anchors.fill: parent
-                    spacing: 5
-
-                    Image
-                    {
-                        source: "qrc:/Icon/SearchIcon.png"
-                        width: 20
-                        height: 20
-                        anchors.verticalCenter: parent.verticalCenter
-                        fillMode: Image.PreserveAspectFit
-                    }
-
-                    Text
-                    {
-                        text: "搜索..."
-                        color: "#999999"
-                        font.pixelSize: 18
-                        verticalAlignment: Text.AlignVCenter
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                }
             }
         }
     }
@@ -105,11 +76,9 @@ Window
                     "状态评估",
                     "数据保存"
                 ]
-                delegate: Button
+                delegate: TabButton
                 {
-                    text: modelData
-                    checkable: true
-                    checked: verticalTabs.currentIndex === index
+                    //label: modelData
                     onClicked: verticalTabs.currentIndex = index
                     width: parent.width
                     height: 56

@@ -8,8 +8,11 @@
         <file>QML/StatusAssessmentPage.qml</file>
         <file>QML/DataSavePage.qml</file>
         <file>QML/LineChartView.qml</file>
+        <file>QML/SearchBar.qml</file>
+        <file>QML/TabButton.qml</file>
     </qresource>
     <qresource prefix="">
         <file>Icon/SearchIcon.png</file>
+        <file>Icon/AppIcon.png</file>
     </qresource>
 </RCC>
