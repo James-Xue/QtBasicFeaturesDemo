@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     }
 
     // 2. Initialize app
-    QApplication app(argc, argv);
+    const QApplication app(argc, argv);
 
     // 3. Create Qml engine and load qml, set Style "Fusion" or "Material"、"Basic"
     //QQuickStyle::setStyle("Fusion");

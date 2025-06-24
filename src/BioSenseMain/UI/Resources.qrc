@@ -10,6 +10,6 @@
         <file>QML/LineChartView.qml</file>
     </qresource>
     <qresource prefix="">
-        <file>Icon/search_icon.png</file>
+        <file>Icon/SearchIcon.png</file>
     </qresource>
 </RCC>

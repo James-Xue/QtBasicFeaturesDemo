@@ -55,7 +55,7 @@ Window
 
                     Image
                     {
-                        source: "qrc:/UI/search_icon.png"
+                        source: "qrc:/Icon/SearchIcon.png"
                         width: 20
                         height: 20
                         anchors.verticalCenter: parent.verticalCenter
@@ -148,12 +148,13 @@ Window
                 anchors.fill: parent
                 currentIndex: verticalTabs.currentIndex
 
-                Loader { source: "DataImportPage.qml" }
-                Loader { source: "SignalPreprocessPage.qml" }
-                Loader { source: "FeatureExtractPage.qml" }
-                Loader { source: "VisualizationPage.qml" }
-                Loader { source: "StatusAssessmentPage.qml" }
-                Loader { source: "DataSavePage.qml" }
+                // 使用资源路径加载界面
+                Loader { source: "qrc:/QML/DataImportPage.qml" }
+                Loader { source: "qrc:/QML/SignalPreprocessPage.qml" }
+                Loader { source: "qrc:/QML/FeatureExtractPage.qml" }
+                Loader { source: "qrc:/QML/VisualizationPage.qml" }
+                Loader { source: "qrc:/QML/StatusAssessmentPage.qml" }
+                Loader { source: "qrc:/QML/DataSavePage.qml" }
             }
         }
     }
