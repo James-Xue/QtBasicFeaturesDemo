@@ -10,7 +10,7 @@ Window
     width: 800
     height: 600
     visible: true
-    title: qsTr("BioSense Main Window")
+    title: qsTr("生理评估软件") // "BioSense Main Window"
     color: "#dae8f9" // 主背景色 RGB(218,232,249)
 
     // 顶部区域：大字标题 + 搜索框
@@ -77,13 +77,14 @@ Window
 
             Repeater
             {
-                model: [
-                    "数据导入",
-                    "信号预处理",
-                    "特征提取",
-                    "可视化分析",
-                    "状态评估",
-                    "数据保存"
+                model:
+                [
+                    qsTr("数据导入"),
+                    qsTr("信号预处理"),
+                    qsTr("特征提取"),
+                    qsTr("可视化分析"),
+                    qsTr("状态评估"),
+                    qsTr("数据保存")
                 ]
                 delegate: TabButton
                 {
