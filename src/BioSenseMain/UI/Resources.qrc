@@ -10,6 +10,8 @@
         <file>QML/LineChartView.qml</file>
         <file>QML/SearchBar.qml</file>
         <file>QML/TabButton.qml</file>
+        <file>QML/SideTabBar.qml</file>
+        <file>QML/MainContentArea.qml</file>
     </qresource>
     <qresource prefix="">
         <file>Icon/AppIcon.ico</file>

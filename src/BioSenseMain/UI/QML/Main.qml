@@ -55,7 +55,7 @@ Window
         }
     }
 
-    // 主体区域：左侧竖直页签 + 右侧内容
+    // 主体区域：左侧竖直页签 + 折叠按钮 + 右侧内容
     RowLayout
     {
         anchors.top: topBarBg.bottom
@@ -63,63 +63,69 @@ Window
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 20
-        spacing: 20
+        spacing: 0
 
-        // 竖直页签
-        Column
+        // 折叠时按钮在最左侧
+        Rectangle
         {
-            id: verticalTabs
-            spacing: 16
-            Layout.preferredWidth: 180
+            id: collapseBtnLeft
+            visible: sideTabBar.collapsed
+            width: 20
             Layout.fillHeight: true
+            color: "#b0c4de"
+            border.color: "#90a4ae"
+            border.width: 1
 
-            property int currentIndex: 0
-
-            Repeater
+            MouseArea
             {
-                model:
-                [
-                    qsTr("数据导入"),
-                    qsTr("信号预处理"),
-                    qsTr("特征提取"),
-                    qsTr("可视化分析"),
-                    qsTr("状态评估"),
-                    qsTr("数据保存")
-                ]
-                delegate: TabButton
-                {
-                    label: modelData
-                    checked: (verticalTabs.currentIndex === index)
-                    onClicked: verticalTabs.currentIndex = index
-                    width: parent.width
-                }
+                anchors.fill: parent
+                onClicked: sideTabBar.collapsed = !sideTabBar.collapsed
+            }
+            Text
+            {
+                anchors.centerIn: parent
+                text: ">"
+                font.pixelSize: 18
             }
         }
 
-        // 右侧内容区
+        SideTabBar
+        {
+            id: sideTabBar
+            // 可通过 sideTabBar.currentIndex 获取当前选中页签
+            Layout.preferredWidth: sideTabBar.collapsed ? 40 : 180
+            Layout.fillHeight: true
+        }
+
+        // 展开时按钮在中间
         Rectangle
         {
-            color: "#ffffff"
-            radius: 12
-            border.color: "#d0e9fd" // 内容区边框
+            id: collapseBtnRight
+            visible: !sideTabBar.collapsed
+            width: 20
+            Layout.fillHeight: true
+            color: "#b0c4de"
+            border.color: "#90a4ae"
             border.width: 1
+
+            MouseArea
+            {
+                anchors.fill: parent
+                onClicked: sideTabBar.collapsed = !sideTabBar.collapsed
+            }
+            Text
+            {
+                anchors.centerIn: parent
+                text: "<"
+                font.pixelSize: 18
+            }
+        }
+
+        MainContentArea
+        {
+            currentIndex: sideTabBar.currentIndex
             Layout.fillWidth: true
             Layout.fillHeight: true
-
-            StackLayout
-            {
-                id: stack
-                anchors.fill: parent
-                currentIndex: verticalTabs.currentIndex
-
-                // 使用资源路径加载界面
-                Loader { source: "qrc:/QML/DataImportPage.qml" }
-                Loader { source: "qrc:/QML/SignalPreprocessPage.qml" }
-                Loader { source: "qrc:/QML/FeatureExtractPage.qml" }
-                Loader { source: "qrc:/QML/VisualizationPage.qml" }
-                Loader { source: "qrc:/QML/StatusAssessmentPage.qml" }
-                Loader { source: "qrc:/QML/DataSavePage.qml" }
-            }
         }
     }
 
