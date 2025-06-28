@@ -15,7 +15,7 @@ ChartView
     property real initialYAxisMax: 3500  // Initial max for Y-axis
     
     // X轴设置
-    ValueAxis 
+    ValueAxis
     {
         id: x
         min: 0
@@ -25,7 +25,7 @@ ChartView
     }
 
     // Y轴设置
-    ValueAxis 
+    ValueAxis
     {
         id: y
         min: 0
