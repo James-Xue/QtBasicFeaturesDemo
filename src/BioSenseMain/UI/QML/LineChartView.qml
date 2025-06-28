@@ -1,5 +1,5 @@
-import QtQuick
-import QtCharts
+import QtQuick 6.9
+import QtCharts 6.9
 
 ChartView
 {

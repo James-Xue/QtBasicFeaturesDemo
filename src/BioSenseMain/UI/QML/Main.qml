@@ -1,17 +1,23 @@
-import QtQml
-import QtQuick.Window
-import QtQuick.Controls
-import QtQuick.Layouts
+import QtQml 6.9
+import QtQuick.Window 6.9
+import QtQuick.Controls 6.9
+import QtQuick.Layouts 6.9
 import "qrc:/QML"
 
 Window
 {
     id: mainWindow
-    width: 800
-    height: 600
+    width: 1200
+    height: 900
     visible: true
     title: qsTr("生理评估软件") // "BioSense Main Window"
-    color: "#dae8f9" // 主背景色 RGB(218,232,249)
+    color: "#dae8f9"           // 主背景色 RGB(218,232,249)
+
+    // 设置控件风格，必须这样写
+    // Component.onCompleted:
+    // {
+    //     Qt.callLater(function() { QtQuick.Controls.Style.style = "Fusion" })
+    // }
 
     // 顶部区域：大字标题 + 搜索框
     Rectangle

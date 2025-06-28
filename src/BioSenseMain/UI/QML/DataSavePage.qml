@@ -1,6 +1,6 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
+import QtQuick 6.9
+import QtQuick.Controls 6.9
+import QtQuick.Layouts 6.9
 
 Rectangle
 {

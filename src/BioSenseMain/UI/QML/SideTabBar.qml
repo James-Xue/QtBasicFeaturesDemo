@@ -1,5 +1,5 @@
-import QtQuick
-import QtQuick.Layouts
+import QtQuick 6.9
+import QtQuick.Layouts 6.9
 
 // 侧边栏组件，包含竖直排列的页签按钮
 ColumnLayout
@@ -23,11 +23,11 @@ ColumnLayout
         qsTr("数据保存")         // Data Save
     ]
 
-    // 关键：加上 preferredWidth
-    Layout.preferredWidth: collapsed ? 40 : 180
+    // 适配大窗口：折叠宽度56，展开宽度220
+    Layout.preferredWidth: collapsed ? 56 : 220
     Layout.fillWidth: false        // 关键：不允许横向拉伸
     Layout.fillHeight: true
-    spacing: 16
+    spacing: 20
 
     // 动态生成页签按钮
     Repeater

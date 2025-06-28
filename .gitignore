@@ -37,3 +37,4 @@
 # Ignore the following folders
 build/
 lib/
+/test/Output.txt
