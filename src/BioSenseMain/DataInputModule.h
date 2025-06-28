@@ -8,6 +8,7 @@
 #include <QValueAxis>
 #include <QVariantList>
 #include <QVector>
+#include <QUrl>
 
 namespace Bio
 {
@@ -46,11 +47,12 @@ namespace Bio
 
         // Q_INVOKABLE
       public:
-        Q_INVOKABLE void ImportFile(const QString &sPath);
+        Q_INVOKABLE bool ImportFile(const QUrl &sUrl);
         Q_INVOKABLE void setSeriesData(QLineSeries *series, QValueAxis *axisX, QValueAxis *axisY);
 
         // Core Function
       public:
+        bool ImportFile(const QString &sPath);
         bool loadData(const QString &filePath);
         QVector<double> getSignalData() const;
         QString getLastError() const;
