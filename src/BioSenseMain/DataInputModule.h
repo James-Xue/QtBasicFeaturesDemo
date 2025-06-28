@@ -47,12 +47,12 @@ namespace Bio
 
         // Q_INVOKABLE
       public:
-        Q_INVOKABLE bool ImportFile(const QUrl &sUrl);
+        Q_INVOKABLE bool ImportFile(const QUrl &qUrl);
         Q_INVOKABLE void setSeriesData(QLineSeries *series, QValueAxis *axisX, QValueAxis *axisY);
 
         // Core Function
       public:
-        bool ImportFile(const QString &sPath);
+        bool ImportFile(const QString &sLocPath);
         bool loadData(const QString &filePath);
         QVector<double> getSignalData() const;
         QString getLastError() const;

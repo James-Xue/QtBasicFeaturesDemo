@@ -160,7 +160,7 @@ namespace Bio
     {
         std::vector<std::string> vctString;
         const bool bRet = ReadCSV(sFileFullPath, vctString);
-        if (!bRet)
+        if (false == bRet)
         {
             return false;
         }

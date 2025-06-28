@@ -18,25 +18,14 @@ namespace Bio
     {
     }
 
-    // 辅助函数：去除 file:/// 前缀，返回本地文件路径
-    static QString toLocalFilePath(const QString &path)
-    {
-        QUrl url(path);
-        if (url.isLocalFile())
-        {
-            return url.toLocalFile();
-        }
-        return path;
-    }
-
-    bool DataInputModule::ImportFile(const QUrl &sUrl)
+    bool DataInputModule::ImportFile(const QUrl &qUrl)
     {
         // 目前仅支持打开本地文件
-        if (false == sUrl.isLocalFile())
+        if (false == qUrl.isLocalFile())
         {
             return false;
         }
-        const QString sLocPath = sUrl.toLocalFile();
+        const QString sLocPath = qUrl.toLocalFile();
         return ImportFile(sLocPath);
     }
 
@@ -78,27 +67,14 @@ namespace Bio
         valueAxisY->setRange(std::max(minY - yMargin, 0.0), maxY + yMargin);
     }
 
-    bool DataInputModule::ImportFile(const QString &sPath)
+    bool DataInputModule::ImportFile(const QString &sLocPath)
     {
-        QString localPath = toLocalFilePath(sPath);
-        qDebug() << u8"导入文件路径:" << localPath;
-
-        // 调用 CSVHelper 读取数据到 std::vector<int>
+        // 1. 调用 CSVHelper 读取数据到 std::vector<int>
         CSVHelper csvHelper;
         std::vector<int> csvData;
-        bool ok = csvHelper.ReadCSV(localPath, csvData);
+        csvHelper.ReadCSV(sLocPath, csvData);
 
-        if (ok)
-        {
-            qDebug() << u8"CSV 文件读取成功，行数:" << static_cast<int>(csvData.size());
-            // 你可以在这里处理 csvData
-        }
-        else
-        {
-            qDebug() << u8"CSV 文件读取失败";
-        }
-
-        // ...读取CSV到std::vector<double> csvData...
+        // 2. 读取CSV到std::vector<double> csvData...
         m_chartData.clear();
         for (int iIdx = 0; iIdx < csvData.size(); ++iIdx)
         {
@@ -106,7 +82,7 @@ namespace Bio
         }
 
 #if _DEBUG
-        // 调用特征提取助手类，对心电图数据进行分析
+        // 3. 调用特征提取助手类，对心电图数据进行分析
         {
             // 将 std::vector<int> 转为 QVector<double>
             QVector<double> ecgSignal;
