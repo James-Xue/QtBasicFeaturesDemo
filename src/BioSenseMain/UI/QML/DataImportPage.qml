@@ -13,14 +13,16 @@ Rectangle
     FileDialog
     {
         id: fileDialog
-        title: qsTr("请选择要导入的CSV文件") // Please select the CSV file to import
+        title: qsTr("请选择要导入的CSV文件")     // Please select the CSV file to import
         nameFilters: [qsTr("CSV 文件 (*.csv)")] // CSV File (*.csv)
+
         // 文件选择后回调
         onAccepted:
         {
             var url = fileDialog.currentFile;
-            var localPath = url.toLocalFile ? url.toLocalFile() : url.toString().replace("file:///", "");
-            filePathInput.text = localPath;           // 显示文件路径
+            var localPath =
+                url.toLocalFile ? url.toLocalFile() : url.toString().replace("file:///", "");
+            filePathInput.text = localPath;               // 显示文件路径
             dataInput.ImportFile(fileDialog.currentFile); // 调用C++导入接口
         }
     }
@@ -68,7 +70,7 @@ Rectangle
                 TextField
                 {
                     id: filePathInput
-                    width: 260
+                    width: 380
                     height: 36
                     placeholderText: qsTr("文件路径") // File path
                     color: "#006064"
