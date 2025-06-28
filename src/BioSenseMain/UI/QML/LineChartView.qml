@@ -21,7 +21,7 @@ ChartView
         min: 0
         max: initialXAxisMax
         titleText: "X"
-        labelFormat: "%d" 
+        labelFormat: "%d"
     }
 
     // Y轴设置
